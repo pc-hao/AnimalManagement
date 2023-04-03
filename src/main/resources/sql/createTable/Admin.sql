@@ -1,4 +1,4 @@
-CREATE TABLE `Admin`
+CREATE TABLE `admin`
 (
     `id`       int(11)      NOT NULL AUTO_INCREMENT,
     `username` varchar(255) NOT NULL,
