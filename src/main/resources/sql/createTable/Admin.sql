@@ -1,3 +1,4 @@
+# 创建表的相关SQL操作
 CREATE TABLE `admin`
 (
     `id`       int(11)      NOT NULL AUTO_INCREMENT,

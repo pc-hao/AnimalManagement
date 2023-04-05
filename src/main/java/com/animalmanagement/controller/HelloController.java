@@ -8,12 +8,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/hello")
+@RequestMapping("/hello")   // 注解指出网址
 public class HelloController {
     @Autowired
     AdminMapper adminMapper;
 
-    @GetMapping("")
+    @GetMapping("")         // 相当于是/hello后，后面的网址
     public BaseResponse get() {
         return BaseResponse.builder()
                 .code(1)
