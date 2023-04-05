@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+
+<generatorConfiguration>
+
+    <properties resource="jdbc.properties"/>
+
+    <context id="goods" targetRuntime="MyBatis3">
+        <property name="autoDelimitKeywords" value="true"/>
+        <property name="beginningDelimiter" value="`"/>
+        <property name="endingDelimiter" value="`"/>
+
+        <plugin type="com.itfsw.mybatis.generator.plugins.BatchInsertPlugin"/>
+        <plugin type="com.itfsw.mybatis.generator.plugins.SelectOneByExamplePlugin"/>
+        <plugin type="com.itfsw.mybatis.generator.plugins.ModelColumnPlugin"/>
+        <!-- Example 目标包修改插件-->
+        <plugin type="com.itfsw.mybatis.generator.plugins.ExampleTargetPlugin">
+            <!-- 修改Example类生成到目标包下 -->
+            <property name="targetPackage" value="com.animalmanagement.example"/>
+        </plugin>
+        <plugin type="org.mybatis.generator.plugins.UnmergeableXmlMappersPlugin"/>
+
+        <plugin type="org.mybatis.generator.plugins.SerializablePlugin"/>
+        <plugin type="org.mybatis.generator.plugins.RowBoundsPlugin"/>
+
+        <commentGenerator>
+            <property name="suppressDate" value="true"/>
+            <property name="suppressAllComments" value="true"/>
+            <property name="addRemarkComments" value="true"/>
+        </commentGenerator>
+
+        <jdbcConnection driverClass="${driverClassName}"
+                        connectionURL="${url}"
+                        userId="${username}"
+                        password="${password}">
+            <property name="nullCatalogMeansCurrent" value="true"/>
+        </jdbcConnection>
+
+        <javaTypeResolver>
+            <property name="forceBigDecimals" value="false"/>
+        </javaTypeResolver>
+
+        <javaModelGenerator targetPackage="com.animalmanagement.entity" targetProject="src/main/java">
+            <property name="enableSubPackages" value="true"/>
+            <property name="trimStrings" value="true"/>
+        </javaModelGenerator>
+
+        <sqlMapGenerator targetPackage="mapper" targetProject="src/main/resources">
+            <property name="enableSubPackages" value="true"/>
+        </sqlMapGenerator>
+
+        <javaClientGenerator type="XMLMAPPER" targetPackage="com.animalmanagement.mapper" targetProject="src/main/java">
+            <property name="enableSubPackages" value="true"/>
+        </javaClientGenerator>
+
+        <table tableName="admin" domainObjectName="Admin">
+            <columnOverride column="id" javaType="java.lang.Integer" jdbcType="INTEGER"/>
+        </table>
+        <table tableName="user" domainObjectName="User">
+            <columnOverride column="id" javaType="java.lang.Integer" jdbcType="INTEGER"/>
+        </table>
+        <table tableName="animal" domainObjectName="Animal">
+            <columnOverride column="id" javaType="java.lang.Integer" jdbcType="INTEGER"/>
+        </table>
+        <table tableName="tweet" domainObjectName="Tweet">
+            <columnOverride column="id" javaType="java.lang.Integer" jdbcType="INTEGER"/>
+            <columnOverride column="user_id" javaType="java.lang.Integer" jdbcType="INTEGER"/>
+            <columnOverride column="views" javaType="java.lang.Integer" jdbcType="INTEGER"/>
+            <columnOverride column="views_weekly" javaType="java.lang.Integer" jdbcType="INTEGER"/>
+            <columnOverride column="likes" javaType="java.lang.Integer" jdbcType="INTEGER"/>
+            <columnOverride column="stars" javaType="java.lang.Integer" jdbcType="INTEGER"/>
+        </table>
+        <table tableName="comment" domainObjectName="Comment">
+            <columnOverride column="id" javaType="java.lang.Integer" jdbcType="INTEGER"/>
+            <columnOverride column="user_id" javaType="java.lang.Integer" jdbcType="INTEGER"/>
+            <columnOverride column="tweet_id" javaType="java.lang.Integer" jdbcType="INTEGER"/>
+            <columnOverride column="likes" javaType="java.lang.Integer" jdbcType="INTEGER"/>
+        </table>
+        <table tableName="application" domainObjectName="Application">
+            <columnOverride column="id" javaType="java.lang.Integer" jdbcType="INTEGER"/>
+            <columnOverride column="user_id" javaType="java.lang.Integer" jdbcType="INTEGER"/>
+        </table>
+        <table tableName="track" domainObjectName="Track">
+            <columnOverride column="id" javaType="java.lang.Integer" jdbcType="INTEGER"/>
+            <columnOverride column="user_id" javaType="java.lang.Integer" jdbcType="INTEGER"/>
+            <columnOverride column="location_x" javaType="java.lang.Integer" jdbcType="INTEGER"/>
+            <columnOverride column="location_y" javaType="java.lang.Integer" jdbcType="INTEGER"/>
+        </table>
+        <table tableName="tag" domainObjectName="Tag">
+            <columnOverride column="id" javaType="java.lang.Integer" jdbcType="INTEGER"/>
+        </table>
+        <table tableName="tweettag" domainObjectName="TweetTag">
+            <columnOverride column="tweet_id" javaType="java.lang.Integer" jdbcType="INTEGER"/>
+            <columnOverride column="tag_id" javaType="java.lang.Integer" jdbcType="INTEGER"/>
+        </table>
+        <table tableName="token" domainObjectName="Token">
+            <columnOverride column="token" javaType="java.lang.Integer" jdbcType="INTEGER"/>
+            <columnOverride column="user_id" javaType="java.lang.Integer" jdbcType="INTEGER"/>
+        </table>
+        <table tableName="admintoken" domainObjectName="AdminToken">
+            <columnOverride column="token" javaType="java.lang.Integer" jdbcType="INTEGER"/>
+            <columnOverride column="admin_id" javaType="java.lang.Integer" jdbcType="INTEGER"/>
+        </table>
+        <table tableName="message" domainObjectName="Message">
+            <columnOverride column="id" javaType="java.lang.Integer" jdbcType="INTEGER"/>
+            <columnOverride column="user_id" javaType="java.lang.Integer" jdbcType="INTEGER"/>
+        </table>
+        <table tableName="star" domainObjectName="Star">
+            <columnOverride column="user_id" javaType="java.lang.Integer" jdbcType="INTEGER"/>
+            <columnOverride column="tweet_id" javaType="java.lang.Integer" jdbcType="INTEGER"/>
+        </table>
+        <table tableName="tweetlike" domainObjectName="TweetLike">
+            <columnOverride column="user_id" javaType="java.lang.Integer" jdbcType="INTEGER"/>
+            <columnOverride column="tweet_id" javaType="java.lang.Integer" jdbcType="INTEGER"/>
+        </table>
+        <table tableName="commentlike" domainObjectName="CommentLike">
+            <columnOverride column="user_id" javaType="java.lang.Integer" jdbcType="INTEGER"/>
+            <columnOverride column="comment_id" javaType="java.lang.Integer" jdbcType="INTEGER"/>
+        </table>
+    </context>
+</generatorConfiguration>
