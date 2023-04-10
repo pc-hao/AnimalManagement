@@ -41,6 +41,4 @@ public interface SysRoleMapper {
      * @project https://github.com/itfsw/mybatis-generator-plugin
      */
     SysRole selectOneByExample(SysRoleExample example);
-
-    List<SysRole> selectSysRoleByUserId(Integer userId);
 }

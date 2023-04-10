@@ -51,11 +51,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
      */
     @Autowired
     private UserAuthenticationProvider userAuthenticationProvider;
-    /**
-     * 用户未登录处理器
-     */
-    @Autowired
-    private CustomizeAuthenticationEntryPoint authenticationEntryPoint;
 
     /**
      * 加密方式
@@ -105,7 +100,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 // 配置没有权限自定义处理类
                 .exceptionHandling()
                 .accessDeniedHandler(userAuthAccessDeniedHandler)
-                .authenticationEntryPoint(authenticationEntryPoint) //匿名用户访问无权限资源时的异常处理
+                .authenticationEntryPoint(userAuthenticationEntryPointHandler) //匿名用户访问无权限资源时的异常处理
                 .and()
                 // 开启跨域
                 .cors()

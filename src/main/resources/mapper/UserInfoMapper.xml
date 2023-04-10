@@ -1,15 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.animalmanagement.mapper.UserMapper">
-  <resultMap id="BaseResultMap" type="com.animalmanagement.entity.User">
-    <id column="id" jdbcType="INTEGER" property="id" />
+<mapper namespace="com.animalmanagement.mapper.UserInfoMapper">
+  <resultMap id="BaseResultMap" type="com.animalmanagement.entity.UserInfo">
+    <result column="id" jdbcType="INTEGER" property="id" />
     <result column="username" jdbcType="VARCHAR" property="username" />
-    <result column="password" jdbcType="VARCHAR" property="password" />
     <result column="email" jdbcType="VARCHAR" property="email" />
     <result column="phone" jdbcType="VARCHAR" property="phone" />
     <result column="bio" jdbcType="VARCHAR" property="bio" />
     <result column="avatar" jdbcType="VARCHAR" property="avatar" />
-    <result column="blacked" jdbcType="VARCHAR" property="blacked" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -70,15 +68,15 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, username, `password`, email, phone, bio, avatar, blacked
+    id, username, email, phone, bio, avatar
   </sql>
-  <select id="selectByExample" parameterType="com.animalmanagement.example.UserExample" resultMap="BaseResultMap">
+  <select id="selectByExample" parameterType="com.animalmanagement.example.UserInfoExample" resultMap="BaseResultMap">
     select
     <if test="distinct">
       distinct
     </if>
     <include refid="Base_Column_List" />
-    from user
+    from userinfo
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
@@ -86,41 +84,26 @@
       order by ${orderByClause}
     </if>
   </select>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-    select 
-    <include refid="Base_Column_List" />
-    from user
-    where id = #{id,jdbcType=INTEGER}
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-    delete from user
-    where id = #{id,jdbcType=INTEGER}
-  </delete>
-  <delete id="deleteByExample" parameterType="com.animalmanagement.example.UserExample">
-    delete from user
+  <delete id="deleteByExample" parameterType="com.animalmanagement.example.UserInfoExample">
+    delete from userinfo
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.animalmanagement.entity.User">
-    insert into user (id, username, `password`, 
-      email, phone, bio, 
-      avatar, blacked)
-    values (#{id,jdbcType=INTEGER}, #{username,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
-      #{email,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, #{bio,jdbcType=VARCHAR}, 
-      #{avatar,jdbcType=VARCHAR}, #{blacked,jdbcType=VARCHAR})
+  <insert id="insert" parameterType="com.animalmanagement.entity.UserInfo">
+    insert into userinfo (id, username, email, 
+      phone, bio, avatar)
+    values (#{id,jdbcType=INTEGER}, #{username,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, 
+      #{phone,jdbcType=VARCHAR}, #{bio,jdbcType=VARCHAR}, #{avatar,jdbcType=VARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="com.animalmanagement.entity.User">
-    insert into user
+  <insert id="insertSelective" parameterType="com.animalmanagement.entity.UserInfo">
+    insert into userinfo
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
         id,
       </if>
       <if test="username != null">
         username,
-      </if>
-      <if test="password != null">
-        `password`,
       </if>
       <if test="email != null">
         email,
@@ -134,9 +117,6 @@
       <if test="avatar != null">
         avatar,
       </if>
-      <if test="blacked != null">
-        blacked,
-      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -144,9 +124,6 @@
       </if>
       <if test="username != null">
         #{username,jdbcType=VARCHAR},
-      </if>
-      <if test="password != null">
-        #{password,jdbcType=VARCHAR},
       </if>
       <if test="email != null">
         #{email,jdbcType=VARCHAR},
@@ -160,28 +137,22 @@
       <if test="avatar != null">
         #{avatar,jdbcType=VARCHAR},
       </if>
-      <if test="blacked != null">
-        #{blacked,jdbcType=VARCHAR},
-      </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="com.animalmanagement.example.UserExample" resultType="java.lang.Long">
-    select count(*) from user
+  <select id="countByExample" parameterType="com.animalmanagement.example.UserInfoExample" resultType="java.lang.Long">
+    select count(*) from userinfo
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </select>
   <update id="updateByExampleSelective" parameterType="map">
-    update user
+    update userinfo
     <set>
       <if test="record.id != null">
         id = #{record.id,jdbcType=INTEGER},
       </if>
       <if test="record.username != null">
         username = #{record.username,jdbcType=VARCHAR},
-      </if>
-      <if test="record.password != null">
-        `password` = #{record.password,jdbcType=VARCHAR},
       </if>
       <if test="record.email != null">
         email = #{record.email,jdbcType=VARCHAR},
@@ -195,67 +166,24 @@
       <if test="record.avatar != null">
         avatar = #{record.avatar,jdbcType=VARCHAR},
       </if>
-      <if test="record.blacked != null">
-        blacked = #{record.blacked,jdbcType=VARCHAR},
-      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
   <update id="updateByExample" parameterType="map">
-    update user
+    update userinfo
     set id = #{record.id,jdbcType=INTEGER},
       username = #{record.username,jdbcType=VARCHAR},
-      `password` = #{record.password,jdbcType=VARCHAR},
       email = #{record.email,jdbcType=VARCHAR},
       phone = #{record.phone,jdbcType=VARCHAR},
       bio = #{record.bio,jdbcType=VARCHAR},
-      avatar = #{record.avatar,jdbcType=VARCHAR},
-      blacked = #{record.blacked,jdbcType=VARCHAR}
+      avatar = #{record.avatar,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByPrimaryKeySelective" parameterType="com.animalmanagement.entity.User">
-    update user
-    <set>
-      <if test="username != null">
-        username = #{username,jdbcType=VARCHAR},
-      </if>
-      <if test="password != null">
-        `password` = #{password,jdbcType=VARCHAR},
-      </if>
-      <if test="email != null">
-        email = #{email,jdbcType=VARCHAR},
-      </if>
-      <if test="phone != null">
-        phone = #{phone,jdbcType=VARCHAR},
-      </if>
-      <if test="bio != null">
-        bio = #{bio,jdbcType=VARCHAR},
-      </if>
-      <if test="avatar != null">
-        avatar = #{avatar,jdbcType=VARCHAR},
-      </if>
-      <if test="blacked != null">
-        blacked = #{blacked,jdbcType=VARCHAR},
-      </if>
-    </set>
-    where id = #{id,jdbcType=INTEGER}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="com.animalmanagement.entity.User">
-    update user
-    set username = #{username,jdbcType=VARCHAR},
-      `password` = #{password,jdbcType=VARCHAR},
-      email = #{email,jdbcType=VARCHAR},
-      phone = #{phone,jdbcType=VARCHAR},
-      bio = #{bio,jdbcType=VARCHAR},
-      avatar = #{avatar,jdbcType=VARCHAR},
-      blacked = #{blacked,jdbcType=VARCHAR}
-    where id = #{id,jdbcType=INTEGER}
-  </update>
-  <select id="selectOneByExample" parameterType="com.animalmanagement.example.UserExample" resultMap="BaseResultMap">
+  <select id="selectOneByExample" parameterType="com.animalmanagement.example.UserInfoExample" resultMap="BaseResultMap">
     <!--
       WARNING - @mbg.generated
       This element is automatically generated by MyBatis Generator, do not modify.
@@ -263,7 +191,7 @@
     -->
     select
     <include refid="Base_Column_List" />
-    from user
+    from userinfo
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
@@ -272,13 +200,13 @@
     </if>
     limit 1
   </select>
-  <select id="selectByExampleWithRowbounds" parameterType="com.animalmanagement.example.UserExample" resultMap="BaseResultMap">
+  <select id="selectByExampleWithRowbounds" parameterType="com.animalmanagement.example.UserInfoExample" resultMap="BaseResultMap">
     select
     <if test="distinct">
       distinct
     </if>
     <include refid="Base_Column_List" />
-    from user
+    from userinfo
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>

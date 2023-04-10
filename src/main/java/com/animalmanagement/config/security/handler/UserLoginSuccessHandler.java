@@ -32,7 +32,7 @@ public class UserLoginSuccessHandler implements AuthenticationSuccessHandler {
         token = JWTConfig.tokenPrefix + token;
         ResultUtil.response(response, BaseResponse.builder()
                 .code(StatusEnum.SUCCESS.getCode())
-                .body(new TokenVo(token))
+                .body(new TokenVo(selfUserEntity.getId(), token))
                 .message("登录成功").build());
     }
 }

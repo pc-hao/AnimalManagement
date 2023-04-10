@@ -197,13 +197,4 @@
             order by ${orderByClause}
         </if>
     </select>
-
-    <!-- 查询用户所有角色 -->
-    <select id="selectSysRoleByUserId" resultType="com.animalmanagement.entity.SysRole" parameterType="java.lang.Integer">
-        SELECT sr.*
-        FROM sys_role sr
-                 LEFT JOIN sys_role_user se ON se.role_id = sr.id
-        WHERE se.user_id = #{userId}
-    </select>
-
 </mapper>
