@@ -2,7 +2,7 @@ package com.animalmanagement.config.security.Service;
 
 import com.animalmanagement.config.security.entity.SelfUserEntity;
 import com.animalmanagement.entity.SysUser;
-import com.animalmanagement.service.SysUserService;
+import com.animalmanagement.service.UserService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
 public class SelfUserDetailsService implements UserDetailsService {
 
     @Autowired
-    private SysUserService sysUserService;
+    private UserService userService;
 
     /**
      * 查询用户信息
@@ -24,7 +24,7 @@ public class SelfUserDetailsService implements UserDetailsService {
     @Override
     public SelfUserEntity loadUserByUsername(String username) throws UsernameNotFoundException {
         // 查询用户信息
-        SysUser sysUser = sysUserService.selectUserByName(username);
+        SysUser sysUser = userService.selectUserByName(username);
         if (sysUser != null) {
             // 组装参数
             SelfUserEntity selfUserEntity = new SelfUserEntity();

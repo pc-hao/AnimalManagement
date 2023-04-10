@@ -3,7 +3,7 @@ package com.animalmanagement.config.security;
 import com.animalmanagement.config.security.Service.SelfUserDetailsService;
 import com.animalmanagement.config.security.entity.SelfUserEntity;
 import com.animalmanagement.entity.SysRole;
-import com.animalmanagement.service.SysUserService;
+import com.animalmanagement.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -30,7 +30,7 @@ public class UserAuthenticationProvider implements AuthenticationProvider {
     SelfUserDetailsService selfUserDetailsService;
 
     @Autowired
-    SysUserService sysUserService;
+    UserService userService;
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
@@ -54,7 +54,7 @@ public class UserAuthenticationProvider implements AuthenticationProvider {
         // 角色集合
         Set<GrantedAuthority> authorities = new HashSet<>();
         // 查询用户角色
-        List<SysRole> sysRoleList = sysUserService.selectSysRoleByUserId(userInfo.getId());
+        List<SysRole> sysRoleList = userService.selectSysRoleByUserId(userInfo.getId());
         for (SysRole sysRole : sysRoleList) {
             authorities.add(new SimpleGrantedAuthority("ROLE_" + sysRole.getRoleName()));
         }

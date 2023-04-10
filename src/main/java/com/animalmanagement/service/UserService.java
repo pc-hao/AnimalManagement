@@ -1,6 +1,5 @@
 package com.animalmanagement.service;
 
-import com.animalmanagement.entity.RoleUser;
 import com.animalmanagement.entity.SysRole;
 import com.animalmanagement.entity.SysUser;
 import com.animalmanagement.example.RoleUserExample;
@@ -15,7 +14,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class SysUserService {
+public class UserService {
     @Autowired
     SysUserMapper sysUserMapper;
 
