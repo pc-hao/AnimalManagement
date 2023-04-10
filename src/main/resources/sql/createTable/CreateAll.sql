@@ -3,9 +3,9 @@ DROP TABLE IF EXISTS `sys_user`;
 CREATE TABLE `sys_user`
 (
     `id`       int(32)      NOT NULL AUTO_INCREMENT,
-    `username` varchar(100) NOT NULL UNIQUE,
-    `password` varchar(100) NOT NULL,
-    `status`   varchar(100) comment 'NORMAL正常  PROHIBIT禁用',
+    `username` varchar(32) NOT NULL UNIQUE,
+    `password` varchar(256) NOT NULL,
+    `status`   varchar(10) NOT NULL comment 'NORMAL正常  PROHIBIT禁用',
     PRIMARY KEY (`id`)
 ) ENGINE = InnoDB
   AUTO_INCREMENT = 4
@@ -21,7 +21,7 @@ DROP TABLE IF EXISTS `sys_role`;
 CREATE TABLE `sys_role`
 (
     `id`        int(32) NOT NULL AUTO_INCREMENT,
-    `role_name` varchar(100) DEFAULT '',
+    `role_name` varchar(10) NOT NULL,
     PRIMARY KEY (`id`)
 ) ENGINE = InnoDB
   AUTO_INCREMENT = 3
@@ -50,7 +50,7 @@ values (1, 2, 1),
        (2, 3, 2);
 
 
-CREATE TABLE `userInfo`
+CREATE TABLE `userinfo`
 (
     `id`       int(32)     NOT NULL UNIQUE,
     `username` varchar(32) NOT NULL,
@@ -88,7 +88,7 @@ CREATE TABLE `tweet`
     `published`    boolean  NOT NULL,
     `deleted`      boolean  NOT NULL,
     PRIMARY KEY (`id`),
-    FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
+    FOREIGN KEY (`user_id`) REFERENCES `sys_user` (`id`)
 );
 
 
