@@ -12,5 +12,5 @@ import lombok.NoArgsConstructor;
 public class BaseResponse<T> {
     private Integer code;
     private T body;
-    private String Message;
+    private String message;
 }
