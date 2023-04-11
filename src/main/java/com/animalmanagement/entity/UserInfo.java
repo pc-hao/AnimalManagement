@@ -1,7 +1,10 @@
 package com.animalmanagement.entity;
 
+import lombok.Builder;
+
 import java.io.Serializable;
 
+@Builder
 public class UserInfo implements Serializable {
     private Integer id;
 
