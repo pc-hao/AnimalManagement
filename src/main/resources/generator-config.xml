@@ -55,69 +55,81 @@
             <property name="enableSubPackages" value="true"/>
         </javaClientGenerator>
 
-        <table tableName="admin" domainObjectName="Admin">
+<!--        <table tableName="sys_user" domainObjectName="SysUser">-->
+<!--            <columnOverride column="id" javaType="java.lang.Integer" jdbcType="INTEGER"/>-->
+<!--        </table>-->
+
+<!--        <table tableName="sys_role" domainObjectName="SysRole">-->
+<!--            <columnOverride column="id" javaType="java.lang.Integer" jdbcType="INTEGER"/>-->
+<!--        </table>-->
+
+<!--        <table tableName="sys_role_user" domainObjectName="RoleUser">-->
+<!--            <columnOverride column="id" javaType="java.lang.Integer" jdbcType="INTEGER"/>-->
+<!--        </table>-->
+
+        <table tableName="userInfo" domainObjectName="UserInfo">
             <columnOverride column="id" javaType="java.lang.Integer" jdbcType="INTEGER"/>
         </table>
-        <table tableName="user" domainObjectName="User">
-            <columnOverride column="id" javaType="java.lang.Integer" jdbcType="INTEGER"/>
-        </table>
-        <table tableName="animal" domainObjectName="Animal">
-            <columnOverride column="id" javaType="java.lang.Integer" jdbcType="INTEGER"/>
-        </table>
-        <table tableName="tweet" domainObjectName="Tweet">
-            <columnOverride column="id" javaType="java.lang.Integer" jdbcType="INTEGER"/>
-            <columnOverride column="user_id" javaType="java.lang.Integer" jdbcType="INTEGER"/>
-            <columnOverride column="views" javaType="java.lang.Integer" jdbcType="INTEGER"/>
-            <columnOverride column="views_weekly" javaType="java.lang.Integer" jdbcType="INTEGER"/>
-            <columnOverride column="likes" javaType="java.lang.Integer" jdbcType="INTEGER"/>
-            <columnOverride column="stars" javaType="java.lang.Integer" jdbcType="INTEGER"/>
-        </table>
-        <table tableName="comment" domainObjectName="Comment">
-            <columnOverride column="id" javaType="java.lang.Integer" jdbcType="INTEGER"/>
-            <columnOverride column="user_id" javaType="java.lang.Integer" jdbcType="INTEGER"/>
-            <columnOverride column="tweet_id" javaType="java.lang.Integer" jdbcType="INTEGER"/>
-            <columnOverride column="likes" javaType="java.lang.Integer" jdbcType="INTEGER"/>
-        </table>
-        <table tableName="application" domainObjectName="Application">
-            <columnOverride column="id" javaType="java.lang.Integer" jdbcType="INTEGER"/>
-            <columnOverride column="user_id" javaType="java.lang.Integer" jdbcType="INTEGER"/>
-        </table>
-        <table tableName="track" domainObjectName="Track">
-            <columnOverride column="id" javaType="java.lang.Integer" jdbcType="INTEGER"/>
-            <columnOverride column="user_id" javaType="java.lang.Integer" jdbcType="INTEGER"/>
-            <columnOverride column="location_x" javaType="java.lang.Integer" jdbcType="INTEGER"/>
-            <columnOverride column="location_y" javaType="java.lang.Integer" jdbcType="INTEGER"/>
-        </table>
-        <table tableName="tag" domainObjectName="Tag">
-            <columnOverride column="id" javaType="java.lang.Integer" jdbcType="INTEGER"/>
-        </table>
-        <table tableName="tweettag" domainObjectName="TweetTag">
-            <columnOverride column="tweet_id" javaType="java.lang.Integer" jdbcType="INTEGER"/>
-            <columnOverride column="tag_id" javaType="java.lang.Integer" jdbcType="INTEGER"/>
-        </table>
-        <table tableName="token" domainObjectName="Token">
-            <columnOverride column="token" javaType="java.lang.Integer" jdbcType="INTEGER"/>
-            <columnOverride column="user_id" javaType="java.lang.Integer" jdbcType="INTEGER"/>
-        </table>
-        <table tableName="admintoken" domainObjectName="AdminToken">
-            <columnOverride column="token" javaType="java.lang.Integer" jdbcType="INTEGER"/>
-            <columnOverride column="admin_id" javaType="java.lang.Integer" jdbcType="INTEGER"/>
-        </table>
-        <table tableName="message" domainObjectName="Message">
-            <columnOverride column="id" javaType="java.lang.Integer" jdbcType="INTEGER"/>
-            <columnOverride column="user_id" javaType="java.lang.Integer" jdbcType="INTEGER"/>
-        </table>
-        <table tableName="star" domainObjectName="Star">
-            <columnOverride column="user_id" javaType="java.lang.Integer" jdbcType="INTEGER"/>
-            <columnOverride column="tweet_id" javaType="java.lang.Integer" jdbcType="INTEGER"/>
-        </table>
-        <table tableName="tweetlike" domainObjectName="TweetLike">
-            <columnOverride column="user_id" javaType="java.lang.Integer" jdbcType="INTEGER"/>
-            <columnOverride column="tweet_id" javaType="java.lang.Integer" jdbcType="INTEGER"/>
-        </table>
-        <table tableName="commentlike" domainObjectName="CommentLike">
-            <columnOverride column="user_id" javaType="java.lang.Integer" jdbcType="INTEGER"/>
-            <columnOverride column="comment_id" javaType="java.lang.Integer" jdbcType="INTEGER"/>
-        </table>
+<!--        <table tableName="animal" domainObjectName="Animal">-->
+<!--            <columnOverride column="id" javaType="java.lang.Integer" jdbcType="INTEGER"/>-->
+<!--        </table>-->
+<!--        <table tableName="tweet" domainObjectName="Tweet">-->
+<!--            <columnOverride column="id" javaType="java.lang.Integer" jdbcType="INTEGER"/>-->
+<!--            <columnOverride column="user_id" javaType="java.lang.Integer" jdbcType="INTEGER"/>-->
+<!--            <columnOverride column="views" javaType="java.lang.Integer" jdbcType="INTEGER"/>-->
+<!--            <columnOverride column="views_weekly" javaType="java.lang.Integer" jdbcType="INTEGER"/>-->
+<!--            <columnOverride column="likes" javaType="java.lang.Integer" jdbcType="INTEGER"/>-->
+<!--            <columnOverride column="stars" javaType="java.lang.Integer" jdbcType="INTEGER"/>-->
+<!--        </table>-->
+<!--        <table tableName="comment" domainObjectName="Comment">-->
+<!--            <columnOverride column="id" javaType="java.lang.Integer" jdbcType="INTEGER"/>-->
+<!--            <columnOverride column="user_id" javaType="java.lang.Integer" jdbcType="INTEGER"/>-->
+<!--            <columnOverride column="tweet_id" javaType="java.lang.Integer" jdbcType="INTEGER"/>-->
+<!--            <columnOverride column="likes" javaType="java.lang.Integer" jdbcType="INTEGER"/>-->
+<!--        </table>-->
+<!--        <table tableName="application" domainObjectName="Application">-->
+<!--            <columnOverride column="id" javaType="java.lang.Integer" jdbcType="INTEGER"/>-->
+<!--            <columnOverride column="user_id" javaType="java.lang.Integer" jdbcType="INTEGER"/>-->
+<!--        </table>-->
+<!--        <table tableName="track" domainObjectName="Track">-->
+<!--            <columnOverride column="id" javaType="java.lang.Integer" jdbcType="INTEGER"/>-->
+<!--            <columnOverride column="user_id" javaType="java.lang.Integer" jdbcType="INTEGER"/>-->
+<!--            <columnOverride column="location_x" javaType="java.lang.Integer" jdbcType="INTEGER"/>-->
+<!--            <columnOverride column="location_y" javaType="java.lang.Integer" jdbcType="INTEGER"/>-->
+<!--        </table>-->
+<!--        <table tableName="tag" domainObjectName="Tag">-->
+<!--            <columnOverride column="id" javaType="java.lang.Integer" jdbcType="INTEGER"/>-->
+<!--        </table>-->
+<!--        <table tableName="tweettag" domainObjectName="TweetTag">-->
+<!--            <columnOverride column="tweet_id" javaType="java.lang.Integer" jdbcType="INTEGER"/>-->
+<!--            <columnOverride column="tag_id" javaType="java.lang.Integer" jdbcType="INTEGER"/>-->
+<!--        </table>-->
+<!--        <table tableName="token" domainObjectName="Token">-->
+<!--            <columnOverride column="token" javaType="java.lang.Integer" jdbcType="INTEGER"/>-->
+<!--            <columnOverride column="user_id" javaType="java.lang.Integer" jdbcType="INTEGER"/>-->
+<!--        </table>-->
+<!--        <table tableName="admintoken" domainObjectName="AdminToken">-->
+<!--            <columnOverride column="token" javaType="java.lang.Integer" jdbcType="INTEGER"/>-->
+<!--            <columnOverride column="admin_id" javaType="java.lang.Integer" jdbcType="INTEGER"/>-->
+<!--        </table>-->
+<!--        <table tableName="message" domainObjectName="Message">-->
+<!--            <columnOverride column="id" javaType="java.lang.Integer" jdbcType="INTEGER"/>-->
+<!--            <columnOverride column="user_id" javaType="java.lang.Integer" jdbcType="INTEGER"/>-->
+<!--        </table>-->
+<!--        <table tableName="star" domainObjectName="Star">-->
+<!--            <columnOverride column="user_id" javaType="java.lang.Integer" jdbcType="INTEGER"/>-->
+<!--            <columnOverride column="tweet_id" javaType="java.lang.Integer" jdbcType="INTEGER"/>-->
+<!--        </table>-->
+<!--        <table tableName="tweetlike" domainObjectName="TweetLike">-->
+<!--            <columnOverride column="user_id" javaType="java.lang.Integer" jdbcType="INTEGER"/>-->
+<!--            <columnOverride column="tweet_id" javaType="java.lang.Integer" jdbcType="INTEGER"/>-->
+<!--        </table>-->
+<!--        <table tableName="commentlike" domainObjectName="CommentLike">-->
+<!--            <columnOverride column="user_id" javaType="java.lang.Integer" jdbcType="INTEGER"/>-->
+<!--            <columnOverride column="comment_id" javaType="java.lang.Integer" jdbcType="INTEGER"/>-->
+<!--        </table>-->
+
+<!--        <table tableName="verification" domainObjectName="Verification">-->
+<!--        </table>-->
     </context>
 </generatorConfiguration>
