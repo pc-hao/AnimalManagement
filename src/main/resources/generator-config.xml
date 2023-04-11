@@ -128,5 +128,8 @@
 <!--            <columnOverride column="user_id" javaType="java.lang.Integer" jdbcType="INTEGER"/>-->
 <!--            <columnOverride column="comment_id" javaType="java.lang.Integer" jdbcType="INTEGER"/>-->
 <!--        </table>-->
+
+<!--        <table tableName="verification" domainObjectName="Verification">-->
+<!--        </table>-->
     </context>
 </generatorConfiguration>

@@ -15,12 +15,7 @@ public class HelloController {
     UserService userService;
 
     @GetMapping("")
-    @PreAuthorize("hasAnyRole('ADMIN')")
-    public BaseResponse get() {
-        return BaseResponse.builder()
-                .code(1)
-                .body(userService.selectSysRoleByUserId(2).get(0))
-                .message("Hello, this is AnimalManagement.")
-                .build();
+    public BaseResponse get(){
+        throw new RuntimeException("aaa");
     }
 }

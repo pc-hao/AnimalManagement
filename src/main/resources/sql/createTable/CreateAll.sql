@@ -3,9 +3,9 @@ DROP TABLE IF EXISTS `sys_user`;
 CREATE TABLE `sys_user`
 (
     `id`       int(32)      NOT NULL AUTO_INCREMENT,
-    `username` varchar(100) NOT NULL UNIQUE,
-    `password` varchar(100) NOT NULL,
-    `status`   varchar(100) comment 'NORMAL正常  PROHIBIT禁用',
+    `username` varchar(32) NOT NULL UNIQUE,
+    `password` varchar(256) NOT NULL,
+    `status`   varchar(10) NOT NULL comment 'NORMAL正常  PROHIBIT禁用',
     PRIMARY KEY (`id`)
 ) ENGINE = InnoDB
   AUTO_INCREMENT = 4
@@ -21,7 +21,7 @@ DROP TABLE IF EXISTS `sys_role`;
 CREATE TABLE `sys_role`
 (
     `id`        int(32) NOT NULL AUTO_INCREMENT,
-    `role_name` varchar(100) DEFAULT '',
+    `role_name` varchar(10) NOT NULL,
     PRIMARY KEY (`id`)
 ) ENGINE = InnoDB
   AUTO_INCREMENT = 3
@@ -49,15 +49,16 @@ insert into `sys_role_user`(`id`, `user_id`, `role_id`)
 values (1, 2, 1),
        (2, 3, 2);
 
-
+drop table if exists  userInfo;
 CREATE TABLE `userInfo`
 (
-    `id`       int(32)     NOT NULL UNIQUE,
+    `id`       int(32)     NOT NULL,
     `username` varchar(32) NOT NULL,
-    `email`    varchar(64) NOT NULL,
+    `email`    varchar(64) NOT NULL UNIQUE,
     `phone`    varchar(12),
     `bio`      varchar(64),
     `avatar`   varchar(64),
+    PRIMARY KEY (`id`),
     FOREIGN KEY (`id`) REFERENCES `sys_user` (`id`)
 );
 
@@ -88,7 +89,7 @@ CREATE TABLE `tweet`
     `published`    boolean  NOT NULL,
     `deleted`      boolean  NOT NULL,
     PRIMARY KEY (`id`),
-    FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
+    FOREIGN KEY (`user_id`) REFERENCES `sys_user` (`id`)
 );
 
 
@@ -187,3 +188,15 @@ CREATE TABLE `commentlike`
     FOREIGN KEY (`user_id`) REFERENCES `sys_user` (`id`),
     FOREIGN KEY (`comment_id`) REFERENCES `comment` (`id`)
 );
+
+DROP TABLE IF EXISTS `verification`;
+
+CREATE TABLE `verification`
+(
+    `email`      varchar(50) NOT NULL,
+    `veri_code`  varchar(50) NOT NULL,
+    `start_time` datetime    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (`email`)
+) ENGINE = InnoDB
+  AUTO_INCREMENT = 3
+  DEFAULT CHARSET = utf8mb4;
