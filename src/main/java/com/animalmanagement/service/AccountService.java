@@ -19,19 +19,20 @@ public class AccountService {
     @Autowired
     UserService userService;
 
-    public boolean verifyCode(String email, String verificationCode) {
+    public void verifyCode(String email, String verificationCode) {
         VerificationExample example = new VerificationExample();
         example.createCriteria().andEmailEqualTo(email);
         Verification verifications = verificationMapper.selectOneByExample(example);
-        if (Objects.isNull(verifications) ||
-                !Objects.equals(verifications.getVeriCode(), verificationCode)) {
-            return false;
+        if (Objects.isNull(verifications)) {
+            throw new RuntimeException("验证码过期");
         }
         Date now = new Date();
         long diff = now.getTime() - verifications.getStartTime().getTime(); //毫秒
         if (diff > 600 * 1000) {
-            return false;
+            throw new RuntimeException("验证码过期");
         }
-        return userService.changePasswordByEmail(email, DEFAULT_PASSWORD);
+        if (!Objects.equals(verifications.getVeriCode(), verificationCode)) {
+            throw new RuntimeException("验证码错误");
+        }
     }
 }
