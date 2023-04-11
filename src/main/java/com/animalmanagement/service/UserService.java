@@ -170,7 +170,7 @@ public class UserService {
             long veriCountInDB = verificationMapper.countByExample(veriExample);
             if (veriCountInDB > 0) {
                 System.out.println("原先就存在这个邮件的验证码");
-                verificationMapper.updateByPrimaryKey(newVeri);
+                verificationMapper.updateByPrimaryKeySelective(newVeri);
             } else {
                 System.out.println("原先不存在这个邮件的验证码");
                 verificationMapper.insertSelective(newVeri);
