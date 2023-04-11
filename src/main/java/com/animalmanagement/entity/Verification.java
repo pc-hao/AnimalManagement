@@ -1,8 +1,11 @@
 package com.animalmanagement.entity;
 
+import lombok.Builder;
+
 import java.io.Serializable;
 import java.util.Date;
 
+@Builder
 public class Verification implements Serializable {
     private String email;
 
