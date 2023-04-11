@@ -14,6 +14,8 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import java.util.List;
+
 /**
  * SpringSecurity配置类
  */
@@ -79,9 +81,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(JWTConfig.antMatchers.split(",")).permitAll()
                 // 其他的需要登陆后才能访问
                 .anyRequest().authenticated()
-                .and()
-                // 配置未登录自定义处理类
-                .httpBasic().authenticationEntryPoint(userAuthenticationEntryPointHandler)
                 .and()
                 // 配置登录地址
                 .formLogin()
