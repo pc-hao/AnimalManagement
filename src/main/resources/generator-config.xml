@@ -67,9 +67,9 @@
 <!--            <columnOverride column="id" javaType="java.lang.Integer" jdbcType="INTEGER"/>-->
 <!--        </table>-->
 
-        <table tableName="userInfo" domainObjectName="UserInfo">
-            <columnOverride column="id" javaType="java.lang.Integer" jdbcType="INTEGER"/>
-        </table>
+<!--        <table tableName="userInfo" domainObjectName="UserInfo">-->
+<!--            <columnOverride column="id" javaType="java.lang.Integer" jdbcType="INTEGER"/>-->
+<!--        </table>-->
 <!--        <table tableName="animal" domainObjectName="Animal">-->
 <!--            <columnOverride column="id" javaType="java.lang.Integer" jdbcType="INTEGER"/>-->
 <!--        </table>-->
@@ -128,5 +128,8 @@
 <!--            <columnOverride column="user_id" javaType="java.lang.Integer" jdbcType="INTEGER"/>-->
 <!--            <columnOverride column="comment_id" javaType="java.lang.Integer" jdbcType="INTEGER"/>-->
 <!--        </table>-->
+
+        <table tableName="verification" domainObjectName="Verification">
+        </table>
     </context>
 </generatorConfiguration>
