@@ -1,7 +1,9 @@
 package com.animalmanagement.controller;
 
 import com.animalmanagement.bean.BaseResponse;
-import com.animalmanagement.bean.bo.*;
+import com.animalmanagement.bean.bo.ModifyUserInfoBo;
+import com.animalmanagement.bean.bo.RegisterBo;
+import com.animalmanagement.bean.bo.ResetPasswordBo;
 import com.animalmanagement.enums.StatusEnum;
 import com.animalmanagement.service.AccountService;
 import com.animalmanagement.service.UserService;
@@ -21,8 +23,8 @@ public class UserController {
 
     @PostMapping("/resetPasswordVerify")
     public BaseResponse resetPassword(@RequestBody ResetPasswordBo resetPasswordBo) {
-        accountService.verifyCode(resetPasswordBo.getEmail(), resetPasswordBo.getVerification());
-        userService.changePasswordByEmail(resetPasswordBo.getEmail(), DEFAULT_PASSWORD);
+        accountService.verifyCode(resetPasswordBo.getEmail(), DEFAULT_PASSWORD);
+        userService.changePasswordByEmail(resetPasswordBo.getEmail(), resetPasswordBo.getVerification());
         return BaseResponse.builder().code(StatusEnum.SUCCESS.getCode()).message("请求成功，密码已改为123456").build();
     }
 
@@ -49,10 +51,9 @@ public class UserController {
         return BaseResponse.builder().code(StatusEnum.SUCCESS.getCode()).message("验证码已发送").build();
     }
 
-    @PostMapping("/testaaa")
-    public BaseResponse test111() {
-        userService.sendResetPasswordVeriEmail("1250747862@qq.com");
-        // 错误的BaseResponse都放在service中使用throw来解决了，到这说明一定是正常的
-        return BaseResponse.builder().code(StatusEnum.SUCCESS.getCode()).message("Successfully send email").build();
+    @PostMapping("/modify")
+    public BaseResponse modifyUserInfo(@RequestBody ModifyUserInfoBo modifyUserInfoBo) {
+        userService.modifyUserInfo(modifyUserInfoBo);
+        return BaseResponse.builder().code(StatusEnum.SUCCESS.getCode()).message("修改成功").build();
     }
 }

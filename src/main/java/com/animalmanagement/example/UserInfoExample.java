@@ -513,6 +513,66 @@ public class UserInfoExample {
             addCriterion("avatar not between", value1, value2, "avatar");
             return (Criteria) this;
         }
+
+        public Criteria andBlackedIsNull() {
+            addCriterion("blacked is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andBlackedIsNotNull() {
+            addCriterion("blacked is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andBlackedEqualTo(Boolean value) {
+            addCriterion("blacked =", value, "blacked");
+            return (Criteria) this;
+        }
+
+        public Criteria andBlackedNotEqualTo(Boolean value) {
+            addCriterion("blacked <>", value, "blacked");
+            return (Criteria) this;
+        }
+
+        public Criteria andBlackedGreaterThan(Boolean value) {
+            addCriterion("blacked >", value, "blacked");
+            return (Criteria) this;
+        }
+
+        public Criteria andBlackedGreaterThanOrEqualTo(Boolean value) {
+            addCriterion("blacked >=", value, "blacked");
+            return (Criteria) this;
+        }
+
+        public Criteria andBlackedLessThan(Boolean value) {
+            addCriterion("blacked <", value, "blacked");
+            return (Criteria) this;
+        }
+
+        public Criteria andBlackedLessThanOrEqualTo(Boolean value) {
+            addCriterion("blacked <=", value, "blacked");
+            return (Criteria) this;
+        }
+
+        public Criteria andBlackedIn(List<Boolean> values) {
+            addCriterion("blacked in", values, "blacked");
+            return (Criteria) this;
+        }
+
+        public Criteria andBlackedNotIn(List<Boolean> values) {
+            addCriterion("blacked not in", values, "blacked");
+            return (Criteria) this;
+        }
+
+        public Criteria andBlackedBetween(Boolean value1, Boolean value2) {
+            addCriterion("blacked between", value1, value2, "blacked");
+            return (Criteria) this;
+        }
+
+        public Criteria andBlackedNotBetween(Boolean value1, Boolean value2) {
+            addCriterion("blacked not between", value1, value2, "blacked");
+            return (Criteria) this;
+        }
     }
 
     public static class Criteria extends GeneratedCriteria {
