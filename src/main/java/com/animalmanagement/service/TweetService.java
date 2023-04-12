@@ -3,9 +3,9 @@ package com.animalmanagement.service;
 import com.animalmanagement.bean.bo.AdminGetTweetsBo;
 import com.animalmanagement.bean.bo.AdminGetCommentsBo;
 import org.springframework.stereotype.Service;
-import com.animalmanagement.entity.Comment;
-import com.animalmanagement.mapper.CommentMapper;
-import com.animalmanagement.example.CommentExample;
+import com.animalmanagement.entity.*;
+import com.animalmanagement.mapper.*;
+import com.animalmanagement.example.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Comparator;
@@ -17,48 +17,42 @@ import java.util.Map;
 public class TweetService {
 
     @Autowired
+    TweetMapper tweetMapper;
+
+    @Autowired
     CommentMapper commentMapper;
 
     public Map<String, Object> adminGetTweets(AdminGetTweetsBo adminGetTweetsBo) {
-        // List<Comment> commentList = commentMapper.selectByExample(new CommentExample());
+        List<Tweet> tweetList = tweetMapper.selectByExample(new TweetExample());
 
-        // Map<String, Object> map = new HashMap<>();
-        // map.put("sumNum", commentList.size());
+        Map<String, Object> map = new HashMap<>();
+        map.put("sumNum", tweetList.size());
 
-        // commentList.sort(Comparator.comparing(Comment::get));
-        // int start = adminGetUserBo.getPage() * adminGetUserBo.getPageNum();
-        // if (start >= userList.size()) {
-        //     map.put("users", null);
-        // } else {
-        //     int end = Math.min(start + adminGetUserBo.getPageNum(), userList.size());
-        //     map.put("users", userList.subList(start, end));
-        // }
-        // return map;
-        return null;
+        tweetList.sort(Comparator.comparing(Tweet::getTime));
+        int start = (adminGetTweetsBo.getPage() - 1) * adminGetTweetsBo.getPageNum();
+        if (start >= tweetList.size()) {
+            map.put("users", null);
+        } else {
+            int end = Math.min(start + adminGetTweetsBo.getPageNum(), tweetList.size());
+            map.put("users", tweetList.subList(start, end));
+        }
+        return map;
     }
 
     public Map<String, Object> adminGetComments(AdminGetCommentsBo adminGetCommentsBo) {
-        // List<Comment> commentList = commentMapper.selectByExample(new CommentExample());
+        List<Comment> commentList = commentMapper.selectByExample(new CommentExample());
 
-        // if (Objects.nonNull(adminGetUserBo.getContext())) {
-        //     userList = userList.stream()
-        //             .filter(e ->
-        //                     e.getUsername().contains(adminGetUserBo.getContext()))
-        //             .collect(Collectors.toList());
-        // }
+        Map<String, Object> map = new HashMap<>();
+        map.put("sumNum", commentList.size());
 
-        // Map<String, Object> map = new HashMap<>();
-        // map.put("sumNum", userList.size());
-
-        // userList.sort(Comparator.comparingInt(UserInfo::getId));
-        // int start = adminGetUserBo.getPage() * adminGetUserBo.getPageNum();
-        // if (start >= userList.size()) {
-        //     map.put("users", null);
-        // } else {
-        //     int end = Math.min(start + adminGetUserBo.getPageNum(), userList.size());
-        //     map.put("users", userList.subList(start, end));
-        // }
-        // return map;
-        return null;
+        commentList.sort(Comparator.comparing(Comment::getTime));
+        int start = (adminGetCommentsBo.getPage() - 1) * adminGetCommentsBo.getPageNum();
+        if (start >= commentList.size()) {
+            map.put("users", null);
+        } else {
+            int end = Math.min(start + adminGetCommentsBo.getPageNum(), commentList.size());
+            map.put("users", commentList.subList(start, end));
+        }
+        return map;
     }
 }
