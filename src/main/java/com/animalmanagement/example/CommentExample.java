@@ -465,6 +465,66 @@ public class CommentExample {
             return (Criteria) this;
         }
 
+        public Criteria andCensoredIsNull() {
+            addCriterion("censored is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCensoredIsNotNull() {
+            addCriterion("censored is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCensoredEqualTo(Boolean value) {
+            addCriterion("censored =", value, "censored");
+            return (Criteria) this;
+        }
+
+        public Criteria andCensoredNotEqualTo(Boolean value) {
+            addCriterion("censored <>", value, "censored");
+            return (Criteria) this;
+        }
+
+        public Criteria andCensoredGreaterThan(Boolean value) {
+            addCriterion("censored >", value, "censored");
+            return (Criteria) this;
+        }
+
+        public Criteria andCensoredGreaterThanOrEqualTo(Boolean value) {
+            addCriterion("censored >=", value, "censored");
+            return (Criteria) this;
+        }
+
+        public Criteria andCensoredLessThan(Boolean value) {
+            addCriterion("censored <", value, "censored");
+            return (Criteria) this;
+        }
+
+        public Criteria andCensoredLessThanOrEqualTo(Boolean value) {
+            addCriterion("censored <=", value, "censored");
+            return (Criteria) this;
+        }
+
+        public Criteria andCensoredIn(List<Boolean> values) {
+            addCriterion("censored in", values, "censored");
+            return (Criteria) this;
+        }
+
+        public Criteria andCensoredNotIn(List<Boolean> values) {
+            addCriterion("censored not in", values, "censored");
+            return (Criteria) this;
+        }
+
+        public Criteria andCensoredBetween(Boolean value1, Boolean value2) {
+            addCriterion("censored between", value1, value2, "censored");
+            return (Criteria) this;
+        }
+
+        public Criteria andCensoredNotBetween(Boolean value1, Boolean value2) {
+            addCriterion("censored not between", value1, value2, "censored");
+            return (Criteria) this;
+        }
+
         public Criteria andDeletedIsNull() {
             addCriterion("deleted is null");
             return (Criteria) this;

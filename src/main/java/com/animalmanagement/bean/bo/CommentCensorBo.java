@@ -7,8 +7,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 @NoArgsConstructor
-public class TweetCensorBo {
-    private Integer tweetId;
+public class CommentCensorBo {
+    private Integer commentId;
     private Integer operate;
     private String reason;
 }

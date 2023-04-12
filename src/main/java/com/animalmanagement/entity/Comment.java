@@ -16,6 +16,8 @@ public class Comment implements Serializable {
 
     private Boolean isHelp;
 
+    private Boolean censored;
+
     private Boolean deleted;
 
     private String content;
@@ -70,6 +72,14 @@ public class Comment implements Serializable {
         this.isHelp = isHelp;
     }
 
+    public Boolean getCensored() {
+        return censored;
+    }
+
+    public void setCensored(Boolean censored) {
+        this.censored = censored;
+    }
+
     public Boolean getDeleted() {
         return deleted;
     }
@@ -100,6 +110,7 @@ public class Comment implements Serializable {
         time("time"),
         likes("likes"),
         isHelp("is_help"),
+        censored("censored"),
         deleted("deleted"),
         content("content");
 
