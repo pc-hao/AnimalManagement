@@ -1,6 +1,5 @@
 package com.animalmanagement.service;
 
-import com.animalmanagement.bean.BaseResponse;
 import com.animalmanagement.bean.bo.RegisterBo;
 import com.animalmanagement.entity.*;
 import com.animalmanagement.enums.RoleEnum;
@@ -13,12 +12,10 @@ import com.animalmanagement.utils.EncodeUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
 import java.util.List;
 import java.util.Objects;
 import java.util.Random;
-import java.util.prefs.BackingStoreException;
 import java.util.stream.Collectors;
 
 @Service
@@ -153,17 +150,15 @@ public class UserService {
 
     // -------------------------
     // 以下为与邮箱相关的部分
-    public void trySendEmail(String email) {
+    public void sendResetPasswordVeriEmail(String email) {
         UserInfoExample userInfoExample = new UserInfoExample();
         userInfoExample.createCriteria().andEmailEqualTo(email);
         long count = userInfoMapper.countByExample(userInfoExample);
         if (count == 0) {
             throw new RuntimeException("Email Does Not Exist");
         } else if (count == 1) {
-            System.out.printf("sdadasdasdasda");
             // 将verification的信息写入数据库中，同时发送邮件
             String veri = genVerification();
-            System.out.println("veri: " + veri);
             Verification newVeri = Verification.builder().email(email).veriCode(veri).build();
             VerificationExample veriExample = new VerificationExample();
             veriExample.createCriteria().andEmailEqualTo(email);
@@ -175,12 +170,36 @@ public class UserService {
                 System.out.println("原先不存在这个邮件的验证码");
                 verificationMapper.insertSelective(newVeri);
             }
-            // todo 可能引入bug，需要没有时insert，有时update
-
-            //verificationMapper.updateByExample()
             mailService.sendSimpleMail(MailService.SENDER_MAIL, email, null, MailService.SUBJECT, "您的验证码为：" + veri);
         }
     }
+
+    public void sendRegisterVeriEmail(String email) {
+        // 检查格式
+        checkEmail(email);
+        // 检查邮箱是否已经使用过了
+        UserInfoExample userInfoExample = new UserInfoExample();
+        userInfoExample.createCriteria().andEmailEqualTo(email);
+        long count = userInfoMapper.countByExample(userInfoExample);
+        if (count != 0) {
+            // 邮箱已经使用了
+            throw new RuntimeException("Email Already Exist");
+        } else{
+            // 将verification的信息写入数据库中，同时发送邮件
+            String veri = genVerification();
+            Verification newVeri = Verification.builder().email(email).veriCode(veri).build();
+            VerificationExample veriExample = new VerificationExample();
+            veriExample.createCriteria().andEmailEqualTo(email);
+            long veriCountInDB = verificationMapper.countByExample(veriExample);
+            if (veriCountInDB > 0) {
+                verificationMapper.updateByPrimaryKeySelective(newVeri);
+            } else {
+                verificationMapper.insertSelective(newVeri);
+            }
+            mailService.sendSimpleMail(MailService.SENDER_MAIL, email, null, MailService.SUBJECT, "您的验证码为：" + veri);
+        }
+    }
+
 
     private String genVerification() {
         // 生成一个四位的验证码，以String的形式返回
