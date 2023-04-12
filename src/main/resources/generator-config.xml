@@ -67,10 +67,16 @@
 <!--            <columnOverride column="id" javaType="java.lang.Integer" jdbcType="INTEGER"/>-->
 <!--        </table>-->
 
-        <table tableName="userInfo" domainObjectName="UserInfo">
+        <!-- <table tableName="userInfo" domainObjectName="UserInfo">
             <columnOverride column="id" javaType="java.lang.Integer" jdbcType="INTEGER"/>
+        </table> -->
+        <table tableName="tweet" domainObjectName="Tweet">
+           <columnOverride column="time" javaType="java.lang.String" jdbcType="DATETIME"/>
         </table>
-<!--        <table tableName="animal" domainObjectName="Animal">-->
+        <table tableName="comment" domainObjectName="Comment">
+           <columnOverride column="time" javaType="java.lang.String" jdbcType="DATETIME"/>
+        </table>
+       <!-- <table tableName="animal" domainObjectName="Animal"> -->
 <!--            <columnOverride column="id" javaType="java.lang.Integer" jdbcType="INTEGER"/>-->
 <!--        </table>-->
 <!--        <table tableName="tweet" domainObjectName="Tweet">-->

@@ -260,19 +260,19 @@ public class UserService {
         }
     }
 
-    public void modifyUser(UserInfo newUserInfo) {
-        SysUser sysUser = getUserById(newUserInfo.getId());
-        checkNewUsername(newUserInfo.getUsername(), sysUser);
-        checkPhone(newUserInfo.getPhone());
-        UserInfo oldUserInfo = userInfoMapper.selectByPrimaryKey(newUserInfo.getId());
-        if (!Objects.equals(newUserInfo.getEmail(), oldUserInfo.getEmail())) {
-            throw new RuntimeException("EMAIL CANNOT CHANGE");
-        }
-        if (!Objects.equals(newUserInfo.getBlacked(), oldUserInfo.getBlacked())) {
-            throw new RuntimeException("STATUS CANNOT CHANGE");
-        }
-        userInfoMapper.updateByPrimaryKeySelective(newUserInfo);
-    }
+    // public void modifyUser(UserInfo newUserInfo) {
+    //     SysUser sysUser = getUserById(newUserInfo.getId());
+    //     checkNewUsername(newUserInfo.getUsername(), sysUser);
+    //     checkPhone(newUserInfo.getPhone());
+    //     UserInfo oldUserInfo = userInfoMapper.selectByPrimaryKey(newUserInfo.getId());
+    //     if (!Objects.equals(newUserInfo.getEmail(), oldUserInfo.getEmail())) {
+    //         throw new RuntimeException("EMAIL CANNOT CHANGE");
+    //     }
+    //     if (!Objects.equals(newUserInfo.getBlacked(), oldUserInfo.getBlacked())) {
+    //         throw new RuntimeException("STATUS CANNOT CHANGE");
+    //     }
+    //     userInfoMapper.updateByPrimaryKeySelective(newUserInfo);
+    // }
 
     private void checkNewUsername(String username, SysUser sysUser) {
         if (Objects.isNull(username)) {
