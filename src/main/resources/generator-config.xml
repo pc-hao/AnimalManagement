@@ -56,15 +56,10 @@
         </javaClientGenerator>
 
         <table tableName="tweet" domainObjectName="Tweet">
+           <columnOverride column="time" javaType="java.time.LocalDateTime" jdbcType="TIMESTAMP"/>
         </table>
         <table tableName="comment" domainObjectName="Comment">
+           <columnOverride column="time" javaType="java.time.LocalDateTime" jdbcType="TIMESTAMP"/>
         </table>
-
-        <!-- <table tableName="tweet" domainObjectName="Tweet">
-           <columnOverride column="time" javaType="java.lang.String" jdbcType="DATETIME"/>
-        </table>
-        <table tableName="comment" domainObjectName="Comment">
-           <columnOverride column="time" javaType="java.lang.String" jdbcType="DATETIME"/>
-        </table> -->
     </context>
 </generatorConfiguration>
