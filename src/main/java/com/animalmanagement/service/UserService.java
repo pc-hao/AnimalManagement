@@ -2,6 +2,7 @@ package com.animalmanagement.service;
 
 import com.animalmanagement.bean.bo.AdminGetUserBo;
 import com.animalmanagement.bean.bo.ChangeUserStatusBo;
+import com.animalmanagement.bean.bo.ModifyUserInfoBo;
 import com.animalmanagement.bean.bo.RegisterBo;
 import com.animalmanagement.entity.RoleUser;
 import com.animalmanagement.entity.SysRole;
