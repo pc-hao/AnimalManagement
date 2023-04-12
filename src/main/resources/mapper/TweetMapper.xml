@@ -6,7 +6,7 @@
     <result column="user_id" jdbcType="INTEGER" property="userId" />
     <result column="title" jdbcType="VARCHAR" property="title" />
     <result column="images" jdbcType="VARCHAR" property="images" />
-    <result column="time" jdbcType="DATETIME" property="time" />
+    <result column="time" jdbcType="TIMESTAMP" property="time" />
     <result column="views" jdbcType="INTEGER" property="views" />
     <result column="views_weekly" jdbcType="INTEGER" property="viewsWeekly" />
     <result column="likes" jdbcType="INTEGER" property="likes" />
@@ -140,7 +140,7 @@
       is_help, solved, censored, published, 
       deleted, content)
     values (#{id,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{title,jdbcType=VARCHAR}, 
-      #{images,jdbcType=VARCHAR}, #{time,jdbcType=DATETIME}, #{views,jdbcType=INTEGER}, 
+      #{images,jdbcType=VARCHAR}, #{time,jdbcType=TIMESTAMP}, #{views,jdbcType=INTEGER}, 
       #{viewsWeekly,jdbcType=INTEGER}, #{likes,jdbcType=INTEGER}, #{stars,jdbcType=INTEGER}, 
       #{isHelp,jdbcType=BIT}, #{solved,jdbcType=BIT}, #{censored,jdbcType=BIT}, #{published,jdbcType=BIT}, 
       #{deleted,jdbcType=BIT}, #{content,jdbcType=LONGVARCHAR})
@@ -208,7 +208,7 @@
         #{images,jdbcType=VARCHAR},
       </if>
       <if test="time != null">
-        #{time,jdbcType=DATETIME},
+        #{time,jdbcType=TIMESTAMP},
       </if>
       <if test="views != null">
         #{views,jdbcType=INTEGER},
@@ -264,7 +264,7 @@
         images = #{record.images,jdbcType=VARCHAR},
       </if>
       <if test="record.time != null">
-        `time` = #{record.time,jdbcType=DATETIME},
+        `time` = #{record.time,jdbcType=TIMESTAMP},
       </if>
       <if test="record.views != null">
         views = #{record.views,jdbcType=INTEGER},
@@ -307,7 +307,7 @@
       user_id = #{record.userId,jdbcType=INTEGER},
       title = #{record.title,jdbcType=VARCHAR},
       images = #{record.images,jdbcType=VARCHAR},
-      `time` = #{record.time,jdbcType=DATETIME},
+      `time` = #{record.time,jdbcType=TIMESTAMP},
       views = #{record.views,jdbcType=INTEGER},
       views_weekly = #{record.viewsWeekly,jdbcType=INTEGER},
       likes = #{record.likes,jdbcType=INTEGER},
@@ -328,7 +328,7 @@
       user_id = #{record.userId,jdbcType=INTEGER},
       title = #{record.title,jdbcType=VARCHAR},
       images = #{record.images,jdbcType=VARCHAR},
-      `time` = #{record.time,jdbcType=DATETIME},
+      `time` = #{record.time,jdbcType=TIMESTAMP},
       views = #{record.views,jdbcType=INTEGER},
       views_weekly = #{record.viewsWeekly,jdbcType=INTEGER},
       likes = #{record.likes,jdbcType=INTEGER},
@@ -355,7 +355,7 @@
         images = #{images,jdbcType=VARCHAR},
       </if>
       <if test="time != null">
-        `time` = #{time,jdbcType=DATETIME},
+        `time` = #{time,jdbcType=TIMESTAMP},
       </if>
       <if test="views != null">
         views = #{views,jdbcType=INTEGER},
@@ -395,7 +395,7 @@
     set user_id = #{userId,jdbcType=INTEGER},
       title = #{title,jdbcType=VARCHAR},
       images = #{images,jdbcType=VARCHAR},
-      `time` = #{time,jdbcType=DATETIME},
+      `time` = #{time,jdbcType=TIMESTAMP},
       views = #{views,jdbcType=INTEGER},
       views_weekly = #{viewsWeekly,jdbcType=INTEGER},
       likes = #{likes,jdbcType=INTEGER},
@@ -413,7 +413,7 @@
     set user_id = #{userId,jdbcType=INTEGER},
       title = #{title,jdbcType=VARCHAR},
       images = #{images,jdbcType=VARCHAR},
-      `time` = #{time,jdbcType=DATETIME},
+      `time` = #{time,jdbcType=TIMESTAMP},
       views = #{views,jdbcType=INTEGER},
       views_weekly = #{viewsWeekly,jdbcType=INTEGER},
       likes = #{likes,jdbcType=INTEGER},
