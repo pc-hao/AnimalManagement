@@ -1,5 +1,6 @@
 package com.animalmanagement.service;
 
+import com.animalmanagement.bean.bo.AdminGetUserBo;
 import com.animalmanagement.bean.bo.RegisterBo;
 import com.animalmanagement.entity.RoleUser;
 import com.animalmanagement.entity.SysRole;
@@ -17,10 +18,8 @@ import com.animalmanagement.utils.EncodeUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -83,7 +82,7 @@ public class UserService {
 
         SysUser insertUser = SysUser.builder()
                 .username(registerBo.getUsername())
-                .password(registerBo.getPassword())
+                .password(encodeUtil.encodePassword(registerBo.getPassword()))
                 .status("NORMAL").build();
         sysUserMapper.insertSelective(insertUser);
         SysUserExample example = new SysUserExample();
@@ -144,5 +143,35 @@ public class UserService {
                 !phone.matches("[0-9]+")) {
             throw new RuntimeException("Incorrect Phone Number Format");
         }
+    }
+
+    public Map<String, Object> adminGetUsers(AdminGetUserBo adminGetUserBo) {
+        List<UserInfo> userList = userInfoMapper.selectByExample(new UserInfoExample());
+
+        //只查找已拉黑的用户
+        if (adminGetUserBo.getIsBlack()) {
+            userList = userList.stream().filter(UserInfo::getBlacked).collect(Collectors.toList());
+        }
+
+        //搜索关键字
+        if (Objects.nonNull(adminGetUserBo.getContext())) {
+            userList = userList.stream()
+                    .filter(e ->
+                            e.getUsername().contains(adminGetUserBo.getContext()))
+                    .collect(Collectors.toList());
+        }
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("sumNum", userList.size());
+
+        userList.sort(Comparator.comparingInt(UserInfo::getId));
+        int start = adminGetUserBo.getPage() * adminGetUserBo.getPageNum();
+        if (start >= userList.size()) {
+            map.put("users", null);
+        } else {
+            int end = Math.min(start + adminGetUserBo.getPageNum(), userList.size());
+            map.put("users", userList.subList(start, end));
+        }
+        return map;
     }
 }
