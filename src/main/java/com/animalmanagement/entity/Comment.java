@@ -1,6 +1,7 @@
 package com.animalmanagement.entity;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 public class Comment implements Serializable {
     private Integer id;
@@ -9,11 +10,13 @@ public class Comment implements Serializable {
 
     private Integer tweetId;
 
-    private String time;
+    private LocalDateTime time;
 
     private Integer likes;
 
     private Boolean isHelp;
+
+    private Boolean censored;
 
     private Boolean deleted;
 
@@ -45,12 +48,12 @@ public class Comment implements Serializable {
         this.tweetId = tweetId;
     }
 
-    public String getTime() {
+    public LocalDateTime getTime() {
         return time;
     }
 
-    public void setTime(String time) {
-        this.time = time == null ? null : time.trim();
+    public void setTime(LocalDateTime time) {
+        this.time = time;
     }
 
     public Integer getLikes() {
@@ -67,6 +70,14 @@ public class Comment implements Serializable {
 
     public void setIsHelp(Boolean isHelp) {
         this.isHelp = isHelp;
+    }
+
+    public Boolean getCensored() {
+        return censored;
+    }
+
+    public void setCensored(Boolean censored) {
+        this.censored = censored;
     }
 
     public Boolean getDeleted() {
@@ -99,6 +110,7 @@ public class Comment implements Serializable {
         time("time"),
         likes("likes"),
         isHelp("is_help"),
+        censored("censored"),
         deleted("deleted"),
         content("content");
 

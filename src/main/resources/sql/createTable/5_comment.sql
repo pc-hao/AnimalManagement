@@ -7,8 +7,9 @@ CREATE TABLE `comment`
     `time`     datetime NOT NULL,
     `likes`    int(32)  NOT NULL DEFAULT 0,
     `is_help`  boolean  NOT NULL,
-    `deleted`  boolean  NOT NULL,
+    `censored` boolean  NOT NULL DEFAULT FALSE, 
+    `deleted`  boolean  NOT NULL DEFAULT FALSE,
     PRIMARY KEY (`id`),
-    FOREIGN KEY (`user_id`) REFERENCES `user` (`id`),
+    FOREIGN KEY (`user_id`) REFERENCES `sys_user` (`id`),
     FOREIGN KEY (`tweet_id`) REFERENCES `tweet` (`id`)
 );

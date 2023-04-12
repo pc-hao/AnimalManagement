@@ -1,6 +1,7 @@
 package com.animalmanagement.entity;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 public class Tweet implements Serializable {
     private Integer id;
@@ -11,7 +12,7 @@ public class Tweet implements Serializable {
 
     private String images;
 
-    private String time;
+    private LocalDateTime time;
 
     private Integer views;
 
@@ -67,12 +68,12 @@ public class Tweet implements Serializable {
         this.images = images == null ? null : images.trim();
     }
 
-    public String getTime() {
+    public LocalDateTime getTime() {
         return time;
     }
 
-    public void setTime(String time) {
-        this.time = time == null ? null : time.trim();
+    public void setTime(LocalDateTime time) {
+        this.time = time;
     }
 
     public Integer getViews() {

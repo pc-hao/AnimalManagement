@@ -1,5 +1,6 @@
 package com.animalmanagement.example;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -294,52 +295,52 @@ public class CommentExample {
             return (Criteria) this;
         }
 
-        public Criteria andTimeEqualTo(String value) {
+        public Criteria andTimeEqualTo(LocalDateTime value) {
             addCriterion("`time` =", value, "time");
             return (Criteria) this;
         }
 
-        public Criteria andTimeNotEqualTo(String value) {
+        public Criteria andTimeNotEqualTo(LocalDateTime value) {
             addCriterion("`time` <>", value, "time");
             return (Criteria) this;
         }
 
-        public Criteria andTimeGreaterThan(String value) {
+        public Criteria andTimeGreaterThan(LocalDateTime value) {
             addCriterion("`time` >", value, "time");
             return (Criteria) this;
         }
 
-        public Criteria andTimeGreaterThanOrEqualTo(String value) {
+        public Criteria andTimeGreaterThanOrEqualTo(LocalDateTime value) {
             addCriterion("`time` >=", value, "time");
             return (Criteria) this;
         }
 
-        public Criteria andTimeLessThan(String value) {
+        public Criteria andTimeLessThan(LocalDateTime value) {
             addCriterion("`time` <", value, "time");
             return (Criteria) this;
         }
 
-        public Criteria andTimeLessThanOrEqualTo(String value) {
+        public Criteria andTimeLessThanOrEqualTo(LocalDateTime value) {
             addCriterion("`time` <=", value, "time");
             return (Criteria) this;
         }
 
-        public Criteria andTimeIn(List<String> values) {
+        public Criteria andTimeIn(List<LocalDateTime> values) {
             addCriterion("`time` in", values, "time");
             return (Criteria) this;
         }
 
-        public Criteria andTimeNotIn(List<String> values) {
+        public Criteria andTimeNotIn(List<LocalDateTime> values) {
             addCriterion("`time` not in", values, "time");
             return (Criteria) this;
         }
 
-        public Criteria andTimeBetween(String value1, String value2) {
+        public Criteria andTimeBetween(LocalDateTime value1, LocalDateTime value2) {
             addCriterion("`time` between", value1, value2, "time");
             return (Criteria) this;
         }
 
-        public Criteria andTimeNotBetween(String value1, String value2) {
+        public Criteria andTimeNotBetween(LocalDateTime value1, LocalDateTime value2) {
             addCriterion("`time` not between", value1, value2, "time");
             return (Criteria) this;
         }
@@ -461,6 +462,66 @@ public class CommentExample {
 
         public Criteria andIsHelpNotBetween(Boolean value1, Boolean value2) {
             addCriterion("is_help not between", value1, value2, "isHelp");
+            return (Criteria) this;
+        }
+
+        public Criteria andCensoredIsNull() {
+            addCriterion("censored is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCensoredIsNotNull() {
+            addCriterion("censored is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCensoredEqualTo(Boolean value) {
+            addCriterion("censored =", value, "censored");
+            return (Criteria) this;
+        }
+
+        public Criteria andCensoredNotEqualTo(Boolean value) {
+            addCriterion("censored <>", value, "censored");
+            return (Criteria) this;
+        }
+
+        public Criteria andCensoredGreaterThan(Boolean value) {
+            addCriterion("censored >", value, "censored");
+            return (Criteria) this;
+        }
+
+        public Criteria andCensoredGreaterThanOrEqualTo(Boolean value) {
+            addCriterion("censored >=", value, "censored");
+            return (Criteria) this;
+        }
+
+        public Criteria andCensoredLessThan(Boolean value) {
+            addCriterion("censored <", value, "censored");
+            return (Criteria) this;
+        }
+
+        public Criteria andCensoredLessThanOrEqualTo(Boolean value) {
+            addCriterion("censored <=", value, "censored");
+            return (Criteria) this;
+        }
+
+        public Criteria andCensoredIn(List<Boolean> values) {
+            addCriterion("censored in", values, "censored");
+            return (Criteria) this;
+        }
+
+        public Criteria andCensoredNotIn(List<Boolean> values) {
+            addCriterion("censored not in", values, "censored");
+            return (Criteria) this;
+        }
+
+        public Criteria andCensoredBetween(Boolean value1, Boolean value2) {
+            addCriterion("censored between", value1, value2, "censored");
+            return (Criteria) this;
+        }
+
+        public Criteria andCensoredNotBetween(Boolean value1, Boolean value2) {
+            addCriterion("censored not between", value1, value2, "censored");
             return (Criteria) this;
         }
 

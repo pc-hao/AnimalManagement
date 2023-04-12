@@ -2,15 +2,12 @@ package com.animalmanagement.controller;
 
 
 import com.animalmanagement.bean.BaseResponse;
-import com.animalmanagement.bean.bo.AdminGetCommentsBo;
-import com.animalmanagement.bean.bo.AdminGetTweetsBo;
-import com.animalmanagement.bean.bo.AdminGetUserBo;
-import com.animalmanagement.bean.bo.ChangeUserStatusBo;
-import com.animalmanagement.bean.bo.ModifyUserInfoBo;
+import com.animalmanagement.bean.bo.*;
 import com.animalmanagement.entity.UserInfo;
 import com.animalmanagement.enums.StatusEnum;
 import com.animalmanagement.service.TweetService;
 import com.animalmanagement.service.UserService;
+import com.animalmanagement.service.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,6 +24,9 @@ public class AdminController {
 
     @Autowired
     TweetService tweetService;
+
+    @Autowired
+    CommentService commentService;
 
     @RequestMapping("/user/get")
     public BaseResponse getUsers(@RequestBody AdminGetUserBo adminGetUserBo) {
@@ -56,11 +56,26 @@ public class AdminController {
                 .build();
     }
 
+    @PostMapping("/tweet/content")
+    public BaseResponse tweetContent(@RequestBody AdminTweetContentBo adminTweetContentBo) {
+        return BaseResponse.builder()
+                .code(StatusEnum.SUCCESS.getCode())
+                .body(tweetService.adminTweetGetContent(adminTweetContentBo))
+                .build();
+    }
+
+    @PostMapping("/tweet/censor")
+    public BaseResponse tweetCensor(@RequestBody TweetCensorBo tweetCensorBo) {
+        return BaseResponse.builder()
+                .code(StatusEnum.SUCCESS.getCode())
+                .build();
+    }
+
     @PostMapping("/comment/get")
     public BaseResponse getTweets(@RequestBody AdminGetCommentsBo adminGetCommentsBo) {
         return BaseResponse.builder()
                 .code(StatusEnum.SUCCESS.getCode())
-                .body(tweetService.adminGetComments(adminGetCommentsBo))
+                .body(commentService.adminGetComments(adminGetCommentsBo))
                 .build();
     }
 }

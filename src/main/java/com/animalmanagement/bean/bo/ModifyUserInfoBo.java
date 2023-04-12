@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class ModifyUserInfoBo {
-    private String userId;
+    private Integer userId;
     private String username;
     private String password;
     private String passwordConfirm;

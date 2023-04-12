@@ -1,3 +1,8 @@
+DROP DATABASE animalmanagement;
+CREATE DATABASE animalmanagement;
+USE animalmanagement;
+
+
 DROP TABLE IF EXISTS `sys_user`;
 
 CREATE TABLE `sys_user`

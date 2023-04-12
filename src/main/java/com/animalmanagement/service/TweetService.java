@@ -1,7 +1,6 @@
 package com.animalmanagement.service;
 
-import com.animalmanagement.bean.bo.AdminGetTweetsBo;
-import com.animalmanagement.bean.bo.AdminGetCommentsBo;
+import com.animalmanagement.bean.bo.*;
 import org.springframework.stereotype.Service;
 import com.animalmanagement.entity.*;
 import com.animalmanagement.mapper.*;
@@ -18,9 +17,6 @@ public class TweetService {
 
     @Autowired
     TweetMapper tweetMapper;
-
-    @Autowired
-    CommentMapper commentMapper;
 
     public Map<String, Object> adminGetTweets(AdminGetTweetsBo adminGetTweetsBo) {
         List<Tweet> tweetList = tweetMapper.selectByExample(new TweetExample());
@@ -39,20 +35,43 @@ public class TweetService {
         return map;
     }
 
-    public Map<String, Object> adminGetComments(AdminGetCommentsBo adminGetCommentsBo) {
-        List<Comment> commentList = commentMapper.selectByExample(new CommentExample());
+    public Map<String, Object> adminTweetGetContent(AdminTweetContentBo adminTweetContentBo) {
+        Tweet tweet = tweetMapper.selectByPrimaryKey(adminTweetContentBo.getTweetId());
 
         Map<String, Object> map = new HashMap<>();
-        map.put("sumNum", commentList.size());
+        map.put("userId", tweet.getUserId());
+        map.put("title", tweet.getTitle());
+        map.put("content", tweet.getContent());
+        map.put("images", tweet.getImages());
+        map.put("time", tweet.getTime());
+        map.put("views", tweet.getViews());
+        map.put("viewsWeekly", tweet.getViewsWeekly());
+        map.put("likess", tweet.getLikes());
+        map.put("stars", tweet.getStars());
+        map.put("isHelp", tweet.getIsHelp());
+        map.put("censored", tweet.getCensored());
+        map.put("solved", tweet.getSolved());
+        map.put("published", tweet.getPublished());
+        map.put("deleted", tweet.getDeleted());
 
-        commentList.sort(Comparator.comparing(Comment::getTime));
-        int start = (adminGetCommentsBo.getPage() - 1) * adminGetCommentsBo.getPageNum();
-        if (start >= commentList.size()) {
-            map.put("users", null);
-        } else {
-            int end = Math.min(start + adminGetCommentsBo.getPageNum(), commentList.size());
-            map.put("users", commentList.subList(start, end));
-        }
         return map;
+    }
+
+    public void adminTweetCensor(TweetCensorBo tweetCensorBo) {
+        Integer tweetId = tweetCensorBo.getTweetId();
+        checkIdExists(tweetId);
+        Tweet tweet = tweetMapper.selectByPrimaryKey(tweetId);
+        if(tweetCensorBo.getOperate() == 0) {
+            tweet.setCensored(true);
+        } else {
+            tweet.setDeleted(true);
+        }
+    }
+
+    public void checkIdExists(Integer tweetId) {
+        Tweet tweet = tweetMapper.selectByPrimaryKey(tweetId);
+        if (tweet == null) {
+            throw new RuntimeException("TweetId Does Not Exist");
+        }
     }
 }
