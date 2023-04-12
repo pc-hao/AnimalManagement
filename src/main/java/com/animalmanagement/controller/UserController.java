@@ -1,6 +1,7 @@
 package com.animalmanagement.controller;
 
 import com.animalmanagement.bean.BaseResponse;
+import com.animalmanagement.bean.bo.ModifyUserInfoBo;
 import com.animalmanagement.bean.bo.RegisterBo;
 import com.animalmanagement.bean.bo.ResetPasswordBo;
 import com.animalmanagement.enums.StatusEnum;
@@ -32,5 +33,11 @@ public class UserController {
         accountService.verifyCode(registerBo.getEmail(), registerBo.getVerification());
         userService.register(registerBo);
         return BaseResponse.builder().code(StatusEnum.SUCCESS.getCode()).message("注册成功").build();
+    }
+
+    @PostMapping("/modify")
+    public BaseResponse modifyUserInfo(@RequestBody ModifyUserInfoBo modifyUserInfoBo) {
+        userService.modifyUserInfo(modifyUserInfoBo);
+        return BaseResponse.builder().code(StatusEnum.SUCCESS.getCode()).message("修改成功").build();
     }
 }

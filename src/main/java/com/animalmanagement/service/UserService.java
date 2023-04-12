@@ -20,6 +20,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -101,6 +102,31 @@ public class UserService {
         userInfoMapper.insertSelective(userInfo);
     }
 
+    public void modifyUserInfo(ModifyUserInfoBo modifyUserInfoBo) {
+        checkUserId(Integer.parseInt(modifyUserInfoBo.getUserId()));
+
+        SysUser sysUser = sysUserMapper.selectByPrimaryKey(Integer.parseInt(modifyUserInfoBo.getUserId()));
+        UserInfo userInfo = userInfoMapper.selectByPrimaryKey(Integer.parseInt(modifyUserInfoBo.getUserId()));
+
+        if(!modifyUserInfoBo.getUsername().isEmpty()) {
+            checkUsername(modifyUserInfoBo.getUsername());
+        }
+        if(!modifyUserInfoBo.getPassword().isEmpty()) {
+            checkPassword(modifyUserInfoBo.getPassword(), modifyUserInfoBo.getPasswordConfirm());
+            sysUser.setPassword(encodeUtil.encodePassword(modifyUserInfoBo.getPassword()));
+        }
+        if(!modifyUserInfoBo.getPhone().isEmpty()) {
+            checkPhone(modifyUserInfoBo.getPhone());
+            userInfo.setPhone(modifyUserInfoBo.getPhone());
+        }
+        if(!modifyUserInfoBo.getBio().isEmpty()) {
+            userInfo.setBio(modifyUserInfoBo.getBio());
+        }
+
+        sysUserMapper.updateByPrimaryKeySelective(sysUser);
+        userInfoMapper.updateByPrimaryKeySelective(userInfo);
+    }
+
     public void checkUsername(String username) {
         if (Objects.isNull(username)) {
             throw new RuntimeException("Username Is Empty");
@@ -144,6 +170,14 @@ public class UserService {
                 phone.length() != 11 ||
                 !phone.matches("[0-9]+")) {
             throw new RuntimeException("Incorrect Phone Number Format");
+        }
+    }
+
+    public void checkUserId(Integer userId) {
+        SysUserExample example = new SysUserExample();
+        example.createCriteria().andIdEqualTo(userId);
+        if (!Objects.nonNull(sysUserMapper.selectOneByExample(example))) {
+            throw new RuntimeException("UserId Does Not Exist");
         }
     }
 
