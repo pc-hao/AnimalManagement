@@ -8,6 +8,7 @@
     <result column="phone" jdbcType="VARCHAR" property="phone" />
     <result column="bio" jdbcType="VARCHAR" property="bio" />
     <result column="avatar" jdbcType="VARCHAR" property="avatar" />
+    <result column="blacked" jdbcType="BIT" property="blacked" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -68,7 +69,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, username, email, phone, bio, avatar
+    id, username, email, phone, bio, avatar, blacked
   </sql>
   <select id="selectByExample" parameterType="com.animalmanagement.example.UserInfoExample" resultMap="BaseResultMap">
     select
@@ -102,9 +103,11 @@
   </delete>
   <insert id="insert" parameterType="com.animalmanagement.entity.UserInfo">
     insert into userinfo (id, username, email, 
-      phone, bio, avatar)
+      phone, bio, avatar, 
+      blacked)
     values (#{id,jdbcType=INTEGER}, #{username,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, 
-      #{phone,jdbcType=VARCHAR}, #{bio,jdbcType=VARCHAR}, #{avatar,jdbcType=VARCHAR})
+      #{phone,jdbcType=VARCHAR}, #{bio,jdbcType=VARCHAR}, #{avatar,jdbcType=VARCHAR}, 
+      #{blacked,jdbcType=BIT})
   </insert>
   <insert id="insertSelective" parameterType="com.animalmanagement.entity.UserInfo">
     insert into userinfo
@@ -127,6 +130,9 @@
       <if test="avatar != null">
         avatar,
       </if>
+      <if test="blacked != null">
+        blacked,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -146,6 +152,9 @@
       </if>
       <if test="avatar != null">
         #{avatar,jdbcType=VARCHAR},
+      </if>
+      <if test="blacked != null">
+        #{blacked,jdbcType=BIT},
       </if>
     </trim>
   </insert>
@@ -176,6 +185,9 @@
       <if test="record.avatar != null">
         avatar = #{record.avatar,jdbcType=VARCHAR},
       </if>
+      <if test="record.blacked != null">
+        blacked = #{record.blacked,jdbcType=BIT},
+      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -188,7 +200,8 @@
       email = #{record.email,jdbcType=VARCHAR},
       phone = #{record.phone,jdbcType=VARCHAR},
       bio = #{record.bio,jdbcType=VARCHAR},
-      avatar = #{record.avatar,jdbcType=VARCHAR}
+      avatar = #{record.avatar,jdbcType=VARCHAR},
+      blacked = #{record.blacked,jdbcType=BIT}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -211,6 +224,9 @@
       <if test="avatar != null">
         avatar = #{avatar,jdbcType=VARCHAR},
       </if>
+      <if test="blacked != null">
+        blacked = #{blacked,jdbcType=BIT},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -220,7 +236,8 @@
       email = #{email,jdbcType=VARCHAR},
       phone = #{phone,jdbcType=VARCHAR},
       bio = #{bio,jdbcType=VARCHAR},
-      avatar = #{avatar,jdbcType=VARCHAR}
+      avatar = #{avatar,jdbcType=VARCHAR},
+      blacked = #{blacked,jdbcType=BIT}
     where id = #{id,jdbcType=INTEGER}
   </update>
   <select id="selectOneByExample" parameterType="com.animalmanagement.example.UserInfoExample" resultMap="BaseResultMap">
