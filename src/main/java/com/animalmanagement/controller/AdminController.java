@@ -2,9 +2,11 @@ package com.animalmanagement.controller;
 
 
 import com.animalmanagement.bean.BaseResponse;
+import com.animalmanagement.bean.bo.AdminGetCommentsBo;
 import com.animalmanagement.bean.bo.AdminGetTweetsBo;
 import com.animalmanagement.bean.bo.AdminGetUserBo;
 import com.animalmanagement.bean.bo.ChangeUserStatusBo;
+import com.animalmanagement.bean.bo.ModifyUserInfoBo;
 import com.animalmanagement.entity.UserInfo;
 import com.animalmanagement.enums.StatusEnum;
 import com.animalmanagement.service.TweetService;
@@ -41,16 +43,24 @@ public class AdminController {
     }
 
     @RequestMapping("/user/modify")
-    public BaseResponse modifyUser(@RequestBody UserInfo userInfo) {
-        userService.modifyUser(userInfo);
+    public BaseResponse modifyUser(@RequestBody ModifyUserInfoBo modifyUserInfoBo) {
+        userService.modifyUserInfo(modifyUserInfoBo);
         return BaseResponse.builder().code(StatusEnum.SUCCESS.getCode()).build();
     }
 
-    @PostMapping("tweet/get")
+    @PostMapping("/tweet/get")
     public BaseResponse getTweets(@RequestBody AdminGetTweetsBo adminGetTweetsBo) {
         return BaseResponse.builder()
                 .code(StatusEnum.SUCCESS.getCode())
                 .body(tweetService.adminGetTweets(adminGetTweetsBo))
+                .build();
+    }
+
+    @PostMapping("/comment/get")
+    public BaseResponse getTweets(@RequestBody AdminGetCommentsBo adminGetCommentsBo) {
+        return BaseResponse.builder()
+                .code(StatusEnum.SUCCESS.getCode())
+                .body(tweetService.adminGetComments(adminGetCommentsBo))
                 .build();
     }
 }

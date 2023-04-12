@@ -5,6 +5,7 @@
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="user_id" jdbcType="INTEGER" property="userId" />
     <result column="tweet_id" jdbcType="INTEGER" property="tweetId" />
+    <result column="time" jdbcType="DATETIME" property="time" />
     <result column="likes" jdbcType="INTEGER" property="likes" />
     <result column="is_help" jdbcType="BIT" property="isHelp" />
     <result column="deleted" jdbcType="BIT" property="deleted" />
@@ -71,7 +72,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, user_id, tweet_id, likes, is_help, deleted
+    id, user_id, tweet_id, `time`, likes, is_help, deleted
   </sql>
   <sql id="Blob_Column_List">
     content
@@ -126,11 +127,11 @@
   </delete>
   <insert id="insert" parameterType="com.animalmanagement.entity.Comment">
     insert into comment (id, user_id, tweet_id, 
-      likes, is_help, deleted, content
-      )
+      `time`, likes, is_help, deleted, 
+      content)
     values (#{id,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{tweetId,jdbcType=INTEGER}, 
-      #{likes,jdbcType=INTEGER}, #{isHelp,jdbcType=BIT}, #{deleted,jdbcType=BIT}, #{content,jdbcType=LONGVARCHAR}
-      )
+      #{time,jdbcType=DATETIME}, #{likes,jdbcType=INTEGER}, #{isHelp,jdbcType=BIT}, #{deleted,jdbcType=BIT}, 
+      #{content,jdbcType=LONGVARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.animalmanagement.entity.Comment">
     insert into comment
@@ -143,6 +144,9 @@
       </if>
       <if test="tweetId != null">
         tweet_id,
+      </if>
+      <if test="time != null">
+        `time`,
       </if>
       <if test="likes != null">
         likes,
@@ -166,6 +170,9 @@
       </if>
       <if test="tweetId != null">
         #{tweetId,jdbcType=INTEGER},
+      </if>
+      <if test="time != null">
+        #{time,jdbcType=DATETIME},
       </if>
       <if test="likes != null">
         #{likes,jdbcType=INTEGER},
@@ -199,6 +206,9 @@
       <if test="record.tweetId != null">
         tweet_id = #{record.tweetId,jdbcType=INTEGER},
       </if>
+      <if test="record.time != null">
+        `time` = #{record.time,jdbcType=DATETIME},
+      </if>
       <if test="record.likes != null">
         likes = #{record.likes,jdbcType=INTEGER},
       </if>
@@ -221,6 +231,7 @@
     set id = #{record.id,jdbcType=INTEGER},
       user_id = #{record.userId,jdbcType=INTEGER},
       tweet_id = #{record.tweetId,jdbcType=INTEGER},
+      `time` = #{record.time,jdbcType=DATETIME},
       likes = #{record.likes,jdbcType=INTEGER},
       is_help = #{record.isHelp,jdbcType=BIT},
       deleted = #{record.deleted,jdbcType=BIT},
@@ -234,6 +245,7 @@
     set id = #{record.id,jdbcType=INTEGER},
       user_id = #{record.userId,jdbcType=INTEGER},
       tweet_id = #{record.tweetId,jdbcType=INTEGER},
+      `time` = #{record.time,jdbcType=DATETIME},
       likes = #{record.likes,jdbcType=INTEGER},
       is_help = #{record.isHelp,jdbcType=BIT},
       deleted = #{record.deleted,jdbcType=BIT}
@@ -249,6 +261,9 @@
       </if>
       <if test="tweetId != null">
         tweet_id = #{tweetId,jdbcType=INTEGER},
+      </if>
+      <if test="time != null">
+        `time` = #{time,jdbcType=DATETIME},
       </if>
       <if test="likes != null">
         likes = #{likes,jdbcType=INTEGER},
@@ -269,6 +284,7 @@
     update comment
     set user_id = #{userId,jdbcType=INTEGER},
       tweet_id = #{tweetId,jdbcType=INTEGER},
+      `time` = #{time,jdbcType=DATETIME},
       likes = #{likes,jdbcType=INTEGER},
       is_help = #{isHelp,jdbcType=BIT},
       deleted = #{deleted,jdbcType=BIT},
@@ -279,6 +295,7 @@
     update comment
     set user_id = #{userId,jdbcType=INTEGER},
       tweet_id = #{tweetId,jdbcType=INTEGER},
+      `time` = #{time,jdbcType=DATETIME},
       likes = #{likes,jdbcType=INTEGER},
       is_help = #{isHelp,jdbcType=BIT},
       deleted = #{deleted,jdbcType=BIT}

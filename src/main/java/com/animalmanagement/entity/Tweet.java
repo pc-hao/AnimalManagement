@@ -7,7 +7,11 @@ public class Tweet implements Serializable {
 
     private Integer userId;
 
+    private String title;
+
     private String images;
+
+    private String time;
 
     private Integer views;
 
@@ -47,12 +51,28 @@ public class Tweet implements Serializable {
         this.userId = userId;
     }
 
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title == null ? null : title.trim();
+    }
+
     public String getImages() {
         return images;
     }
 
     public void setImages(String images) {
         this.images = images == null ? null : images.trim();
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time == null ? null : time.trim();
     }
 
     public Integer getViews() {
@@ -145,7 +165,9 @@ public class Tweet implements Serializable {
     public enum Column {
         id("id"),
         userId("user_id"),
+        title("title"),
         images("images"),
+        time("time"),
         views("views"),
         viewsWeekly("views_weekly"),
         likes("likes"),

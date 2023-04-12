@@ -9,6 +9,8 @@ public class Comment implements Serializable {
 
     private Integer tweetId;
 
+    private String time;
+
     private Integer likes;
 
     private Boolean isHelp;
@@ -41,6 +43,14 @@ public class Comment implements Serializable {
 
     public void setTweetId(Integer tweetId) {
         this.tweetId = tweetId;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time == null ? null : time.trim();
     }
 
     public Integer getLikes() {
@@ -86,6 +96,7 @@ public class Comment implements Serializable {
         id("id"),
         userId("user_id"),
         tweetId("tweet_id"),
+        time("time"),
         likes("likes"),
         isHelp("is_help"),
         deleted("deleted"),

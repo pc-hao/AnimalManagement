@@ -4,7 +4,9 @@
   <resultMap id="BaseResultMap" type="com.animalmanagement.entity.Tweet">
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="title" jdbcType="VARCHAR" property="title" />
     <result column="images" jdbcType="VARCHAR" property="images" />
+    <result column="time" jdbcType="DATETIME" property="time" />
     <result column="views" jdbcType="INTEGER" property="views" />
     <result column="views_weekly" jdbcType="INTEGER" property="viewsWeekly" />
     <result column="likes" jdbcType="INTEGER" property="likes" />
@@ -77,8 +79,8 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, user_id, images, views, views_weekly, likes, stars, is_help, solved, censored, 
-    published, deleted
+    id, user_id, title, images, `time`, views, views_weekly, likes, stars, is_help, solved, 
+    censored, published, deleted
   </sql>
   <sql id="Blob_Column_List">
     content
@@ -132,16 +134,16 @@
     </if>
   </delete>
   <insert id="insert" parameterType="com.animalmanagement.entity.Tweet">
-    insert into tweet (id, user_id, images, 
-      views, views_weekly, likes, 
-      stars, is_help, solved, censored, 
-      published, deleted, content
-      )
-    values (#{id,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{images,jdbcType=VARCHAR}, 
-      #{views,jdbcType=INTEGER}, #{viewsWeekly,jdbcType=INTEGER}, #{likes,jdbcType=INTEGER}, 
-      #{stars,jdbcType=INTEGER}, #{isHelp,jdbcType=BIT}, #{solved,jdbcType=BIT}, #{censored,jdbcType=BIT}, 
-      #{published,jdbcType=BIT}, #{deleted,jdbcType=BIT}, #{content,jdbcType=LONGVARCHAR}
-      )
+    insert into tweet (id, user_id, title, 
+      images, `time`, views, 
+      views_weekly, likes, stars, 
+      is_help, solved, censored, published, 
+      deleted, content)
+    values (#{id,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{title,jdbcType=VARCHAR}, 
+      #{images,jdbcType=VARCHAR}, #{time,jdbcType=DATETIME}, #{views,jdbcType=INTEGER}, 
+      #{viewsWeekly,jdbcType=INTEGER}, #{likes,jdbcType=INTEGER}, #{stars,jdbcType=INTEGER}, 
+      #{isHelp,jdbcType=BIT}, #{solved,jdbcType=BIT}, #{censored,jdbcType=BIT}, #{published,jdbcType=BIT}, 
+      #{deleted,jdbcType=BIT}, #{content,jdbcType=LONGVARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.animalmanagement.entity.Tweet">
     insert into tweet
@@ -152,8 +154,14 @@
       <if test="userId != null">
         user_id,
       </if>
+      <if test="title != null">
+        title,
+      </if>
       <if test="images != null">
         images,
+      </if>
+      <if test="time != null">
+        `time`,
       </if>
       <if test="views != null">
         views,
@@ -193,8 +201,14 @@
       <if test="userId != null">
         #{userId,jdbcType=INTEGER},
       </if>
+      <if test="title != null">
+        #{title,jdbcType=VARCHAR},
+      </if>
       <if test="images != null">
         #{images,jdbcType=VARCHAR},
+      </if>
+      <if test="time != null">
+        #{time,jdbcType=DATETIME},
       </if>
       <if test="views != null">
         #{views,jdbcType=INTEGER},
@@ -243,8 +257,14 @@
       <if test="record.userId != null">
         user_id = #{record.userId,jdbcType=INTEGER},
       </if>
+      <if test="record.title != null">
+        title = #{record.title,jdbcType=VARCHAR},
+      </if>
       <if test="record.images != null">
         images = #{record.images,jdbcType=VARCHAR},
+      </if>
+      <if test="record.time != null">
+        `time` = #{record.time,jdbcType=DATETIME},
       </if>
       <if test="record.views != null">
         views = #{record.views,jdbcType=INTEGER},
@@ -285,7 +305,9 @@
     update tweet
     set id = #{record.id,jdbcType=INTEGER},
       user_id = #{record.userId,jdbcType=INTEGER},
+      title = #{record.title,jdbcType=VARCHAR},
       images = #{record.images,jdbcType=VARCHAR},
+      `time` = #{record.time,jdbcType=DATETIME},
       views = #{record.views,jdbcType=INTEGER},
       views_weekly = #{record.viewsWeekly,jdbcType=INTEGER},
       likes = #{record.likes,jdbcType=INTEGER},
@@ -304,7 +326,9 @@
     update tweet
     set id = #{record.id,jdbcType=INTEGER},
       user_id = #{record.userId,jdbcType=INTEGER},
+      title = #{record.title,jdbcType=VARCHAR},
       images = #{record.images,jdbcType=VARCHAR},
+      `time` = #{record.time,jdbcType=DATETIME},
       views = #{record.views,jdbcType=INTEGER},
       views_weekly = #{record.viewsWeekly,jdbcType=INTEGER},
       likes = #{record.likes,jdbcType=INTEGER},
@@ -324,8 +348,14 @@
       <if test="userId != null">
         user_id = #{userId,jdbcType=INTEGER},
       </if>
+      <if test="title != null">
+        title = #{title,jdbcType=VARCHAR},
+      </if>
       <if test="images != null">
         images = #{images,jdbcType=VARCHAR},
+      </if>
+      <if test="time != null">
+        `time` = #{time,jdbcType=DATETIME},
       </if>
       <if test="views != null">
         views = #{views,jdbcType=INTEGER},
@@ -363,7 +393,9 @@
   <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.animalmanagement.entity.Tweet">
     update tweet
     set user_id = #{userId,jdbcType=INTEGER},
+      title = #{title,jdbcType=VARCHAR},
       images = #{images,jdbcType=VARCHAR},
+      `time` = #{time,jdbcType=DATETIME},
       views = #{views,jdbcType=INTEGER},
       views_weekly = #{viewsWeekly,jdbcType=INTEGER},
       likes = #{likes,jdbcType=INTEGER},
@@ -379,7 +411,9 @@
   <update id="updateByPrimaryKey" parameterType="com.animalmanagement.entity.Tweet">
     update tweet
     set user_id = #{userId,jdbcType=INTEGER},
+      title = #{title,jdbcType=VARCHAR},
       images = #{images,jdbcType=VARCHAR},
+      `time` = #{time,jdbcType=DATETIME},
       views = #{views,jdbcType=INTEGER},
       views_weekly = #{viewsWeekly,jdbcType=INTEGER},
       likes = #{likes,jdbcType=INTEGER},
