@@ -3,9 +3,12 @@ package com.animalmanagement.mapper;
 import com.animalmanagement.entity.Verification;
 import com.animalmanagement.example.VerificationExample;
 import java.util.List;
+
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.session.RowBounds;
 
+@Mapper
 public interface VerificationMapper {
     long countByExample(VerificationExample example);
 

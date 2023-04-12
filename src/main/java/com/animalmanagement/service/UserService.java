@@ -4,18 +4,13 @@ import com.animalmanagement.bean.bo.AdminGetUserBo;
 import com.animalmanagement.bean.bo.ChangeUserStatusBo;
 import com.animalmanagement.bean.bo.ModifyUserInfoBo;
 import com.animalmanagement.bean.bo.RegisterBo;
-import com.animalmanagement.entity.RoleUser;
-import com.animalmanagement.entity.SysRole;
-import com.animalmanagement.entity.SysUser;
-import com.animalmanagement.entity.UserInfo;
+import com.animalmanagement.entity.*;
 import com.animalmanagement.enums.RoleEnum;
 import com.animalmanagement.example.RoleUserExample;
 import com.animalmanagement.example.SysUserExample;
 import com.animalmanagement.example.UserInfoExample;
-import com.animalmanagement.mapper.RoleUserMapper;
-import com.animalmanagement.mapper.SysRoleMapper;
-import com.animalmanagement.mapper.SysUserMapper;
-import com.animalmanagement.mapper.UserInfoMapper;
+import com.animalmanagement.example.VerificationExample;
+import com.animalmanagement.mapper.*;
 import com.animalmanagement.utils.EncodeUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,8 +36,15 @@ public class UserService {
     UserInfoMapper userInfoMapper;
 
     @Autowired
+    VerificationMapper verificationMapper;
+
+    @Autowired
     EncodeUtil encodeUtil;
 
+    @Autowired
+    MailService mailService;
+
+    private static final Random VeriNumGenerator = new Random();
     /**
      * 根据用户名查询实体
      */
@@ -172,6 +174,69 @@ public class UserService {
                 !phone.matches("[0-9]+")) {
             throw new RuntimeException("Incorrect Phone Number Format");
         }
+    }
+
+    // -------------------------
+    // 以下为与邮箱相关的部分
+    public void sendResetPasswordVeriEmail(String email) {
+        UserInfoExample userInfoExample = new UserInfoExample();
+        userInfoExample.createCriteria().andEmailEqualTo(email);
+        long count = userInfoMapper.countByExample(userInfoExample);
+        if (count == 0) {
+            throw new RuntimeException("Email Does Not Exist");
+        } else if (count == 1) {
+            // 将verification的信息写入数据库中，同时发送邮件
+            String veri = genVerification();
+            Verification newVeri = Verification.builder().email(email).veriCode(veri).build();
+            VerificationExample veriExample = new VerificationExample();
+            veriExample.createCriteria().andEmailEqualTo(email);
+            long veriCountInDB = verificationMapper.countByExample(veriExample);
+            if (veriCountInDB > 0) {
+                System.out.println("原先就存在这个邮件的验证码");
+                verificationMapper.updateByPrimaryKeySelective(newVeri);
+            } else {
+                System.out.println("原先不存在这个邮件的验证码");
+                verificationMapper.insertSelective(newVeri);
+            }
+            mailService.sendSimpleMail(MailService.SENDER_MAIL, email, null, MailService.SUBJECT, "您的验证码为：" + veri);
+        }
+    }
+
+    public void sendRegisterVeriEmail(String email) {
+        // 检查格式
+        checkEmail(email);
+        // 检查邮箱是否已经使用过了
+        UserInfoExample userInfoExample = new UserInfoExample();
+        userInfoExample.createCriteria().andEmailEqualTo(email);
+        long count = userInfoMapper.countByExample(userInfoExample);
+        if (count != 0) {
+            // 邮箱已经使用了
+            throw new RuntimeException("Email Already Exist");
+        } else{
+            // 将verification的信息写入数据库中，同时发送邮件
+            String veri = genVerification();
+            Verification newVeri = Verification.builder().email(email).veriCode(veri).build();
+            VerificationExample veriExample = new VerificationExample();
+            veriExample.createCriteria().andEmailEqualTo(email);
+            long veriCountInDB = verificationMapper.countByExample(veriExample);
+            if (veriCountInDB > 0) {
+                verificationMapper.updateByPrimaryKeySelective(newVeri);
+            } else {
+                verificationMapper.insertSelective(newVeri);
+            }
+            mailService.sendSimpleMail(MailService.SENDER_MAIL, email, null, MailService.SUBJECT, "您的验证码为：" + veri);
+        }
+    }
+
+
+    private String genVerification() {
+        // 生成一个四位的验证码，以String的形式返回
+        int veriNum = VeriNumGenerator.nextInt(10000);
+        if (veriNum < 1000) {
+            // 保证有四位
+            veriNum+=1000;
+        }
+        return Integer.toString(veriNum);
     }
 
     public void checkUserId(Integer userId) {

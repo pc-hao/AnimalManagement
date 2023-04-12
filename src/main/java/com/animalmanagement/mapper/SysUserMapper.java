@@ -3,9 +3,12 @@ package com.animalmanagement.mapper;
 import com.animalmanagement.entity.SysUser;
 import com.animalmanagement.example.SysUserExample;
 import java.util.List;
+
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.session.RowBounds;
 
+@Mapper
 public interface SysUserMapper {
     long countByExample(SysUserExample example);
 
