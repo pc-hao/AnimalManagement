@@ -106,13 +106,14 @@ public class UserService {
     }
 
     public void modifyUserInfo(ModifyUserInfoBo modifyUserInfoBo) {
-        checkUserId(Integer.parseInt(modifyUserInfoBo.getUserId()));
+        checkUserId(modifyUserInfoBo.getUserId());
 
-        SysUser sysUser = sysUserMapper.selectByPrimaryKey(Integer.parseInt(modifyUserInfoBo.getUserId()));
-        UserInfo userInfo = userInfoMapper.selectByPrimaryKey(Integer.parseInt(modifyUserInfoBo.getUserId()));
+        SysUser sysUser = sysUserMapper.selectByPrimaryKey(modifyUserInfoBo.getUserId());
+        UserInfo userInfo = userInfoMapper.selectByPrimaryKey(modifyUserInfoBo.getUserId());
 
         if(!modifyUserInfoBo.getUsername().isEmpty()) {
             checkUsername(modifyUserInfoBo.getUsername());
+            sysUser.setUsername(modifyUserInfoBo.getUsername());
         }
         if(!modifyUserInfoBo.getPassword().isEmpty()) {
             checkPassword(modifyUserInfoBo.getPassword(), modifyUserInfoBo.getPasswordConfirm());
