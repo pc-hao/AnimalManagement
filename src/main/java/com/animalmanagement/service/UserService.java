@@ -1,6 +1,7 @@
 package com.animalmanagement.service;
 
 import com.animalmanagement.bean.bo.AdminGetUserBo;
+import com.animalmanagement.bean.bo.ChangeUserStatusBo;
 import com.animalmanagement.bean.bo.RegisterBo;
 import com.animalmanagement.entity.RoleUser;
 import com.animalmanagement.entity.SysRole;
@@ -17,6 +18,7 @@ import com.animalmanagement.mapper.UserInfoMapper;
 import com.animalmanagement.utils.EncodeUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -173,5 +175,83 @@ public class UserService {
             map.put("users", userList.subList(start, end));
         }
         return map;
+    }
+
+    public void prohibitUser(SysUser sysUser) {
+        sysUser.setStatus("PROHIBIT");
+        sysUserMapper.updateByPrimaryKeySelective(sysUser);
+
+        UserInfo userInfo = userInfoMapper.selectByPrimaryKey(sysUser.getId());
+        userInfo.setBlacked(true);
+        userInfoMapper.updateByPrimaryKeySelective(userInfo);
+    }
+
+    public void unProhibitUser(SysUser sysUser) {
+        sysUser.setStatus("NORMAL");
+        sysUserMapper.updateByPrimaryKeySelective(sysUser);
+
+        UserInfo userInfo = userInfoMapper.selectByPrimaryKey(sysUser.getId());
+        userInfo.setBlacked(false);
+        userInfoMapper.updateByPrimaryKeySelective(userInfo);
+    }
+
+    public SysUser getUserById(Integer userId) {
+        SysUser sysUser = sysUserMapper.selectByPrimaryKey(userId);
+        if (Objects.isNull(sysUser)) {
+            throw new RuntimeException("User Does Not Exist");
+        }
+        return sysUser;
+    }
+
+    public void changeUserStatus(ChangeUserStatusBo changeUserStatusBo) {
+        SysUser sysUser = getUserById(changeUserStatusBo.getUserId());
+        checkUserIsAdmin(changeUserStatusBo.getUserId());
+        if (changeUserStatusBo.getOperation() == 1) {
+            prohibitUser(sysUser);
+        } else {
+            unProhibitUser(sysUser);
+        }
+    }
+
+    public void checkUserIsAdmin(Integer userId) {
+        RoleUserExample example = new RoleUserExample();
+        example.createCriteria().andUserIdEqualTo(userId);
+        RoleUser roleUser = roleUserMapper.selectOneByExample(example);
+        if (Objects.isNull(roleUser)) {
+            throw new RuntimeException("User ROLE Does Not Exist");
+        }
+        if (Objects.equals(roleUser.getRoleId(), RoleEnum.ADMIN.getCode())) {
+            throw new RuntimeException("CANNOT CHANGE ADMIN STATUS");
+        }
+    }
+
+    public void modifyUser(UserInfo newUserInfo) {
+        SysUser sysUser = getUserById(newUserInfo.getId());
+        checkNewUsername(newUserInfo.getUsername(), sysUser);
+        checkPhone(newUserInfo.getPhone());
+        UserInfo oldUserInfo = userInfoMapper.selectByPrimaryKey(newUserInfo.getId());
+        if (!Objects.equals(newUserInfo.getEmail(), oldUserInfo.getEmail())) {
+            throw new RuntimeException("EMAIL CANNOT CHANGE");
+        }
+        if (!Objects.equals(newUserInfo.getBlacked(), oldUserInfo.getBlacked())) {
+            throw new RuntimeException("STATUS CANNOT CHANGE");
+        }
+        userInfoMapper.updateByPrimaryKeySelective(newUserInfo);
+    }
+
+    private void checkNewUsername(String username, SysUser sysUser) {
+        if (Objects.isNull(username)) {
+            throw new RuntimeException("Username Is Empty");
+        }
+        if (username.length() > 20) {
+            throw new RuntimeException("Username Is Too Long");
+        }
+        SysUserExample example = new SysUserExample();
+        example.createCriteria().andUsernameEqualTo(username);
+
+        SysUser another = sysUserMapper.selectOneByExample(example);
+        if (!Objects.equals(sysUser.getId(), another.getId())) {
+            throw new RuntimeException("Username Already Exists");
+        }
     }
 }
