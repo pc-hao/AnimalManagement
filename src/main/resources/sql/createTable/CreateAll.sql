@@ -62,6 +62,11 @@ CREATE TABLE `userInfo`
     FOREIGN KEY (`id`) REFERENCES `sys_user` (`id`)
 );
 
+INSERT INTO `userInfo`
+VALUES (2, 'admin', '20000000@buaa.edu.cn', "15000000000", "This is a bio", "path"); ##password:123456
+INSERT INTO `userInfo`
+VALUES (3, 'user', '20000001@buaa.edu.cn', "15000000001", "This is a bio", "path"); ##password:123456
+
 CREATE TABLE `animal`
 (
     `id`      int(32)      NOT NULL AUTO_INCREMENT,
