@@ -1,9 +1,7 @@
 package com.animalmanagement.controller;
 
 import com.animalmanagement.bean.BaseResponse;
-import com.animalmanagement.bean.bo.ModifyUserInfoBo;
-import com.animalmanagement.bean.bo.RegisterBo;
-import com.animalmanagement.bean.bo.ResetPasswordBo;
+import com.animalmanagement.bean.bo.*;
 import com.animalmanagement.enums.StatusEnum;
 import com.animalmanagement.service.AccountService;
 import com.animalmanagement.service.UserService;
@@ -35,7 +33,6 @@ public class UserController {
         return BaseResponse.builder().code(StatusEnum.SUCCESS.getCode()).message("注册成功").build();
     }
 
-    //-------------------------------------------
     // 请求重置密码，邮件发验证码
     @PostMapping("/resetPasswordRequest")
     public BaseResponse resetPasswordRequest(@RequestBody ResetPasswordRequestBo resetPasswordRequestBo) {

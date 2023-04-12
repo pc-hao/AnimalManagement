@@ -31,6 +31,3 @@ build/
 
 ### VS Code ###
 .vscode/
-!/src/main/resources/application.yml
-!/src/main/resources/generator-config.xml
-!/src/main/resources/jdbc.properties
