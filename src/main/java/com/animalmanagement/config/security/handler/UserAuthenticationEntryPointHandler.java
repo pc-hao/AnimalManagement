@@ -20,6 +20,6 @@ public class UserAuthenticationEntryPointHandler implements AuthenticationEntryP
      */
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) {
-        ResultUtil.response(response, BaseResponse.builder().code(StatusEnum.NOT_LOGIN.getCode()).message("用户未登录").build());
+        ResultUtil.response(response, BaseResponse.builder().code(StatusEnum.NOT_LOGIN.getCode()).message("用户未登录或用户无权限").build());
     }
 }

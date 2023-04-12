@@ -11,8 +11,6 @@ import java.util.Objects;
 
 @Service
 public class AccountService {
-    private final static String DEFAULT_PASSWORD = "123456";
-
     @Autowired
     VerificationMapper verificationMapper;
 

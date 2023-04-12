@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/user")
 public class UserController {
+    private final static String DEFAULT_PASSWORD = "123456";
+
     @Autowired
     AccountService accountService;
 
@@ -21,7 +23,7 @@ public class UserController {
 
     @PostMapping("/resetPasswordVerify")
     public BaseResponse resetPassword(@RequestBody ResetPasswordBo resetPasswordBo) {
-        accountService.verifyCode(resetPasswordBo.getEmail(), resetPasswordBo.getVerification());
+        accountService.verifyCode(resetPasswordBo.getEmail(), DEFAULT_PASSWORD);
         userService.changePasswordByEmail(resetPasswordBo.getEmail(), resetPasswordBo.getVerification());
         return BaseResponse.builder().code(StatusEnum.SUCCESS.getCode()).message("请求成功，密码已改为123456").build();
     }

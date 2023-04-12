@@ -7,6 +7,7 @@ CREATE TABLE `userInfo`
     `phone`    varchar(12),
     `bio`      varchar(64),
     `avatar`   varchar(64),
+    `blacked`  boolean,
     PRIMARY KEY (`id`),
     FOREIGN KEY (`id`) REFERENCES `sys_user` (`id`)
 );

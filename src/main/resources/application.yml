@@ -7,6 +7,21 @@ spring:
     url: jdbc:mysql://localhost:3306/animalmanagement?useSSL=false&useUnicode=true&characterEncoding=utf8&serverTimezone=GMT%2B8&allowPublicKeyRetrieval=true
     username: root
     password: password
+  # 邮箱的配置
+  mail: #邮箱配置   pom.xml引入 spring-boot-starter-mail、 spring-boot-starter-freemarker
+    host: smtp.office365.com #SMTP服务器地址
+    #host: localhost
+    port: 587
+    username: BH_ANI_2@outlook.com      #登陆账号
+    password: oluwwvfwlhjsfuec  #登陆密码（或授权码）
+    properties:
+      from: BH_ANI_2@outlook.com #邮件发信人（即真实邮箱）
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
 
 mybatis:
   mapper-locations: classpath:mapper/*.xml
@@ -22,4 +37,4 @@ jwt:
   # 过期时间 单位秒 1天后过期=86400 7天后过期=604800
   expiration: 86400
   # 配置不需要认证的接口
-  antMatchers: /login,/user/resetPasswordVerify,/user/registerVerify
+  antMatchers: /login,/user/registerVerify,/user/resetPasswordVerify,/user/resetPasswordRequest,/user/registerRequest
