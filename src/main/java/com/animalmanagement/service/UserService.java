@@ -45,6 +45,7 @@ public class UserService {
     MailService mailService;
 
     private static final Random VeriNumGenerator = new Random();
+
     /**
      * 根据用户名查询实体
      */
@@ -102,6 +103,7 @@ public class UserService {
 
         UserInfo userInfo = UserInfo.builder().id(sysUser.getId()).build();
         BeanUtils.copyProperties(registerBo, userInfo);
+        userInfo.setBlacked(false);
         userInfoMapper.insertSelective(userInfo);
     }
 
@@ -111,19 +113,19 @@ public class UserService {
         SysUser sysUser = sysUserMapper.selectByPrimaryKey(modifyUserInfoBo.getUserId());
         UserInfo userInfo = userInfoMapper.selectByPrimaryKey(modifyUserInfoBo.getUserId());
 
-        if(!modifyUserInfoBo.getUsername().isEmpty()) {
+        if (!modifyUserInfoBo.getUsername().isEmpty()) {
             checkUsername(modifyUserInfoBo.getUsername());
             sysUser.setUsername(modifyUserInfoBo.getUsername());
         }
-        if(!modifyUserInfoBo.getPassword().isEmpty()) {
+        if (!modifyUserInfoBo.getPassword().isEmpty()) {
             checkPassword(modifyUserInfoBo.getPassword(), modifyUserInfoBo.getPasswordConfirm());
             sysUser.setPassword(encodeUtil.encodePassword(modifyUserInfoBo.getPassword()));
         }
-        if(!modifyUserInfoBo.getPhone().isEmpty()) {
+        if (!modifyUserInfoBo.getPhone().isEmpty()) {
             checkPhone(modifyUserInfoBo.getPhone());
             userInfo.setPhone(modifyUserInfoBo.getPhone());
         }
-        if(!modifyUserInfoBo.getBio().isEmpty()) {
+        if (!modifyUserInfoBo.getBio().isEmpty()) {
             userInfo.setBio(modifyUserInfoBo.getBio());
         }
 
@@ -213,7 +215,7 @@ public class UserService {
         if (count != 0) {
             // 邮箱已经使用了
             throw new RuntimeException("Email Already Exist");
-        } else{
+        } else {
             // 将verification的信息写入数据库中，同时发送邮件
             String veri = genVerification();
             Verification newVeri = Verification.builder().email(email).veriCode(veri).build();
@@ -235,7 +237,7 @@ public class UserService {
         int veriNum = VeriNumGenerator.nextInt(10000);
         if (veriNum < 1000) {
             // 保证有四位
-            veriNum+=1000;
+            veriNum += 1000;
         }
         return Integer.toString(veriNum);
     }
@@ -299,9 +301,17 @@ public class UserService {
     public SysUser getUserById(Integer userId) {
         SysUser sysUser = sysUserMapper.selectByPrimaryKey(userId);
         if (Objects.isNull(sysUser)) {
-            throw new RuntimeException("User Does Not Exist");
+            throw new RuntimeException("User Id Does Not Exist");
         }
         return sysUser;
+    }
+
+    public UserInfo getUserInfoById(Integer id) {
+        UserInfo userInfo = userInfoMapper.selectByPrimaryKey(id);
+        if (Objects.isNull(userInfo)) {
+            throw new RuntimeException("User Id Does Not Exist");
+        }
+        return userInfo;
     }
 
     public void changeUserStatus(ChangeUserStatusBo changeUserStatusBo) {

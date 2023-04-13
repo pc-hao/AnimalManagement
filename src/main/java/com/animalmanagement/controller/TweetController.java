@@ -4,6 +4,7 @@ import com.animalmanagement.bean.BaseResponse;
 import com.animalmanagement.bean.bo.*;
 import com.animalmanagement.enums.StatusEnum;
 import com.animalmanagement.service.AccountService;
+import com.animalmanagement.service.TweetService;
 import com.animalmanagement.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -20,5 +21,14 @@ public class TweetController {
     @Autowired
     UserService userService;
 
-    
+    @Autowired
+    TweetService tweetService;
+
+    @PostMapping("/tweet/content")
+    public BaseResponse getTweetContent(@RequestBody TweetContentBo tweetContentBo) {
+        return BaseResponse.builder()
+                .code(StatusEnum.SUCCESS.getCode())
+                .body(tweetService.getTweetContent(tweetContentBo))
+                .build();
+    }
 }
