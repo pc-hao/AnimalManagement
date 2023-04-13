@@ -1,4 +1,4 @@
-CREATE TABLE `tweetlike`
+CREATE TABLE `tweetstar`
 (
     `user_id`   int(32)         NOT NULL,
     `tweet_id`  int(32)         NOT NULL,

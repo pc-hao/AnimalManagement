@@ -5,5 +5,5 @@ CREATE TABLE `application`
     `content`   varchar(256)    NOT NULL,
     `censored`  boolean         NOT NULL,
     PRIMARY KEY (`id`),
-    FOREIGN KEY (`user_id`) REFERENCES `user`(`id`)
+    FOREIGN KEY (`user_id`) REFERENCES `sys_user`(`id`)
 );

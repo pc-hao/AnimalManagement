@@ -89,6 +89,7 @@ CREATE TABLE `tweet`
     `views_weekly` int(32)  NOT NULL DEFAULT 0,
     `likes`        int(32)  NOT NULL DEFAULT 0,
     `stars`        int(32)  NOT NULL DEFAULT 0,
+    `comments`     int(32)  NOT NULL DEFAULT 0,
     `is_help`      boolean  NOT NULL,
     `solved`       boolean  NOT NULL DEFAULT FALSE,
     `censored`     boolean  NOT NULL DEFAULT FALSE,
@@ -97,6 +98,7 @@ CREATE TABLE `tweet`
     PRIMARY KEY (`id`),
     FOREIGN KEY (`user_id`) REFERENCES `sys_user` (`id`)
 );
+
 
 
 CREATE TABLE `comment`
@@ -194,6 +196,15 @@ CREATE TABLE `commentlike`
     PRIMARY KEY (`user_id`, `comment_id`),
     FOREIGN KEY (`user_id`) REFERENCES `sys_user` (`id`),
     FOREIGN KEY (`comment_id`) REFERENCES `comment` (`id`)
+);
+
+CREATE TABLE `tweetstar`
+(
+    `user_id`   int(32)         NOT NULL,
+    `tweet_id`  int(32)         NOT NULL,
+    PRIMARY KEY (`user_id`, `tweet_id`),
+    FOREIGN KEY (`user_id`) REFERENCES `sys_user`(`id`),
+    FOREIGN KEY (`tweet_id`) REFERENCES `tweet`(`id`)
 );
 
 DROP TABLE IF EXISTS `verification`;

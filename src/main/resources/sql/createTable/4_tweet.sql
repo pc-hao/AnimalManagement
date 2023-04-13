@@ -10,11 +10,12 @@ CREATE TABLE `tweet`
     `views_weekly` int(32)  NOT NULL DEFAULT 0,
     `likes`        int(32)  NOT NULL DEFAULT 0,
     `stars`        int(32)  NOT NULL DEFAULT 0,
+    `comments`     int(32)  NOT NULL DEFAULT 0,
     `is_help`      boolean  NOT NULL,
     `solved`       boolean  NOT NULL DEFAULT FALSE,
     `censored`     boolean  NOT NULL DEFAULT FALSE,
     `published`    boolean  NOT NULL DEFAULT FALSE,
     `deleted`      boolean  NOT NULL DEFAULT FALSE,
     PRIMARY KEY (`id`),
-    FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
+    FOREIGN KEY (`user_id`) REFERENCES `sys_user` (`id`)
 );
