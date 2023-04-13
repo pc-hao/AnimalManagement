@@ -3,6 +3,9 @@ package com.animalmanagement.entity;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
+import lombok.Builder;
+
+@Builder
 public class Comment implements Serializable {
     private Integer id;
 
