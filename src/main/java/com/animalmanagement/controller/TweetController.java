@@ -38,4 +38,12 @@ public class TweetController {
                 .body(tweetService.getTweets(getTweetsBo))
                 .build();
     }
+
+    @PostMapping("/like")
+    public BaseResponse like(@RequestBody GetTweetsBo getTweetsBo) {
+        
+        return BaseResponse.builder()
+                .code(StatusEnum.SUCCESS.getCode())
+                .build();
+    }
 }

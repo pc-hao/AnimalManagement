@@ -28,6 +28,9 @@ public class CommentService {
     @Autowired
     SysUserMapper sysUserMapper;
 
+    @Autowired
+    CommentLikeMapper commentLikeMapper;
+
     public Map<String, Object> adminGetComments(AdminGetCommentsBo adminGetCommentsBo) {
         List<Comment> commentList = commentMapper.selectByExample(new CommentExample());
 
@@ -83,5 +86,51 @@ public class CommentService {
                                 .content(addCommentBo.getComment())
                                 .build();
         commentMapper.insertSelective(insertComment);
+    }
+
+    public void commentLike(CommentLikeBo commentLikeBo) {
+        SysUser sysUser = sysUserMapper.selectByPrimaryKey(commentLikeBo.getUserId());
+        if(Objects.isNull(sysUser)) {
+            throw new RuntimeException("UserId Does Not Exist");
+        }
+        Comment comment = commentMapper.selectByPrimaryKey(commentLikeBo.getCommentId());
+        if(Objects.isNull(comment)) {
+            throw new RuntimeException("CommentId Does Not Exist");
+        }
+        
+        CommentLikeExample example = new CommentLikeExample();
+        example.createCriteria().andUserIdEqualTo(commentLikeBo.getUserId());
+        example.createCriteria().andCommentIdEqualTo(commentLikeBo.getCommentId());
+        CommentLikeKey commentLike = commentLikeMapper.selectOneByExample(example);
+        if(Objects.isNull(commentLike)) {
+            CommentLikeKey insertCommentLike =  CommentLikeKey.builder()
+                                            .userId(commentLikeBo.getUserId())
+                                            .commentId(commentLikeBo.getCommentId())
+                                            .build();
+            commentLikeMapper.insertSelective(insertCommentLike);
+            comment.setLikes(comment.getLikes() + 1);
+            commentMapper.updateByPrimaryKeySelective(comment);
+        }
+    }
+
+    public void commentUnlike(CommentLikeBo commentLikeBo) {
+        SysUser sysUser = sysUserMapper.selectByPrimaryKey(commentLikeBo.getUserId());
+        if(Objects.isNull(sysUser)) {
+            throw new RuntimeException("UserId Does Not Exist");
+        }
+        Comment comment = commentMapper.selectByPrimaryKey(commentLikeBo.getCommentId());
+        if(Objects.isNull(comment)) {
+            throw new RuntimeException("CommentId Does Not Exist");
+        }
+        
+        CommentLikeExample example = new CommentLikeExample();
+        example.createCriteria().andUserIdEqualTo(commentLikeBo.getUserId());
+        example.createCriteria().andCommentIdEqualTo(commentLikeBo.getCommentId());
+        CommentLikeKey commentLike = commentLikeMapper.selectOneByExample(example);
+        if(!Objects.isNull(commentLike)) {
+            commentLikeMapper.deleteByPrimaryKey(commentLike);
+            comment.setLikes(comment.getLikes() - 1);
+            commentMapper.updateByPrimaryKeySelective(comment);
+        }
     }
 }
