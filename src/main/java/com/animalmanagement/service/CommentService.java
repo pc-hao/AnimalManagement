@@ -7,10 +7,12 @@ import com.animalmanagement.mapper.*;
 import com.animalmanagement.example.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import org.springframework.stereotype.Service;
 
@@ -19,6 +21,12 @@ public class CommentService {
 
     @Autowired
     CommentMapper commentMapper;
+
+    @Autowired
+    TweetMapper tweetMapper;
+
+    @Autowired
+    SysUserMapper sysUserMapper;
 
     public Map<String, Object> adminGetComments(AdminGetCommentsBo adminGetCommentsBo) {
         List<Comment> commentList = commentMapper.selectByExample(new CommentExample());
@@ -53,5 +61,27 @@ public class CommentService {
         if (comment == null) {
             throw new RuntimeException("CommentId Does Not Exist");
         }
+    }
+
+    public void addComment(AddCommentBo addCommentBo) {
+        SysUser sysUser = sysUserMapper.selectByPrimaryKey(addCommentBo.getUserId());
+        if(Objects.isNull(sysUser)) {
+            throw new RuntimeException("UserId Does Not Exist");
+        }
+        Tweet tweet = tweetMapper.selectByPrimaryKey(addCommentBo.getTweetId());
+        if(Objects.isNull(tweet)) {
+            throw new RuntimeException("TweetId Does Not Exist");
+        }
+        if(addCommentBo.getComment().isEmpty()) {
+            throw new RuntimeException("The Content Is Empty");
+        }
+        Comment insertComment = Comment.builder()
+                                .userId(addCommentBo.getUserId())
+                                .tweetId(addCommentBo.getTweetId())
+                                .time(LocalDateTime.now())
+                                .isHelp(false)
+                                .content(addCommentBo.getComment())
+                                .build();
+        commentMapper.insertSelective(insertComment);
     }
 }
