@@ -66,6 +66,7 @@ public class AdminController {
 
     @PostMapping("/tweet/censor")
     public BaseResponse tweetCensor(@RequestBody TweetCensorBo tweetCensorBo) {
+        tweetService.adminTweetCensor(tweetCensorBo);
         return BaseResponse.builder()
                 .code(StatusEnum.SUCCESS.getCode())
                 .build();
@@ -76,6 +77,14 @@ public class AdminController {
         return BaseResponse.builder()
                 .code(StatusEnum.SUCCESS.getCode())
                 .body(commentService.adminGetComments(adminGetCommentsBo))
+                .build();
+    }
+
+    @PostMapping("/comment/censor")
+    public BaseResponse commentCensor(@RequestBody CommentCensorBo commentCensorBo) {
+        commentService.adminCommentCensor(commentCensorBo);
+        return BaseResponse.builder()
+                .code(StatusEnum.SUCCESS.getCode())
                 .build();
     }
 }
