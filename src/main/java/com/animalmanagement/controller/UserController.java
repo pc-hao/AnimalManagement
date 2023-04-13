@@ -6,9 +6,11 @@ import com.animalmanagement.enums.StatusEnum;
 import com.animalmanagement.service.AccountService;
 import com.animalmanagement.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@PreAuthorize("hasRole('USER')")
 @RequestMapping("/user")
 public class UserController {
     private final static String DEFAULT_PASSWORD = "123456";

@@ -1,12 +1,16 @@
 package com.animalmanagement.service;
 
 import com.animalmanagement.bean.bo.*;
+import com.animalmanagement.bean.vo.TweetContentVo;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import com.animalmanagement.entity.*;
 import com.animalmanagement.mapper.*;
 import com.animalmanagement.example.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.time.LocalTime;
+import java.util.*;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -18,6 +22,15 @@ public class TweetService {
 
     @Autowired
     TweetMapper tweetMapper;
+
+    @Autowired
+    UserService userService;
+
+    @Autowired
+    TweetLikeMapper likeMapper;
+
+    @Autowired
+    StarMapper starMapper;
 
     @Autowired
     SysUserMapper sysUserMapper;
@@ -68,7 +81,7 @@ public class TweetService {
         Integer tweetId = tweetCensorBo.getTweetId();
         checkIdExists(tweetId);
         Tweet tweet = tweetMapper.selectByPrimaryKey(tweetId);
-        if(tweetCensorBo.getOperate() == 0) {
+        if (tweetCensorBo.getOperate() == 0) {
             tweet.setCensored(true);
         } else {
             tweet.setDeleted(true);
@@ -79,6 +92,53 @@ public class TweetService {
         Tweet tweet = tweetMapper.selectByPrimaryKey(tweetId);
         if (tweet == null) {
             throw new RuntimeException("TweetId Does Not Exist");
+        }
+    }
+
+    public TweetContentVo getTweetContent(TweetContentBo tweetContentBo) {
+        UserInfo userInfo = userService.getUserInfoById(tweetContentBo.getUserId());
+        Tweet tweet = getTweetById(tweetContentBo.getTweetId());
+        checkTweetValid(tweet);
+
+        TweetContentVo tweetContentVo = new TweetContentVo();
+        BeanUtils.copyProperties(tweet, tweetContentVo);
+        tweetContentVo.setUsername(userInfo.getUsername());
+        tweetContentVo.setAvatar(userInfo.getAvatar());
+
+        TweetLikeExample likeExample = new TweetLikeExample();
+        likeExample.createCriteria().andUserIdEqualTo(userInfo.getId()).andTweetIdEqualTo(tweet.getId());
+        tweetContentVo.setHasLiked(Objects.nonNull(likeMapper.selectByExample(likeExample)));
+
+        StarExample starExample = new StarExample();
+        starExample.createCriteria().andUserIdEqualTo(userInfo.getId()).andTweetIdEqualTo(tweet.getId());
+        tweetContentVo.setHasStarred(Objects.nonNull(starMapper.selectByExample(starExample)));
+
+        return tweetContentVo;
+    }
+
+    /**
+     * 通过id获取帖子，id不存在直接报错
+     */
+    public Tweet getTweetById(Integer id) {
+        Tweet tweet = tweetMapper.selectByPrimaryKey(id);
+        if (Objects.isNull(tweet)) {
+            throw new RuntimeException("Tweet Id Does Not Exist");
+        }
+        return tweet;
+    }
+
+    /**
+     * 校验帖子是否过审、被删除、发布
+     */
+    private void checkTweetValid(Tweet tweet) {
+        if (!tweet.getCensored()) {
+            throw new RuntimeException("Tweet Is Not Censored");
+        }
+        if (tweet.getDeleted()) {
+            throw new RuntimeException("Tweet Has Deleted");
+        }
+        if (!tweet.getPublished()) {
+            throw new RuntimeException("Tweet Id Does Not Exist");
         }
     }
 
@@ -113,7 +173,7 @@ public class TweetService {
         if(Objects.isNull(tweet)) {
             throw new RuntimeException("TweetId Does Not Exist");
         }
-        
+
         TweetLikeExample example = new TweetLikeExample();
         example.createCriteria().andUserIdEqualTo(tweetLikeBo.getUserId());
         example.createCriteria().andTweetIdEqualTo(tweetLikeBo.getTweetId());
@@ -138,7 +198,7 @@ public class TweetService {
         if(Objects.isNull(tweet)) {
             throw new RuntimeException("TweetId Does Not Exist");
         }
-        
+
         TweetLikeExample example = new TweetLikeExample();
         example.createCriteria().andUserIdEqualTo(tweetLikeBo.getUserId());
         example.createCriteria().andTweetIdEqualTo(tweetLikeBo.getTweetId());
