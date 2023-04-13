@@ -11,6 +11,7 @@
     <result column="views_weekly" jdbcType="INTEGER" property="viewsWeekly" />
     <result column="likes" jdbcType="INTEGER" property="likes" />
     <result column="stars" jdbcType="INTEGER" property="stars" />
+    <result column="comments" jdbcType="INTEGER" property="comments" />
     <result column="is_help" jdbcType="BIT" property="isHelp" />
     <result column="solved" jdbcType="BIT" property="solved" />
     <result column="censored" jdbcType="BIT" property="censored" />
@@ -79,8 +80,8 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, user_id, title, images, `time`, views, views_weekly, likes, stars, is_help, solved, 
-    censored, published, deleted
+    id, user_id, title, images, `time`, views, views_weekly, likes, stars, comments, 
+    is_help, solved, censored, published, deleted
   </sql>
   <sql id="Blob_Column_List">
     content
@@ -137,13 +138,15 @@
     insert into tweet (id, user_id, title, 
       images, `time`, views, 
       views_weekly, likes, stars, 
-      is_help, solved, censored, published, 
-      deleted, content)
+      comments, is_help, solved, censored, 
+      published, deleted, content
+      )
     values (#{id,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{title,jdbcType=VARCHAR}, 
       #{images,jdbcType=VARCHAR}, #{time,jdbcType=TIMESTAMP}, #{views,jdbcType=INTEGER}, 
       #{viewsWeekly,jdbcType=INTEGER}, #{likes,jdbcType=INTEGER}, #{stars,jdbcType=INTEGER}, 
-      #{isHelp,jdbcType=BIT}, #{solved,jdbcType=BIT}, #{censored,jdbcType=BIT}, #{published,jdbcType=BIT}, 
-      #{deleted,jdbcType=BIT}, #{content,jdbcType=LONGVARCHAR})
+      #{comments,jdbcType=INTEGER}, #{isHelp,jdbcType=BIT}, #{solved,jdbcType=BIT}, #{censored,jdbcType=BIT}, 
+      #{published,jdbcType=BIT}, #{deleted,jdbcType=BIT}, #{content,jdbcType=LONGVARCHAR}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.animalmanagement.entity.Tweet">
     insert into tweet
@@ -174,6 +177,9 @@
       </if>
       <if test="stars != null">
         stars,
+      </if>
+      <if test="comments != null">
+        comments,
       </if>
       <if test="isHelp != null">
         is_help,
@@ -221,6 +227,9 @@
       </if>
       <if test="stars != null">
         #{stars,jdbcType=INTEGER},
+      </if>
+      <if test="comments != null">
+        #{comments,jdbcType=INTEGER},
       </if>
       <if test="isHelp != null">
         #{isHelp,jdbcType=BIT},
@@ -278,6 +287,9 @@
       <if test="record.stars != null">
         stars = #{record.stars,jdbcType=INTEGER},
       </if>
+      <if test="record.comments != null">
+        comments = #{record.comments,jdbcType=INTEGER},
+      </if>
       <if test="record.isHelp != null">
         is_help = #{record.isHelp,jdbcType=BIT},
       </if>
@@ -312,6 +324,7 @@
       views_weekly = #{record.viewsWeekly,jdbcType=INTEGER},
       likes = #{record.likes,jdbcType=INTEGER},
       stars = #{record.stars,jdbcType=INTEGER},
+      comments = #{record.comments,jdbcType=INTEGER},
       is_help = #{record.isHelp,jdbcType=BIT},
       solved = #{record.solved,jdbcType=BIT},
       censored = #{record.censored,jdbcType=BIT},
@@ -333,6 +346,7 @@
       views_weekly = #{record.viewsWeekly,jdbcType=INTEGER},
       likes = #{record.likes,jdbcType=INTEGER},
       stars = #{record.stars,jdbcType=INTEGER},
+      comments = #{record.comments,jdbcType=INTEGER},
       is_help = #{record.isHelp,jdbcType=BIT},
       solved = #{record.solved,jdbcType=BIT},
       censored = #{record.censored,jdbcType=BIT},
@@ -369,6 +383,9 @@
       <if test="stars != null">
         stars = #{stars,jdbcType=INTEGER},
       </if>
+      <if test="comments != null">
+        comments = #{comments,jdbcType=INTEGER},
+      </if>
       <if test="isHelp != null">
         is_help = #{isHelp,jdbcType=BIT},
       </if>
@@ -400,6 +417,7 @@
       views_weekly = #{viewsWeekly,jdbcType=INTEGER},
       likes = #{likes,jdbcType=INTEGER},
       stars = #{stars,jdbcType=INTEGER},
+      comments = #{comments,jdbcType=INTEGER},
       is_help = #{isHelp,jdbcType=BIT},
       solved = #{solved,jdbcType=BIT},
       censored = #{censored,jdbcType=BIT},
@@ -418,6 +436,7 @@
       views_weekly = #{viewsWeekly,jdbcType=INTEGER},
       likes = #{likes,jdbcType=INTEGER},
       stars = #{stars,jdbcType=INTEGER},
+      comments = #{comments,jdbcType=INTEGER},
       is_help = #{isHelp,jdbcType=BIT},
       solved = #{solved,jdbcType=BIT},
       censored = #{censored,jdbcType=BIT},
