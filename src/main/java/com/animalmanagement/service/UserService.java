@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
@@ -364,5 +365,11 @@ public class UserService {
         if (!Objects.equals(sysUser.getId(), another.getId())) {
             throw new RuntimeException("Username Already Exists");
         }
+    }
+
+    public Map<Integer, UserInfo> getUserInfoByIdList(List<Integer> idList) {
+        UserInfoExample userInfoExample = new UserInfoExample();
+        userInfoExample.createCriteria().andIdIn(idList);
+        return userInfoMapper.selectByExample(userInfoExample).stream().collect(Collectors.toMap(UserInfo::getId, Function.identity()));
     }
 }
