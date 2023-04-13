@@ -74,4 +74,26 @@ public class TweetService {
             throw new RuntimeException("TweetId Does Not Exist");
         }
     }
+
+    public Map<String, Object> getTweets(GetTweetsBo getTweetsBo) {
+        int pageSize = 8;
+
+        List<Tweet> tweetList = tweetMapper.selectByExample(new TweetExample());
+
+        Map<String, Object> map = new HashMap<>();
+
+        if(getTweetsBo.getType().equals("时间")) {
+            tweetList.sort(Comparator.comparing(Tweet::getTime));
+        } else {
+            tweetList.sort(Comparator.comparing(Tweet::getViewsWeekly));
+        }
+        int start = (getTweetsBo.getCommentpage() - 1) * pageSize;
+        if (start >= tweetList.size()) {
+            map.put("users", null);
+        } else {
+            int end = Math.min(start + getTweetsBo.getCommentpage(), pageSize);
+            map.put("users", tweetList.subList(start, end));
+        }
+        return map;
+    }
 }

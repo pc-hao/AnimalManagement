@@ -20,11 +20,22 @@ public class TweetController {
     @Autowired
     CommentService commentService;
 
+    @Autowired
+    TweetService tweetService;
+
     @PostMapping("/addComment")
     public BaseResponse addComment(@RequestBody AddCommentBo addCommentBo) {
         commentService.addComment(addCommentBo);
         return BaseResponse.builder()
                 .code(StatusEnum.SUCCESS.getCode())
+                .build();
+    }
+
+    @PostMapping("/get")
+    public BaseResponse getTweets(@RequestBody GetTweetsBo getTweetsBo) {
+        return BaseResponse.builder()
+                .code(StatusEnum.SUCCESS.getCode())
+                .body(tweetService.getTweets(getTweetsBo))
                 .build();
     }
 }
