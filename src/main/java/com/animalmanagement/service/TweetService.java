@@ -11,6 +11,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalTime;
 import java.util.*;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 @Service
 public class TweetService {
@@ -26,6 +31,12 @@ public class TweetService {
 
     @Autowired
     StarMapper starMapper;
+
+    @Autowired
+    SysUserMapper sysUserMapper;
+
+    @Autowired
+    TweetLikeMapper tweetLikeMapper;
 
     public Map<String, Object> adminGetTweets(AdminGetTweetsBo adminGetTweetsBo) {
         List<Tweet> tweetList = tweetMapper.selectByExample(new TweetExample());
@@ -128,6 +139,74 @@ public class TweetService {
         }
         if (!tweet.getPublished()) {
             throw new RuntimeException("Tweet Id Does Not Exist");
+        }
+    }
+
+    public Map<String, Object> getTweets(GetTweetsBo getTweetsBo) {
+        int pageSize = 8;
+
+        List<Tweet> tweetList = tweetMapper.selectByExample(new TweetExample());
+
+        Map<String, Object> map = new HashMap<>();
+
+        if(getTweetsBo.getType().equals("时间")) {
+            tweetList.sort(Comparator.comparing(Tweet::getTime));
+        } else {
+            tweetList.sort(Comparator.comparing(Tweet::getViewsWeekly));
+        }
+        int start = (getTweetsBo.getCommentpage() - 1) * pageSize;
+        if (start >= tweetList.size()) {
+            map.put("users", null);
+        } else {
+            int end = Math.min(start + getTweetsBo.getCommentpage(), pageSize);
+            map.put("users", tweetList.subList(start, end));
+        }
+        return map;
+    }
+
+    public void tweetLike(TweetLikeBo tweetLikeBo) {
+        SysUser sysUser = sysUserMapper.selectByPrimaryKey(tweetLikeBo.getUserId());
+        if(Objects.isNull(sysUser)) {
+            throw new RuntimeException("UserId Does Not Exist");
+        }
+        Tweet tweet = tweetMapper.selectByPrimaryKey(tweetLikeBo.getTweetId());
+        if(Objects.isNull(tweet)) {
+            throw new RuntimeException("TweetId Does Not Exist");
+        }
+
+        TweetLikeExample example = new TweetLikeExample();
+        example.createCriteria().andUserIdEqualTo(tweetLikeBo.getUserId());
+        example.createCriteria().andTweetIdEqualTo(tweetLikeBo.getTweetId());
+        TweetLikeKey tweetLike = tweetLikeMapper.selectOneByExample(example);
+        if(Objects.isNull(tweetLike)) {
+            TweetLikeKey insertTweetLike =  TweetLikeKey.builder()
+                                            .userId(tweetLikeBo.getUserId())
+                                            .tweetId(tweetLikeBo.getTweetId())
+                                            .build();
+            tweetLikeMapper.insertSelective(insertTweetLike);
+            tweet.setLikes(tweet.getLikes() + 1);
+            tweetMapper.updateByPrimaryKeySelective(tweet);
+        }
+    }
+
+    public void tweetUnlike(TweetLikeBo tweetLikeBo) {
+        SysUser sysUser = sysUserMapper.selectByPrimaryKey(tweetLikeBo.getUserId());
+        if(Objects.isNull(sysUser)) {
+            throw new RuntimeException("UserId Does Not Exist");
+        }
+        Tweet tweet = tweetMapper.selectByPrimaryKey(tweetLikeBo.getTweetId());
+        if(Objects.isNull(tweet)) {
+            throw new RuntimeException("TweetId Does Not Exist");
+        }
+
+        TweetLikeExample example = new TweetLikeExample();
+        example.createCriteria().andUserIdEqualTo(tweetLikeBo.getUserId());
+        example.createCriteria().andTweetIdEqualTo(tweetLikeBo.getTweetId());
+        TweetLikeKey tweetLike = tweetLikeMapper.selectOneByExample(example);
+        if(!Objects.isNull(tweetLike)) {
+            tweetLikeMapper.deleteByPrimaryKey(tweetLike);
+            tweet.setLikes(tweet.getLikes() - 1);
+            tweetMapper.updateByPrimaryKeySelective(tweet);
         }
     }
 }

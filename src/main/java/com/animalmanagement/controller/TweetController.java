@@ -7,6 +7,7 @@ import com.animalmanagement.service.AccountService;
 import com.animalmanagement.service.CommentService;
 import com.animalmanagement.service.TweetService;
 import com.animalmanagement.service.UserService;
+import com.animalmanagement.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -43,6 +44,35 @@ public class TweetController {
         return BaseResponse.builder()
                 .code(StatusEnum.SUCCESS.getCode())
                 .body(commentService.getComments(getCommentsBo))
+                .build();
+    }
+    @Autowired
+    CommentService commentService;
+
+    @Autowired
+    TweetService tweetService;
+
+    @PostMapping("/addComment")
+    public BaseResponse addComment(@RequestBody AddCommentBo addCommentBo) {
+        commentService.addComment(addCommentBo);
+        return BaseResponse.builder()
+                .code(StatusEnum.SUCCESS.getCode())
+                .build();
+    }
+
+    @PostMapping("/get")
+    public BaseResponse getTweets(@RequestBody GetTweetsBo getTweetsBo) {
+        return BaseResponse.builder()
+                .code(StatusEnum.SUCCESS.getCode())
+                .body(tweetService.getTweets(getTweetsBo))
+                .build();
+    }
+
+    @PostMapping("/like")
+    public BaseResponse like(@RequestBody GetTweetsBo getTweetsBo) {
+
+        return BaseResponse.builder()
+                .code(StatusEnum.SUCCESS.getCode())
                 .build();
     }
 }

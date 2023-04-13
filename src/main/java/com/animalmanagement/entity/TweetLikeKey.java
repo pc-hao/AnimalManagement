@@ -2,6 +2,9 @@ package com.animalmanagement.entity;
 
 import java.io.Serializable;
 
+import lombok.Builder;
+
+@Builder
 public class TweetLikeKey implements Serializable {
     private Integer userId;
 
