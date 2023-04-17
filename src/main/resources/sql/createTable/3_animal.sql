@@ -4,5 +4,6 @@ CREATE TABLE `animal`
     `name`      varchar(32)     NOT NULL UNIQUE,
     `intro`     varchar(256)    NOT NULL,
     `adopted`   boolean         NOT NULL,
+    `avatar`    varchar(64),
     PRIMARY KEY (`id`)
 );
