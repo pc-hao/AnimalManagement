@@ -85,6 +85,7 @@ public class CommentService {
         if(addCommentBo.getComment().isEmpty()) {
             throw new RuntimeException("The Content Is Empty");
         }
+
         Comment insertComment = Comment.builder()
                                 .userId(addCommentBo.getUserId())
                                 .tweetId(addCommentBo.getTweetId())
@@ -93,6 +94,9 @@ public class CommentService {
                                 .content(addCommentBo.getComment())
                                 .build();
         commentMapper.insertSelective(insertComment);
+
+        tweet.setComments(tweet.getComments() + 1);
+        tweetMapper.updateByPrimaryKeySelective(tweet);
     }
 
     public void commentLike(CommentLikeBo commentLikeBo) {

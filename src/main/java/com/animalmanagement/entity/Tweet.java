@@ -3,6 +3,9 @@ package com.animalmanagement.entity;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
+import lombok.Builder;
+
+@Builder
 public class Tweet implements Serializable {
     private Integer id;
 
@@ -21,6 +24,8 @@ public class Tweet implements Serializable {
     private Integer likes;
 
     private Integer stars;
+
+    private Integer comments;
 
     private Boolean isHelp;
 
@@ -108,6 +113,14 @@ public class Tweet implements Serializable {
         this.stars = stars;
     }
 
+    public Integer getComments() {
+        return comments;
+    }
+
+    public void setComments(Integer comments) {
+        this.comments = comments;
+    }
+
     public Boolean getIsHelp() {
         return isHelp;
     }
@@ -173,6 +186,7 @@ public class Tweet implements Serializable {
         viewsWeekly("views_weekly"),
         likes("likes"),
         stars("stars"),
+        comments("comments"),
         isHelp("is_help"),
         solved("solved"),
         censored("censored"),
