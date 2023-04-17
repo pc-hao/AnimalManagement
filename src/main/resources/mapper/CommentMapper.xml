@@ -8,7 +8,7 @@
     <result column="time" jdbcType="TIMESTAMP" property="time" />
     <result column="likes" jdbcType="INTEGER" property="likes" />
     <result column="is_help" jdbcType="BIT" property="isHelp" />
-    <result column="censored" jdbcType="BIT" property="censored" />
+    <result column="censored" jdbcType="INTEGER" property="censored" />
     <result column="deleted" jdbcType="BIT" property="deleted" />
   </resultMap>
   <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.animalmanagement.entity.Comment">
@@ -133,7 +133,7 @@
       )
     values (#{id,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{tweetId,jdbcType=INTEGER}, 
       #{time,jdbcType=TIMESTAMP}, #{likes,jdbcType=INTEGER}, #{isHelp,jdbcType=BIT}, 
-      #{censored,jdbcType=BIT}, #{deleted,jdbcType=BIT}, #{content,jdbcType=LONGVARCHAR}
+      #{censored,jdbcType=INTEGER}, #{deleted,jdbcType=BIT}, #{content,jdbcType=LONGVARCHAR}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.animalmanagement.entity.Comment">
@@ -187,7 +187,7 @@
         #{isHelp,jdbcType=BIT},
       </if>
       <if test="censored != null">
-        #{censored,jdbcType=BIT},
+        #{censored,jdbcType=INTEGER},
       </if>
       <if test="deleted != null">
         #{deleted,jdbcType=BIT},
@@ -225,7 +225,7 @@
         is_help = #{record.isHelp,jdbcType=BIT},
       </if>
       <if test="record.censored != null">
-        censored = #{record.censored,jdbcType=BIT},
+        censored = #{record.censored,jdbcType=INTEGER},
       </if>
       <if test="record.deleted != null">
         deleted = #{record.deleted,jdbcType=BIT},
@@ -246,7 +246,7 @@
       `time` = #{record.time,jdbcType=TIMESTAMP},
       likes = #{record.likes,jdbcType=INTEGER},
       is_help = #{record.isHelp,jdbcType=BIT},
-      censored = #{record.censored,jdbcType=BIT},
+      censored = #{record.censored,jdbcType=INTEGER},
       deleted = #{record.deleted,jdbcType=BIT},
       content = #{record.content,jdbcType=LONGVARCHAR}
     <if test="_parameter != null">
@@ -261,7 +261,7 @@
       `time` = #{record.time,jdbcType=TIMESTAMP},
       likes = #{record.likes,jdbcType=INTEGER},
       is_help = #{record.isHelp,jdbcType=BIT},
-      censored = #{record.censored,jdbcType=BIT},
+      censored = #{record.censored,jdbcType=INTEGER},
       deleted = #{record.deleted,jdbcType=BIT}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -286,7 +286,7 @@
         is_help = #{isHelp,jdbcType=BIT},
       </if>
       <if test="censored != null">
-        censored = #{censored,jdbcType=BIT},
+        censored = #{censored,jdbcType=INTEGER},
       </if>
       <if test="deleted != null">
         deleted = #{deleted,jdbcType=BIT},
@@ -304,7 +304,7 @@
       `time` = #{time,jdbcType=TIMESTAMP},
       likes = #{likes,jdbcType=INTEGER},
       is_help = #{isHelp,jdbcType=BIT},
-      censored = #{censored,jdbcType=BIT},
+      censored = #{censored,jdbcType=INTEGER},
       deleted = #{deleted,jdbcType=BIT},
       content = #{content,jdbcType=LONGVARCHAR}
     where id = #{id,jdbcType=INTEGER}
@@ -316,7 +316,7 @@
       `time` = #{time,jdbcType=TIMESTAMP},
       likes = #{likes,jdbcType=INTEGER},
       is_help = #{isHelp,jdbcType=BIT},
-      censored = #{censored,jdbcType=BIT},
+      censored = #{censored,jdbcType=INTEGER},
       deleted = #{deleted,jdbcType=BIT}
     where id = #{id,jdbcType=INTEGER}
   </update>

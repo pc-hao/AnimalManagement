@@ -14,7 +14,7 @@
     <result column="comments" jdbcType="INTEGER" property="comments" />
     <result column="is_help" jdbcType="BIT" property="isHelp" />
     <result column="solved" jdbcType="BIT" property="solved" />
-    <result column="censored" jdbcType="BIT" property="censored" />
+    <result column="censored" jdbcType="INTEGER" property="censored" />
     <result column="published" jdbcType="BIT" property="published" />
     <result column="deleted" jdbcType="BIT" property="deleted" />
   </resultMap>
@@ -144,7 +144,7 @@
     values (#{id,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{title,jdbcType=VARCHAR}, 
       #{images,jdbcType=VARCHAR}, #{time,jdbcType=TIMESTAMP}, #{views,jdbcType=INTEGER}, 
       #{viewsWeekly,jdbcType=INTEGER}, #{likes,jdbcType=INTEGER}, #{stars,jdbcType=INTEGER}, 
-      #{comments,jdbcType=INTEGER}, #{isHelp,jdbcType=BIT}, #{solved,jdbcType=BIT}, #{censored,jdbcType=BIT}, 
+      #{comments,jdbcType=INTEGER}, #{isHelp,jdbcType=BIT}, #{solved,jdbcType=BIT}, #{censored,jdbcType=INTEGER}, 
       #{published,jdbcType=BIT}, #{deleted,jdbcType=BIT}, #{content,jdbcType=LONGVARCHAR}
       )
   </insert>
@@ -238,7 +238,7 @@
         #{solved,jdbcType=BIT},
       </if>
       <if test="censored != null">
-        #{censored,jdbcType=BIT},
+        #{censored,jdbcType=INTEGER},
       </if>
       <if test="published != null">
         #{published,jdbcType=BIT},
@@ -297,7 +297,7 @@
         solved = #{record.solved,jdbcType=BIT},
       </if>
       <if test="record.censored != null">
-        censored = #{record.censored,jdbcType=BIT},
+        censored = #{record.censored,jdbcType=INTEGER},
       </if>
       <if test="record.published != null">
         published = #{record.published,jdbcType=BIT},
@@ -327,7 +327,7 @@
       comments = #{record.comments,jdbcType=INTEGER},
       is_help = #{record.isHelp,jdbcType=BIT},
       solved = #{record.solved,jdbcType=BIT},
-      censored = #{record.censored,jdbcType=BIT},
+      censored = #{record.censored,jdbcType=INTEGER},
       published = #{record.published,jdbcType=BIT},
       deleted = #{record.deleted,jdbcType=BIT},
       content = #{record.content,jdbcType=LONGVARCHAR}
@@ -349,7 +349,7 @@
       comments = #{record.comments,jdbcType=INTEGER},
       is_help = #{record.isHelp,jdbcType=BIT},
       solved = #{record.solved,jdbcType=BIT},
-      censored = #{record.censored,jdbcType=BIT},
+      censored = #{record.censored,jdbcType=INTEGER},
       published = #{record.published,jdbcType=BIT},
       deleted = #{record.deleted,jdbcType=BIT}
     <if test="_parameter != null">
@@ -393,7 +393,7 @@
         solved = #{solved,jdbcType=BIT},
       </if>
       <if test="censored != null">
-        censored = #{censored,jdbcType=BIT},
+        censored = #{censored,jdbcType=INTEGER},
       </if>
       <if test="published != null">
         published = #{published,jdbcType=BIT},
@@ -420,7 +420,7 @@
       comments = #{comments,jdbcType=INTEGER},
       is_help = #{isHelp,jdbcType=BIT},
       solved = #{solved,jdbcType=BIT},
-      censored = #{censored,jdbcType=BIT},
+      censored = #{censored,jdbcType=INTEGER},
       published = #{published,jdbcType=BIT},
       deleted = #{deleted,jdbcType=BIT},
       content = #{content,jdbcType=LONGVARCHAR}
@@ -439,7 +439,7 @@
       comments = #{comments,jdbcType=INTEGER},
       is_help = #{isHelp,jdbcType=BIT},
       solved = #{solved,jdbcType=BIT},
-      censored = #{censored,jdbcType=BIT},
+      censored = #{censored,jdbcType=INTEGER},
       published = #{published,jdbcType=BIT},
       deleted = #{deleted,jdbcType=BIT}
     where id = #{id,jdbcType=INTEGER}

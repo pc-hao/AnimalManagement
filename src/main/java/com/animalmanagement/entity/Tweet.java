@@ -3,9 +3,6 @@ package com.animalmanagement.entity;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
-import lombok.Builder;
-
-@Builder
 public class Tweet implements Serializable {
     private Integer id;
 
@@ -31,7 +28,7 @@ public class Tweet implements Serializable {
 
     private Boolean solved;
 
-    private Boolean censored;
+    private Integer censored;
 
     private Boolean published;
 
@@ -137,11 +134,11 @@ public class Tweet implements Serializable {
         this.solved = solved;
     }
 
-    public Boolean getCensored() {
+    public Integer getCensored() {
         return censored;
     }
 
-    public void setCensored(Boolean censored) {
+    public void setCensored(Integer censored) {
         this.censored = censored;
     }
 

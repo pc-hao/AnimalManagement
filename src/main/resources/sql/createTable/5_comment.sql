@@ -7,7 +7,7 @@ CREATE TABLE `comment`
     `time`     datetime NOT NULL,
     `likes`    int(32)  NOT NULL DEFAULT 0,
     `is_help`  boolean  NOT NULL,
-    `censored` boolean  NOT NULL DEFAULT FALSE, 
+    `censored` int(32)  NOT NULL DEFAULT 0,
     `deleted`  boolean  NOT NULL DEFAULT FALSE,
     PRIMARY KEY (`id`),
     FOREIGN KEY (`user_id`) REFERENCES `sys_user` (`id`),

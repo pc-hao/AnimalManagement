@@ -13,7 +13,7 @@ CREATE TABLE `tweet`
     `comments`     int(32)  NOT NULL DEFAULT 0,
     `is_help`      boolean  NOT NULL,
     `solved`       boolean  NOT NULL DEFAULT FALSE,
-    `censored`     boolean  NOT NULL DEFAULT FALSE,
+    `censored`     int(32)  NOT NULL DEFAULT 0,
     `published`    boolean  NOT NULL DEFAULT FALSE,
     `deleted`      boolean  NOT NULL DEFAULT FALSE,
     PRIMARY KEY (`id`),
