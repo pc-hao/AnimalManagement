@@ -475,52 +475,52 @@ public class CommentExample {
             return (Criteria) this;
         }
 
-        public Criteria andCensoredEqualTo(Boolean value) {
+        public Criteria andCensoredEqualTo(Integer value) {
             addCriterion("censored =", value, "censored");
             return (Criteria) this;
         }
 
-        public Criteria andCensoredNotEqualTo(Boolean value) {
+        public Criteria andCensoredNotEqualTo(Integer value) {
             addCriterion("censored <>", value, "censored");
             return (Criteria) this;
         }
 
-        public Criteria andCensoredGreaterThan(Boolean value) {
+        public Criteria andCensoredGreaterThan(Integer value) {
             addCriterion("censored >", value, "censored");
             return (Criteria) this;
         }
 
-        public Criteria andCensoredGreaterThanOrEqualTo(Boolean value) {
+        public Criteria andCensoredGreaterThanOrEqualTo(Integer value) {
             addCriterion("censored >=", value, "censored");
             return (Criteria) this;
         }
 
-        public Criteria andCensoredLessThan(Boolean value) {
+        public Criteria andCensoredLessThan(Integer value) {
             addCriterion("censored <", value, "censored");
             return (Criteria) this;
         }
 
-        public Criteria andCensoredLessThanOrEqualTo(Boolean value) {
+        public Criteria andCensoredLessThanOrEqualTo(Integer value) {
             addCriterion("censored <=", value, "censored");
             return (Criteria) this;
         }
 
-        public Criteria andCensoredIn(List<Boolean> values) {
+        public Criteria andCensoredIn(List<Integer> values) {
             addCriterion("censored in", values, "censored");
             return (Criteria) this;
         }
 
-        public Criteria andCensoredNotIn(List<Boolean> values) {
+        public Criteria andCensoredNotIn(List<Integer> values) {
             addCriterion("censored not in", values, "censored");
             return (Criteria) this;
         }
 
-        public Criteria andCensoredBetween(Boolean value1, Boolean value2) {
+        public Criteria andCensoredBetween(Integer value1, Integer value2) {
             addCriterion("censored between", value1, value2, "censored");
             return (Criteria) this;
         }
 
-        public Criteria andCensoredNotBetween(Boolean value1, Boolean value2) {
+        public Criteria andCensoredNotBetween(Integer value1, Integer value2) {
             addCriterion("censored not between", value1, value2, "censored");
             return (Criteria) this;
         }

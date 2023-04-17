@@ -117,6 +117,7 @@ public class UserService {
         if (!modifyUserInfoBo.getUsername().isEmpty()) {
             checkUsername(modifyUserInfoBo.getUsername());
             sysUser.setUsername(modifyUserInfoBo.getUsername());
+            userInfo.setUsername(modifyUserInfoBo.getUsername());
         }
         if (!modifyUserInfoBo.getPassword().isEmpty()) {
             checkPassword(modifyUserInfoBo.getPassword(), modifyUserInfoBo.getPasswordConfirm());

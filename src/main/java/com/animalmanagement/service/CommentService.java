@@ -2,6 +2,7 @@ package com.animalmanagement.service;
 
 import com.animalmanagement.bean.bo.*;
 import com.animalmanagement.bean.vo.CommentVo;
+import com.animalmanagement.enums.CensorStatusEnum;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import com.animalmanagement.entity.*;
@@ -47,10 +48,10 @@ public class CommentService {
         commentList.sort(Comparator.comparing(Comment::getTime));
         int start = (adminGetCommentsBo.getPage() - 1) * adminGetCommentsBo.getPageNum();
         if (start >= commentList.size()) {
-            map.put("users", null);
+            map.put("comments", null);
         } else {
             int end = Math.min(start + adminGetCommentsBo.getPageNum(), commentList.size());
-            map.put("users", commentList.subList(start, end));
+            map.put("comments", commentList.subList(start, end));
         }
         return map;
     }
@@ -60,10 +61,11 @@ public class CommentService {
         checkIdExists(commentId);
         Comment comment = commentMapper.selectByPrimaryKey(commentId);
         if (commentCensorBo.getOperate() == 0) {
-            comment.setCensored(true);
+            comment.setCensored(CensorStatusEnum.PASS.getCode());
         } else {
-            comment.setDeleted(true);
+            comment.setCensored(CensorStatusEnum.REJECT.getCode());
         }
+        commentMapper.updateByPrimaryKeySelective(comment);
     }
 
     public void checkIdExists(Integer commentId) {
@@ -75,24 +77,24 @@ public class CommentService {
 
     public void addComment(AddCommentBo addCommentBo) {
         SysUser sysUser = sysUserMapper.selectByPrimaryKey(addCommentBo.getUserId());
-        if(Objects.isNull(sysUser)) {
+        if (Objects.isNull(sysUser)) {
             throw new RuntimeException("UserId Does Not Exist");
         }
         Tweet tweet = tweetMapper.selectByPrimaryKey(addCommentBo.getTweetId());
-        if(Objects.isNull(tweet)) {
+        if (Objects.isNull(tweet)) {
             throw new RuntimeException("TweetId Does Not Exist");
         }
-        if(addCommentBo.getComment().isEmpty()) {
+        if (addCommentBo.getComment().isEmpty()) {
             throw new RuntimeException("The Content Is Empty");
         }
 
         Comment insertComment = Comment.builder()
-                                .userId(addCommentBo.getUserId())
-                                .tweetId(addCommentBo.getTweetId())
-                                .time(LocalDateTime.now())
-                                .isHelp(false)
-                                .content(addCommentBo.getComment())
-                                .build();
+                .userId(addCommentBo.getUserId())
+                .tweetId(addCommentBo.getTweetId())
+                .time(LocalDateTime.now())
+                .isHelp(false)
+                .content(addCommentBo.getComment())
+                .build();
         commentMapper.insertSelective(insertComment);
 
         tweet.setComments(tweet.getComments() + 1);
@@ -101,11 +103,11 @@ public class CommentService {
 
     public void commentLike(CommentLikeBo commentLikeBo) {
         SysUser sysUser = sysUserMapper.selectByPrimaryKey(commentLikeBo.getUserId());
-        if(Objects.isNull(sysUser)) {
+        if (Objects.isNull(sysUser)) {
             throw new RuntimeException("UserId Does Not Exist");
         }
         Comment comment = commentMapper.selectByPrimaryKey(commentLikeBo.getCommentId());
-        if(Objects.isNull(comment)) {
+        if (Objects.isNull(comment)) {
             throw new RuntimeException("CommentId Does Not Exist");
         }
 
@@ -113,11 +115,11 @@ public class CommentService {
         example.createCriteria().andUserIdEqualTo(commentLikeBo.getUserId());
         example.createCriteria().andCommentIdEqualTo(commentLikeBo.getCommentId());
         CommentLikeKey commentLike = commentLikeMapper.selectOneByExample(example);
-        if(Objects.isNull(commentLike)) {
-            CommentLikeKey insertCommentLike =  CommentLikeKey.builder()
-                                            .userId(commentLikeBo.getUserId())
-                                            .commentId(commentLikeBo.getCommentId())
-                                            .build();
+        if (Objects.isNull(commentLike)) {
+            CommentLikeKey insertCommentLike = CommentLikeKey.builder()
+                    .userId(commentLikeBo.getUserId())
+                    .commentId(commentLikeBo.getCommentId())
+                    .build();
             commentLikeMapper.insertSelective(insertCommentLike);
             comment.setLikes(comment.getLikes() + 1);
             commentMapper.updateByPrimaryKeySelective(comment);
@@ -126,11 +128,11 @@ public class CommentService {
 
     public void commentUnlike(CommentLikeBo commentLikeBo) {
         SysUser sysUser = sysUserMapper.selectByPrimaryKey(commentLikeBo.getUserId());
-        if(Objects.isNull(sysUser)) {
+        if (Objects.isNull(sysUser)) {
             throw new RuntimeException("UserId Does Not Exist");
         }
         Comment comment = commentMapper.selectByPrimaryKey(commentLikeBo.getCommentId());
-        if(Objects.isNull(comment)) {
+        if (Objects.isNull(comment)) {
             throw new RuntimeException("CommentId Does Not Exist");
         }
 
@@ -138,7 +140,7 @@ public class CommentService {
         example.createCriteria().andUserIdEqualTo(commentLikeBo.getUserId());
         example.createCriteria().andCommentIdEqualTo(commentLikeBo.getCommentId());
         CommentLikeKey commentLike = commentLikeMapper.selectOneByExample(example);
-        if(!Objects.isNull(commentLike)) {
+        if (!Objects.isNull(commentLike)) {
             commentLikeMapper.deleteByPrimaryKey(commentLike);
             comment.setLikes(comment.getLikes() - 1);
             commentMapper.updateByPrimaryKeySelective(comment);
@@ -181,6 +183,6 @@ public class CommentService {
      * 校验帖子是否过审、被删除
      */
     private boolean checkCommentValid(Comment comment) {
-        return comment.getCensored() && !comment.getDeleted();
+        return Objects.equals(comment.getCensored(), CensorStatusEnum.PASS.getCode()) && !comment.getDeleted();
     }
 }

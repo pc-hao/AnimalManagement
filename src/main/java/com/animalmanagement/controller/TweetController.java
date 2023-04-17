@@ -46,11 +46,7 @@ public class TweetController {
                 .body(commentService.getComments(getCommentsBo))
                 .build();
     }
-    @Autowired
-    CommentService commentService;
 
-    @Autowired
-    TweetService tweetService;
 
     @PostMapping("/addComment")
     public BaseResponse addComment(@RequestBody AddCommentBo addCommentBo) {

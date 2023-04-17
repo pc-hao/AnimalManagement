@@ -53,12 +53,12 @@ drop table if exists  userInfo;
 CREATE TABLE `userInfo`
 (
     `id`       int(32)     NOT NULL,
-    `username` varchar(32) NOT NULL,
+    `username` varchar(32) NOT NULL UNIQUE,
     `email`    varchar(64) NOT NULL UNIQUE,
     `phone`    varchar(12),
     `bio`      varchar(64),
     `avatar`   varchar(64),
-    `blacked`  boolean,
+    `blacked`  boolean NOT NULL DEFAULT false,
     PRIMARY KEY (`id`),
     FOREIGN KEY (`id`) REFERENCES `sys_user` (`id`)
 );
@@ -92,7 +92,7 @@ CREATE TABLE `tweet`
     `comments`     int(32)  NOT NULL DEFAULT 0,
     `is_help`      boolean  NOT NULL,
     `solved`       boolean  NOT NULL DEFAULT FALSE,
-    `censored`     boolean  NOT NULL DEFAULT FALSE,
+    `censored`     int(32)  NOT NULL DEFAULT 0,
     `published`    boolean  NOT NULL DEFAULT FALSE,
     `deleted`      boolean  NOT NULL DEFAULT FALSE,
     PRIMARY KEY (`id`),
@@ -110,7 +110,7 @@ CREATE TABLE `comment`
     `time`     datetime NOT NULL,
     `likes`    int(32)  NOT NULL DEFAULT 0,
     `is_help`  boolean  NOT NULL,
-    `censored` boolean  NOT NULL DEFAULT FALSE, 
+    `censored` int(32)  NOT NULL DEFAULT 0,
     `deleted`  boolean  NOT NULL DEFAULT FALSE,
     PRIMARY KEY (`id`),
     FOREIGN KEY (`user_id`) REFERENCES `sys_user` (`id`),

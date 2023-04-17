@@ -1,9 +1,9 @@
 package com.animalmanagement.entity;
 
+import lombok.Builder;
+
 import java.io.Serializable;
 import java.time.LocalDateTime;
-
-import lombok.Builder;
 
 @Builder
 public class Comment implements Serializable {
@@ -19,7 +19,7 @@ public class Comment implements Serializable {
 
     private Boolean isHelp;
 
-    private Boolean censored;
+    private Integer censored;
 
     private Boolean deleted;
 
@@ -75,11 +75,11 @@ public class Comment implements Serializable {
         this.isHelp = isHelp;
     }
 
-    public Boolean getCensored() {
+    public Integer getCensored() {
         return censored;
     }
 
-    public void setCensored(Boolean censored) {
+    public void setCensored(Integer censored) {
         this.censored = censored;
     }
 
