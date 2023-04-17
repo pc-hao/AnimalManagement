@@ -1,3 +1,8 @@
+DROP DATABASE animalmanagement;
+CREATE DATABASE animalmanagement;
+USE animalmanagement;
+
+
 DROP TABLE IF EXISTS `sys_user`;
 
 CREATE TABLE `sys_user`
@@ -70,10 +75,11 @@ VALUES (3, 'user', '20000001@buaa.edu.cn', "15000000001", "This is a bio", "path
 
 CREATE TABLE `animal`
 (
-    `id`      int(32)      NOT NULL AUTO_INCREMENT,
-    `name`    varchar(32)  NOT NULL UNIQUE,
-    `intro`   varchar(256) NOT NULL,
-    `adopted` boolean      NOT NULL,
+    `id`        int(32)         NOT NULL AUTO_INCREMENT,
+    `name`      varchar(32)     NOT NULL UNIQUE,
+    `intro`     varchar(256)    NOT NULL,
+    `adopted`   boolean         NOT NULL,
+    `avatar`    varchar(64),
     PRIMARY KEY (`id`)
 );
 
@@ -99,7 +105,7 @@ CREATE TABLE `tweet`
     FOREIGN KEY (`user_id`) REFERENCES `sys_user` (`id`)
 );
 
-
+insert into tweet (user_id,title,`time`,content,is_help) values (3, "hhhh", now(),"这是一个帖子",false);
 
 CREATE TABLE `comment`
 (
@@ -218,3 +224,11 @@ CREATE TABLE `verification`
 ) ENGINE = InnoDB
   AUTO_INCREMENT = 3
   DEFAULT CHARSET = utf8mb4;
+
+
+DROP EVENT IF EXISTS clean_verification_event;
+CREATE EVENT clean_verification_event
+    ON SCHEDULE EVERY 20 MINUTE STARTS NOW()
+    DO delete
+       from verification
+       where TIMESTAMPDIFF(MINUTE, start_time, NOW()) > 10;
