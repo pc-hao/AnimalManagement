@@ -5,9 +5,7 @@ import com.animalmanagement.bean.BaseResponse;
 import com.animalmanagement.bean.bo.*;
 import com.animalmanagement.entity.UserInfo;
 import com.animalmanagement.enums.StatusEnum;
-import com.animalmanagement.service.TweetService;
-import com.animalmanagement.service.UserService;
-import com.animalmanagement.service.CommentService;
+import com.animalmanagement.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,6 +25,9 @@ public class AdminController {
 
     @Autowired
     CommentService commentService;
+
+    @Autowired
+    AnimalService animalService;
 
     @RequestMapping("/user/get")
     public BaseResponse getUsers(@RequestBody AdminGetUserBo adminGetUserBo) {
@@ -85,6 +86,14 @@ public class AdminController {
         commentService.adminCommentCensor(commentCensorBo);
         return BaseResponse.builder()
                 .code(StatusEnum.SUCCESS.getCode())
+                .build();
+    }
+
+    @PostMapping("/animal/get")
+    public BaseResponse animalGet(@RequestBody AdminAnimalGetBo adminAnimalGetBo) {
+        return BaseResponse.builder()
+                .code(StatusEnum.SUCCESS.getCode())
+                .body(animalService.adminAnimalGet(adminAnimalGetBo))
                 .build();
     }
 }
