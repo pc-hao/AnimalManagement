@@ -76,4 +76,13 @@ public class AnimalService {
         }
         animalMapper.updateByPrimaryKey(animal);
     }
+
+    public void adminAnimalDelete(AdminAnimalDeleteBo adminAnimalDeleteBo) {
+        Animal animal = animalMapper.selectByPrimaryKey(adminAnimalDeleteBo.getRecordId());
+        if(Objects.isNull(animal)) {
+            throw new RuntimeException("Animal ID Does Not Exist");
+        }
+        
+        animalMapper.deleteByPrimaryKey(animal.getId());
+    }
 }

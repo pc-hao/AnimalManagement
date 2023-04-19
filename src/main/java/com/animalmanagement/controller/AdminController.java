@@ -109,4 +109,12 @@ public class AdminController {
                 .code(StatusEnum.SUCCESS.getCode())
                 .build();
     }
+
+    @PostMapping("/animal/delete")
+    public BaseResponse animalDelete(@RequestBody AdminAnimalDeleteBo adminAnimalDeleteBo) {
+        animalService.adminAnimalDelete(adminAnimalDeleteBo);
+        return BaseResponse.builder()
+                .code(StatusEnum.SUCCESS.getCode())
+                .build();
+    }
 }
