@@ -1,5 +1,5 @@
-drop table if exists  userInfo;
-CREATE TABLE `userInfo`
+drop table if exists  userinfo;
+CREATE TABLE `userinfo`
 (
     `id`       int(32)     NOT NULL,
     `username` varchar(32) NOT NULL UNIQUE,
