@@ -82,6 +82,9 @@ CREATE TABLE `animal`
     PRIMARY KEY (`id`)
 );
 
+INSERT INTO animal (`id`,`name`,`intro`,`adopted`,`avatar`) values (1, "馆长", "大家好，我是馆长",false,NULL);
+INSERT INTO animal (`id`,`name`,`intro`,`adopted`,`avatar`) values (20, "提米", "嗨，我素提米",true,NULL);
+
 CREATE TABLE `tweet`
 (
     `id`           int(32)  NOT NULL AUTO_INCREMENT,
@@ -105,6 +108,9 @@ CREATE TABLE `tweet`
 );
 
 insert into tweet (user_id,title,`time`,content,is_help) values (3, "hhhh", now(),"这是一个帖子",false);
+insert into tweet (user_id,title,`time`,content,is_help) values (3, "hhhh2", now(),"这是另一个帖子",false);
+insert into tweet (user_id,title,`time`,content,is_help) values (3, "help", now(),"这是一个求助帖",true);
+insert into tweet (user_id,title,`time`,content,is_help) values (3, "help2", now(),"这是另一个求助帖",true);
 
 CREATE TABLE `comment`
 (
