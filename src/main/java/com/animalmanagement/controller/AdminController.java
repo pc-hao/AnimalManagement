@@ -26,6 +26,9 @@ public class AdminController {
     @Autowired
     AnimalService animalService;
 
+    @Autowired
+    HelpService helpService;
+
     @RequestMapping("/user/get")
     public BaseResponse getUsers(@RequestBody AdminGetUserBo adminGetUserBo) {
         return BaseResponse.builder()
@@ -115,6 +118,14 @@ public class AdminController {
         animalService.adminAnimalDelete(adminAnimalDeleteBo);
         return BaseResponse.builder()
                 .code(StatusEnum.SUCCESS.getCode())
+                .build();
+    }
+
+    @PostMapping("/help/get")
+    public BaseResponse helpGet(@RequestBody AdminHelpGetBo adminHelpGetBo) {
+        return BaseResponse.builder()
+                .code(StatusEnum.SUCCESS.getCode())
+                .body(helpService.adminHelpGet(adminHelpGetBo))
                 .build();
     }
 }
