@@ -101,4 +101,12 @@ public class AdminController {
                 .body(animalService.adminAnimalContent(adminAnimalContentBo))
                 .build();
     }
+
+    @PostMapping("/animal/modify")
+    public BaseResponse animalModify(@RequestBody AdminAnimalModifyBo adminAnimalModifyBo) {
+        animalService.adminAnimalModify(adminAnimalModifyBo);
+        return BaseResponse.builder()
+                .code(StatusEnum.SUCCESS.getCode())
+                .build();
+    }
 }
