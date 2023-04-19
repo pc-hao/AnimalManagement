@@ -54,8 +54,7 @@ insert into `sys_role_user`(`id`, `user_id`, `role_id`)
 values (1, 2, 1),
        (2, 3, 2);
 
-drop table if exists  userInfo;
-CREATE TABLE `userInfo`
+CREATE TABLE `userinfo`
 (
     `id`       int(32)     NOT NULL,
     `username` varchar(32) NOT NULL UNIQUE,
@@ -68,9 +67,9 @@ CREATE TABLE `userInfo`
     FOREIGN KEY (`id`) REFERENCES `sys_user` (`id`)
 );
 
-INSERT INTO `userInfo`
+INSERT INTO `userinfo`
 VALUES (2, 'admin', '20000000@buaa.edu.cn', "15000000000", "This is a bio", "path", false); ##password:123456
-INSERT INTO `userInfo`
+INSERT INTO `userinfo`
 VALUES (3, 'user', '20000001@buaa.edu.cn', "15000000001", "This is a bio", "path", false); ##password:123456
 
 CREATE TABLE `animal`
