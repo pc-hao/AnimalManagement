@@ -41,6 +41,9 @@ public class TweetService {
     @Autowired
     TweetStarMapper tweetStarMapper;
 
+    @Autowired
+    UserInfoMapper userInfoMapper;
+
     public Map<String, Object> adminTweetGet(AdminTweetGetBo adminTweetGetBo) {
         TweetExample example = new TweetExample();
         example.createCriteria().andDeletedEqualTo(false);
@@ -77,16 +80,20 @@ public class TweetService {
 
     public Map<String, Object> adminTweetGetContent(AdminTweetContentBo adminTweetContentBo) {
         Tweet tweet = tweetMapper.selectByPrimaryKey(adminTweetContentBo.getTweetId());
+        if(Objects.isNull(tweet)) {
+            throw new RuntimeException("Tweet ID Does Not Exist");
+        }
+        UserInfo userInfo = userInfoMapper.selectByPrimaryKey(tweet.getUserId());
 
         Map<String, Object> map = new HashMap<>();
-        map.put("userId", tweet.getUserId());
+        map.put("username", userInfo.getUsername());
         map.put("title", tweet.getTitle());
         map.put("content", tweet.getContent());
         map.put("images", tweet.getImages());
         map.put("time", tweet.getTime());
         map.put("views", tweet.getViews());
         map.put("viewsWeekly", tweet.getViewsWeekly());
-        map.put("likess", tweet.getLikes());
+        map.put("likes", tweet.getLikes());
         map.put("stars", tweet.getStars());
         map.put("isHelp", tweet.getIsHelp());
         map.put("censored", tweet.getCensored());

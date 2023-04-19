@@ -128,4 +128,28 @@ public class AdminController {
                 .body(helpService.adminHelpGet(adminHelpGetBo))
                 .build();
     }
+
+    @PostMapping("/help/content")
+    public BaseResponse helpContent(@RequestBody AdminHelpContentBo adminHelpContentBo) {
+        return BaseResponse.builder()
+                .code(StatusEnum.SUCCESS.getCode())
+                .body(helpService.adminHelpContent(adminHelpContentBo))
+                .build();
+    }
+
+    @PostMapping("/help/pass")
+    public BaseResponse helpPass(@RequestBody AdminHelpPassBo adminHelpPassBo) {
+        helpService.adminHelpPass(adminHelpPassBo)
+        return BaseResponse.builder()
+                .code(StatusEnum.SUCCESS.getCode())
+                .build();
+    }
+
+    @PostMapping("/help/deny")
+    public BaseResponse helpDeny(@RequestBody AdminHelpDenyBo adminHelpDenyBo) {
+        helpService.adminHelpDeny(adminHelpDenyBo)
+        return BaseResponse.builder()
+                .code(StatusEnum.SUCCESS.getCode())
+                .build();
+    }
 }

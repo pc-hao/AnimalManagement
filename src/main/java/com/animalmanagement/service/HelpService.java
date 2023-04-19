@@ -41,6 +41,9 @@ public class HelpService {
     @Autowired
     TweetStarMapper tweetStarMapper;
 
+    @Autowired
+    UserInfoMapper userInfoMapper;
+
     public Map<String, Object> adminHelpGet(AdminHelpGetBo adminHelpGetBo) {
         TweetExample example = new TweetExample();
         example.createCriteria().andDeletedEqualTo(false);
@@ -83,18 +86,22 @@ public class HelpService {
         return map;
     }
 
-    public Map<String, Object> adminTweetGetContent(AdminTweetContentBo adminTweetContentBo) {
-        Tweet tweet = tweetMapper.selectByPrimaryKey(adminTweetContentBo.getTweetId());
+    public Map<String, Object> adminHelpContent(AdminHelpContentBo adminHelpContentBo) {
+        Tweet tweet = tweetMapper.selectByPrimaryKey(adminHelpContentBo.getHelpId());
+        if(Objects.isNull(tweet)) {
+            throw new RuntimeException("Tweet ID Does Not Exist");
+        }
+        UserInfo userInfo = userInfoMapper.selectByPrimaryKey(tweet.getUserId());
 
         Map<String, Object> map = new HashMap<>();
-        map.put("userId", tweet.getUserId());
+        map.put("username", userInfo.getUsername());
         map.put("title", tweet.getTitle());
         map.put("content", tweet.getContent());
         map.put("images", tweet.getImages());
         map.put("time", tweet.getTime());
         map.put("views", tweet.getViews());
         map.put("viewsWeekly", tweet.getViewsWeekly());
-        map.put("likess", tweet.getLikes());
+        map.put("likes", tweet.getLikes());
         map.put("stars", tweet.getStars());
         map.put("isHelp", tweet.getIsHelp());
         map.put("censored", tweet.getCensored());
@@ -105,23 +112,26 @@ public class HelpService {
         return map;
     }
 
-    public void adminTweetCensor(TweetCensorBo tweetCensorBo) {
-        Integer tweetId = tweetCensorBo.getTweetId();
-        checkIdExists(tweetId);
-        Tweet tweet = tweetMapper.selectByPrimaryKey(tweetId);
-        if (tweetCensorBo.getOperate() == 0) {
-            tweet.setCensored(CensorStatusEnum.PASS.getCode());
-        } else {
-            tweet.setCensored(CensorStatusEnum.REJECT.getCode());
+    public void adminHelpPass(AdminHelpPassBo adminHelpPassBo) {
+        Tweet tweet = tweetMapper.selectByPrimaryKey(adminHelpPassBo.getHelpId());
+        if(Objects.isNull(tweet)) {
+            throw new RuntimeException("Help ID Does Not Exist");
         }
+
+        tweet.setCensored(CensorStatusEnum.PASS.getCode());
+
         tweetMapper.updateByPrimaryKeySelective(tweet);
     }
 
-    public void checkIdExists(Integer tweetId) {
-        Tweet tweet = tweetMapper.selectByPrimaryKey(tweetId);
-        if (tweet == null) {
-            throw new RuntimeException("TweetId Does Not Exist");
+    public void adminHelpDeny(AdminHelpDenyBo adminHelpDenyBo) {
+        Tweet tweet = tweetMapper.selectByPrimaryKey(adminHelpDenyBo.getHelpId());
+        if(Objects.isNull(tweet)) {
+            throw new RuntimeException("Help ID Does Not Exist");
         }
+
+        tweet.setCensored(CensorStatusEnum.REJECT.getCode());
+        
+        tweetMapper.updateByPrimaryKeySelective(tweet);
     }
 
     public TweetContentVo getTweetContent(TweetContentBo tweetContentBo) {
