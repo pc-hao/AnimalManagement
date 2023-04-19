@@ -93,4 +93,12 @@ public class AdminController {
                 .body(animalService.adminAnimalGet(adminAnimalGetBo))
                 .build();
     }
+
+    @PostMapping("/animal/content")
+    public BaseResponse animalContent(@RequestBody AdminAnimalContentBo adminAnimalContentBo) {
+        return BaseResponse.builder()
+                .code(StatusEnum.SUCCESS.getCode())
+                .body(animalService.adminAnimalContent(adminAnimalContentBo))
+                .build();
+    }
 }

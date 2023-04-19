@@ -6,6 +6,7 @@
     <result column="name" jdbcType="VARCHAR" property="name" />
     <result column="intro" jdbcType="VARCHAR" property="intro" />
     <result column="adopted" jdbcType="BIT" property="adopted" />
+    <result column="avatar" jdbcType="VARCHAR" property="avatar" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -66,7 +67,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, `name`, intro, adopted
+    id, `name`, intro, adopted, avatar
   </sql>
   <select id="selectByExample" parameterType="com.animalmanagement.example.AnimalExample" resultMap="BaseResultMap">
     select
@@ -100,9 +101,9 @@
   </delete>
   <insert id="insert" parameterType="com.animalmanagement.entity.Animal">
     insert into animal (id, `name`, intro, 
-      adopted)
+      adopted, avatar)
     values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{intro,jdbcType=VARCHAR}, 
-      #{adopted,jdbcType=BIT})
+      #{adopted,jdbcType=BIT}, #{avatar,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.animalmanagement.entity.Animal">
     insert into animal
@@ -119,6 +120,9 @@
       <if test="adopted != null">
         adopted,
       </if>
+      <if test="avatar != null">
+        avatar,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -132,6 +136,9 @@
       </if>
       <if test="adopted != null">
         #{adopted,jdbcType=BIT},
+      </if>
+      <if test="avatar != null">
+        #{avatar,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -156,6 +163,9 @@
       <if test="record.adopted != null">
         adopted = #{record.adopted,jdbcType=BIT},
       </if>
+      <if test="record.avatar != null">
+        avatar = #{record.avatar,jdbcType=VARCHAR},
+      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -166,7 +176,8 @@
     set id = #{record.id,jdbcType=INTEGER},
       `name` = #{record.name,jdbcType=VARCHAR},
       intro = #{record.intro,jdbcType=VARCHAR},
-      adopted = #{record.adopted,jdbcType=BIT}
+      adopted = #{record.adopted,jdbcType=BIT},
+      avatar = #{record.avatar,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -183,6 +194,9 @@
       <if test="adopted != null">
         adopted = #{adopted,jdbcType=BIT},
       </if>
+      <if test="avatar != null">
+        avatar = #{avatar,jdbcType=VARCHAR},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -190,7 +204,8 @@
     update animal
     set `name` = #{name,jdbcType=VARCHAR},
       intro = #{intro,jdbcType=VARCHAR},
-      adopted = #{adopted,jdbcType=BIT}
+      adopted = #{adopted,jdbcType=BIT},
+      avatar = #{avatar,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
   <select id="selectOneByExample" parameterType="com.animalmanagement.example.AnimalExample" resultMap="BaseResultMap">

@@ -15,6 +15,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @Service
 public class AnimalService {
@@ -44,5 +45,17 @@ public class AnimalService {
             map.put("records", animalList.subList(start, end));
         }
         return map;
+    }
+
+    public AdminAnimalContentVo adminAnimalContent(AdminAnimalContentBo adminAnimalContentBo) {
+        Animal animal = animalMapper.selectByPrimaryKey(adminAnimalContentBo.getRecordId());
+        if(Objects.isNull(animal)) {
+            throw new RuntimeException("Animal ID Does Not Exist");
+        }
+        
+        AdminAnimalContentVo vo = new AdminAnimalContentVo();
+        BeanUtils.copyProperties(animal, vo);
+        
+        return vo;
     }
 }
