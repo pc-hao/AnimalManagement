@@ -11,4 +11,5 @@ public class GetTweetsBo {
     private Integer userId;
     private Integer commentpage;
     private String type;
+    private String match;
 }

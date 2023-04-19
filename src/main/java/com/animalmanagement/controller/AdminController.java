@@ -139,7 +139,7 @@ public class AdminController {
 
     @PostMapping("/help/pass")
     public BaseResponse helpPass(@RequestBody AdminHelpPassBo adminHelpPassBo) {
-        helpService.adminHelpPass(adminHelpPassBo)
+        helpService.adminHelpPass(adminHelpPassBo);
         return BaseResponse.builder()
                 .code(StatusEnum.SUCCESS.getCode())
                 .build();
@@ -147,7 +147,7 @@ public class AdminController {
 
     @PostMapping("/help/deny")
     public BaseResponse helpDeny(@RequestBody AdminHelpDenyBo adminHelpDenyBo) {
-        helpService.adminHelpDeny(adminHelpDenyBo)
+        helpService.adminHelpDeny(adminHelpDenyBo);
         return BaseResponse.builder()
                 .code(StatusEnum.SUCCESS.getCode())
                 .build();

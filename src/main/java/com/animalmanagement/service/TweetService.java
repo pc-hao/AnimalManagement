@@ -177,7 +177,8 @@ public class TweetService {
         example.createCriteria()
                 .andPublishedEqualTo(true)
                 .andCensoredEqualTo(CensorStatusEnum.PASS.getCode())
-                .andDeletedEqualTo(false);
+                .andDeletedEqualTo(false)
+                .andTitleLike(getTweetsBo.getMatch());
         List<Tweet> tweetList = tweetMapper.selectByExample(example);
 
         Map<String, Object> map = new HashMap<>();
