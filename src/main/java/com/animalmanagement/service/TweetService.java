@@ -41,19 +41,36 @@ public class TweetService {
     @Autowired
     TweetStarMapper tweetStarMapper;
 
-    public Map<String, Object> adminGetTweets(AdminGetTweetsBo adminGetTweetsBo) {
-        List<Tweet> tweetList = tweetMapper.selectByExampleWithBLOBs(new TweetExample());
+    public Map<String, Object> adminTweetGet(AdminTweetGetBo adminTweetGetBo) {
+        TweetExample example = new TweetExample();
+        example.createCriteria().andDeletedEqualTo(false);
+        example.createCriteria().andIsHelpEqualTo(false);
+
+        List<Tweet> tweetList = tweetMapper.selectByExampleWithBLOBs(example);
+
+        Map<Integer, UserInfo> userInfoMap = userService.getUserInfoByIdList(
+                tweetList.stream().map(Tweet::getUserId).distinct().toList());
+
+        List<AdminTweetGetVo> voList = tweetList
+                .stream()
+                .map(e -> {
+                    AdminTweetGetVo vo = new AdminTweetGetVo();
+                    BeanUtils.copyProperties(e, vo);
+                    UserInfo userInfo = userInfoMap.get(e.getUserId());
+                    vo.setUsername(userInfo.getUsername());
+                    return vo;
+                }).toList();
+        voList.sort(Comparator.comparing(AdminTweetGetVo::getTime));
 
         Map<String, Object> map = new HashMap<>();
-        map.put("sumNum", tweetList.size());
+        map.put("sumNum", voList.size());
 
-        tweetList.sort(Comparator.comparing(Tweet::getTime));
-        int start = (adminGetTweetsBo.getPage() - 1) * adminGetTweetsBo.getPageNum();
-        if (start >= tweetList.size()) {
+        int start = (adminTweetGetBo.getPage() - 1) * adminTweetGetBo.getPageNum();
+        if (start >= voList.size()) {
             map.put("tweets", null);
         } else {
-            int end = Math.min(start + adminGetTweetsBo.getPageNum(), tweetList.size());
-            map.put("tweets", tweetList.subList(start, end));
+            int end = Math.min(start + adminTweetGetBo.getPageNum(), voList.size());
+            map.put("tweets", voList.subList(start, end));
         }
         return map;
     }

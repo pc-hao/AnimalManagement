@@ -50,10 +50,10 @@ public class AdminController {
     }
 
     @PostMapping("/tweet/get")
-    public BaseResponse getTweets(@RequestBody AdminGetTweetsBo adminGetTweetsBo) {
+    public BaseResponse tweetGet(@RequestBody AdminTweetGetBo adminTweetGetBo) {
         return BaseResponse.builder()
                 .code(StatusEnum.SUCCESS.getCode())
-                .body(tweetService.adminGetTweets(adminGetTweetsBo))
+                .body(tweetService.adminTweetGet(adminTweetGetBo))
                 .build();
     }
 
@@ -74,7 +74,7 @@ public class AdminController {
     }
 
     @PostMapping("/comment/get")
-    public BaseResponse getTweets(@RequestBody AdminGetCommentsBo adminGetCommentsBo) {
+    public BaseResponse getComments(@RequestBody AdminGetCommentsBo adminGetCommentsBo) {
         return BaseResponse.builder()
                 .code(StatusEnum.SUCCESS.getCode())
                 .body(commentService.adminGetComments(adminGetCommentsBo))
