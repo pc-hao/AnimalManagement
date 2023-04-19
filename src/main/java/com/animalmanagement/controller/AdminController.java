@@ -3,15 +3,12 @@ package com.animalmanagement.controller;
 
 import com.animalmanagement.bean.BaseResponse;
 import com.animalmanagement.bean.bo.*;
-import com.animalmanagement.entity.UserInfo;
-import com.animalmanagement.enums.StatusEnum;
 import com.animalmanagement.service.*;
+import com.animalmanagement.enums.*;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @PreAuthorize("hasRole('ADMIN')")

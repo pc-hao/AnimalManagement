@@ -1,10 +1,15 @@
 package com.animalmanagement.service;
 
-import com.animalmanagement.entity.Verification;
-import com.animalmanagement.example.VerificationExample;
-import com.animalmanagement.mapper.VerificationMapper;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.animalmanagement.bean.bo.*;
+import com.animalmanagement.bean.vo.*;
+import com.animalmanagement.entity.*;
+import com.animalmanagement.mapper.*;
+import com.animalmanagement.example.*;
+import com.animalmanagement.enums.*;
+
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Date;
 import java.util.Objects;
