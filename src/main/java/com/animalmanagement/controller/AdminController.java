@@ -26,6 +26,9 @@ public class AdminController {
     @Autowired
     AnimalService animalService;
 
+    @Autowired
+    HelpService helpService;
+
     @RequestMapping("/user/get")
     public BaseResponse getUsers(@RequestBody AdminGetUserBo adminGetUserBo) {
         return BaseResponse.builder()
@@ -47,10 +50,10 @@ public class AdminController {
     }
 
     @PostMapping("/tweet/get")
-    public BaseResponse getTweets(@RequestBody AdminGetTweetsBo adminGetTweetsBo) {
+    public BaseResponse tweetGet(@RequestBody AdminTweetGetBo adminTweetGetBo) {
         return BaseResponse.builder()
                 .code(StatusEnum.SUCCESS.getCode())
-                .body(tweetService.adminGetTweets(adminGetTweetsBo))
+                .body(tweetService.adminTweetGet(adminTweetGetBo))
                 .build();
     }
 
@@ -71,7 +74,7 @@ public class AdminController {
     }
 
     @PostMapping("/comment/get")
-    public BaseResponse getTweets(@RequestBody AdminGetCommentsBo adminGetCommentsBo) {
+    public BaseResponse getComments(@RequestBody AdminGetCommentsBo adminGetCommentsBo) {
         return BaseResponse.builder()
                 .code(StatusEnum.SUCCESS.getCode())
                 .body(commentService.adminGetComments(adminGetCommentsBo))
@@ -99,6 +102,54 @@ public class AdminController {
         return BaseResponse.builder()
                 .code(StatusEnum.SUCCESS.getCode())
                 .body(animalService.adminAnimalContent(adminAnimalContentBo))
+                .build();
+    }
+
+    @PostMapping("/animal/modify")
+    public BaseResponse animalModify(@RequestBody AdminAnimalModifyBo adminAnimalModifyBo) {
+        animalService.adminAnimalModify(adminAnimalModifyBo);
+        return BaseResponse.builder()
+                .code(StatusEnum.SUCCESS.getCode())
+                .build();
+    }
+
+    @PostMapping("/animal/delete")
+    public BaseResponse animalDelete(@RequestBody AdminAnimalDeleteBo adminAnimalDeleteBo) {
+        animalService.adminAnimalDelete(adminAnimalDeleteBo);
+        return BaseResponse.builder()
+                .code(StatusEnum.SUCCESS.getCode())
+                .build();
+    }
+
+    @PostMapping("/help/get")
+    public BaseResponse helpGet(@RequestBody AdminHelpGetBo adminHelpGetBo) {
+        return BaseResponse.builder()
+                .code(StatusEnum.SUCCESS.getCode())
+                .body(helpService.adminHelpGet(adminHelpGetBo))
+                .build();
+    }
+
+    @PostMapping("/help/content")
+    public BaseResponse helpContent(@RequestBody AdminHelpContentBo adminHelpContentBo) {
+        return BaseResponse.builder()
+                .code(StatusEnum.SUCCESS.getCode())
+                .body(helpService.adminHelpContent(adminHelpContentBo))
+                .build();
+    }
+
+    @PostMapping("/help/pass")
+    public BaseResponse helpPass(@RequestBody AdminHelpPassBo adminHelpPassBo) {
+        helpService.adminHelpPass(adminHelpPassBo);
+        return BaseResponse.builder()
+                .code(StatusEnum.SUCCESS.getCode())
+                .build();
+    }
+
+    @PostMapping("/help/deny")
+    public BaseResponse helpDeny(@RequestBody AdminHelpDenyBo adminHelpDenyBo) {
+        helpService.adminHelpDeny(adminHelpDenyBo);
+        return BaseResponse.builder()
+                .code(StatusEnum.SUCCESS.getCode())
                 .build();
     }
 }

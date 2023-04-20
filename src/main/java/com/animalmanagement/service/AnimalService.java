@@ -58,4 +58,31 @@ public class AnimalService {
         
         return vo;
     }
+
+    public void adminAnimalModify(AdminAnimalModifyBo adminAnimalModifyBo) {
+        Animal animal = animalMapper.selectByPrimaryKey(adminAnimalModifyBo.getRecordId());
+        if(Objects.isNull(animal)) {
+            throw new RuntimeException("Animal ID Does Not Exist");
+        }
+        
+        if(!Objects.isNull(adminAnimalModifyBo.getAdopted()) && !adminAnimalModifyBo.getName().isEmpty()) {
+            animal.setName(adminAnimalModifyBo.getName());
+        }
+        if(!Objects.isNull(adminAnimalModifyBo.getAdopted()) && !adminAnimalModifyBo.getIntro().isEmpty()) {
+            animal.setIntro(adminAnimalModifyBo.getIntro());
+        }
+        if(!Objects.isNull(adminAnimalModifyBo.getAdopted())) {
+            animal.setAdopted(adminAnimalModifyBo.getAdopted());
+        }
+        animalMapper.updateByPrimaryKey(animal);
+    }
+
+    public void adminAnimalDelete(AdminAnimalDeleteBo adminAnimalDeleteBo) {
+        Animal animal = animalMapper.selectByPrimaryKey(adminAnimalDeleteBo.getRecordId());
+        if(Objects.isNull(animal)) {
+            throw new RuntimeException("Animal ID Does Not Exist");
+        }
+        
+        animalMapper.deleteByPrimaryKey(animal.getId());
+    }
 }
