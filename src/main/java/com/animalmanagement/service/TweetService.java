@@ -68,7 +68,7 @@ public class TweetService {
         Map<String, Object> map = new HashMap<>();
         map.put("sumNum", voList.size());
 
-        int start = (adminTweetGetBo.getPage() - 1) * adminTweetGetBo.getPageNum();
+        int start = adminTweetGetBo.getPage() * adminTweetGetBo.getPageNum();
         if (start >= voList.size()) {
             map.put("tweets", null);
         } else {

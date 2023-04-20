@@ -37,7 +37,7 @@ public class AnimalService {
         map.put("sumNum", animalList.size());
 
         animalList.sort(Comparator.comparing(Animal::getName));
-        int start = (adminAnimalGetBo.getPage() - 1) * adminAnimalGetBo.getPageNum();
+        int start = adminAnimalGetBo.getPage() * adminAnimalGetBo.getPageNum();
         if (start >= animalList.size()) {
             map.put("records", null);
         } else {

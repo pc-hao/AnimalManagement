@@ -76,7 +76,7 @@ public class HelpService {
         Map<String, Object> map = new HashMap<>();
         map.put("sumNum", voList.size());
 
-        int start = (adminHelpGetBo.getPage() - 1) * adminHelpGetBo.getPageNum();
+        int start = adminHelpGetBo.getPage() * adminHelpGetBo.getPageNum();
         if (start >= voList.size()) {
             map.put("helps", null);
         } else {

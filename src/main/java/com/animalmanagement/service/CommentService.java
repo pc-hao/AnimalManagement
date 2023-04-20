@@ -45,7 +45,7 @@ public class CommentService {
         map.put("sumNum", commentList.size());
 
         commentList.sort(Comparator.comparing(Comment::getTime));
-        int start = (adminGetCommentsBo.getPage() - 1) * adminGetCommentsBo.getPageNum();
+        int start = adminGetCommentsBo.getPage() * adminGetCommentsBo.getPageNum();
         if (start >= commentList.size()) {
             map.put("comments", null);
         } else {
