@@ -1,12 +1,12 @@
 server:
-  port: 8080
+  port: 443
   #http2.enabled: true
   #http2.hpack-encoder.dynamic-table-size: 8192
-  #ssl:
-  #enabled: true
-  #key-store-type: JKS
-  #key-store: file:/root/AnimalManagement/src/main/resources/certificate.jks
-  #key-store-password: Iw7&mAcvJXtgvt*V
+  ssl:
+    #enabled: true
+    key-store-type: JKS
+    key-store: file:/root/AnimalManagement/src/main/resources/certificate.jks
+    key-store-password: Yf9#fheMS2Zi^9Cc
   #key-alias: server
   #protocol: TLS
   #port: 443
