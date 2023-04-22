@@ -1,5 +1,7 @@
 server:
   port: 443
+  #http2.enabled: true
+  #http2.hpack-encoder.dynamic-table-size: 8192
   ssl:
     enabled: true
     key-store-type: JKS
@@ -7,7 +9,7 @@ server:
     key-store-password: Yf9#fheMS2Zi^9Cc
   #key-alias: server
   #protocol: TLS
-  http:
+  http: 
     port: 80
 
 spring:
