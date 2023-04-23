@@ -55,4 +55,13 @@ public class UserController {
         userService.modifyUserInfo(modifyUserInfoBo);
         return BaseResponse.builder().code(StatusEnum.SUCCESS.getCode()).message("修改成功").build();
     }
+
+    @PostMapping("/mainPage")
+    public BaseResponse mainPage(@RequestBody UserMainPageBo userMainPageBo) {
+        return BaseResponse.builder()
+            .code(StatusEnum.SUCCESS.getCode())
+            .body(userService.mainPage(userMainPageBo))
+            .message("修改成功")
+            .build();
+    }
 }
