@@ -10,7 +10,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@PreAuthorize("hasRole('USER')")
+//@PreAuthorize("hasRole('USER')")
 @RequestMapping("/user")
 public class UserController {
     private final static String DEFAULT_PASSWORD = "123456";
