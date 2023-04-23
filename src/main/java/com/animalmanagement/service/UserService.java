@@ -373,4 +373,9 @@ public class UserService {
         userInfoExample.createCriteria().andIdIn(idList);
         return userInfoMapper.selectByExample(userInfoExample).stream().collect(Collectors.toMap(UserInfo::getId, Function.identity()));
     }
+
+    public UserMainPageVo mainPage(UserMainPageBo userMainPageBo) {
+        UserInfo userInfo = userInfoMapper.selectByPrimaryKey(userMainPageBo.getUserId());
+        return new UserMainPageVo(userInfo.getUsername(), userInfo.getAvatar(), userInfo.getBio());
+    }
 }
