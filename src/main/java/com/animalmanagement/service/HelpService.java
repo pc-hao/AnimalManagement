@@ -198,7 +198,7 @@ public class HelpService {
         } else {
             tweetList.sort(Comparator.comparing(Tweet::getViewsWeekly));
         }
-        int start = (getTweetsBo.getCommentpage() - 1) * pageSize;
+        int start = getTweetsBo.getCommentpage() * pageSize;
         if (start >= tweetList.size()) {
             map.put("tweets", null);
         } else {
