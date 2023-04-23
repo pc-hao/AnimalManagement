@@ -107,10 +107,10 @@ CREATE TABLE `tweet`
     FOREIGN KEY (`user_id`) REFERENCES `sys_user` (`id`)
 );
 
-insert into tweet (user_id,title,`time`,content,is_help) values (3, "hhhh", now(),"这是一个帖子",false);
-insert into tweet (user_id,title,`time`,content,is_help) values (3, "hhhh2", now(),"这是另一个帖子",false);
-insert into tweet (user_id,title,`time`,content,is_help) values (3, "help", now(),"这是一个求助帖",true);
-insert into tweet (user_id,title,`time`,content,is_help) values (3, "help2", now(),"这是另一个求助帖",true);
+insert into tweet (user_id,title,`time`,content,is_help,published,censored) values (3, "hhhh", now(),"这是一个帖子",false,true,1);
+insert into tweet (user_id,title,`time`,content,is_help,published,censored) values (3, "hhhh2", now(),"这是另一个帖子",false,true,2);
+insert into tweet (user_id,title,`time`,content,is_help,published,censored) values (3, "help", now(),"这是一个求助帖",true,true,1);
+insert into tweet (user_id,title,`time`,content,is_help,published,censored) values (3, "help2", now(),"这是另一个求助帖",true,true,0);
 
 CREATE TABLE `comment`
 (
