@@ -178,7 +178,7 @@ public class TweetService {
                 .andPublishedEqualTo(true)
                 .andCensoredEqualTo(CensorStatusEnum.PASS.getCode())
                 .andDeletedEqualTo(false)
-                .andTitleLike(getTweetsBo.getMatch());
+                .andTitleLike("%" + getTweetsBo.getMatch() + "%");
         List<Tweet> tweetList = tweetMapper.selectByExample(example);
 
         Map<String, Object> map = new HashMap<>();
@@ -192,7 +192,7 @@ public class TweetService {
         if (start >= tweetList.size()) {
             map.put("tweets", null);
         } else {
-            int end = Math.min(start + getTweetsBo.getCommentpage(), pageSize);
+            int end = Math.min(start + pageSize, tweetList.size());
             map.put("tweets", tweetList.subList(start, end));
         }
         return map;
