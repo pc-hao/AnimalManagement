@@ -10,4 +10,5 @@ import lombok.NoArgsConstructor;
 public class UserSelfTweetBo {
     private Integer userId;
     private Integer page;
+    private String context;
 }

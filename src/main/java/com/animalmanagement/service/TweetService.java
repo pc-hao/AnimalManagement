@@ -310,6 +310,7 @@ public class TweetService {
         } else {
             tweetExample.createCriteria().andIsHelpEqualTo(true);
         }
+        tweetExample.createCriteria().andTitleLike("%" + userStarTweetBo.getContext() + "%");
         
         List<Tweet> tweetList = tweetMapper.selectByExampleWithBLOBs(tweetExample);
 
@@ -346,6 +347,7 @@ public class TweetService {
         TweetExample tweetExample = new TweetExample();
         tweetExample.createCriteria().andUserIdEqualTo(userSelfTweetBo.getUserId());
         tweetExample.createCriteria().andIsHelpEqualTo(false);
+        tweetExample.createCriteria().andTitleLike("%" + userSelfTweetBo.getContext() + "%");
         
         List<Tweet> tweetList = tweetMapper.selectByExampleWithBLOBs(tweetExample);
 
