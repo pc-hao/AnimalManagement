@@ -38,6 +38,8 @@ public class AnimalService {
 
         List<Animal> animalList = animalMapper.selectByExample(example);
 
+        animalList.sort(Comparator.comparing(Animal::getName));
+
         List<AdminAnimalGetVo> voList = animalList
                 .stream()
                 .map(e -> {
@@ -45,7 +47,6 @@ public class AnimalService {
                     BeanUtils.copyProperties(e, vo);
                     return vo;
                 }).toList();
-        voList.sort(Comparator.comparing(AdminAnimalGetVo::getName));
 
         Map<String, Object> map = new HashMap<>();
         map.put("sumNum", voList.size());
@@ -115,6 +116,8 @@ public class AnimalService {
 
         List<Animal> animalList = animalMapper.selectByExample(example);
 
+        animalList.sort(Comparator.comparing(Animal::getName));
+
         List<AnimalGetVo> voList = animalList
                 .stream()
                 .map(e -> {
@@ -122,7 +125,6 @@ public class AnimalService {
                     BeanUtils.copyProperties(e, vo);
                     return vo;
                 }).toList();
-        voList.sort(Comparator.comparing(AnimalGetVo::getName));
 
         Map<String, Object> map = new HashMap<>();
         map.put("sumNum", voList.size());
