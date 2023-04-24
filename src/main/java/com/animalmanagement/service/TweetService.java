@@ -11,6 +11,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -303,16 +304,26 @@ public class TweetService {
         List<TweetStarKey> tweetStarList = tweetStarMapper.selectByExample(tweetStarExample);
         List<Integer> idList = tweetStarList.stream().map(TweetStarKey::getUserId).distinct().toList();
 
-        TweetExample tweetExample = new TweetExample();
-        tweetExample.createCriteria().andIdIn(idList);
-        if(userStarTweetBo.getType() == 0) {
-            tweetExample.createCriteria().andIsHelpEqualTo(false);
+        List<Tweet> tweetList;
+        if(idList.isEmpty()) {
+            tweetList = new ArrayList<>();
         } else {
-            tweetExample.createCriteria().andIsHelpEqualTo(true);
+            TweetExample tweetExample = new TweetExample();
+            tweetExample.createCriteria()
+                .andIdIn(idList)
+                .andTitleLike("%" + userStarTweetBo.getContext() + "%");
+            if(userStarTweetBo.getType() == 0) {
+                tweetExample.createCriteria().andIsHelpEqualTo(false);
+            } else {
+                tweetExample.createCriteria().andIsHelpEqualTo(true);
+            }
+
+            tweetList = tweetMapper.selectByExample(tweetExample);
+
+            tweetList.sort(Comparator.comparing(Tweet::getTime));
         }
-        tweetExample.createCriteria().andTitleLike("%" + userStarTweetBo.getContext() + "%");
-        
-        List<Tweet> tweetList = tweetMapper.selectByExample(tweetExample);
+
+        Map<String, Object> map = new HashMap<>();
 
         List<UserStarTweetVo> voList = tweetList
                 .stream()
@@ -321,9 +332,7 @@ public class TweetService {
                     BeanUtils.copyProperties(e, vo);
                     return vo;
                 }).toList();
-        voList.sort(Comparator.comparing(UserStarTweetVo::getId));
 
-        Map<String, Object> map = new HashMap<>();
         map.put("sumNum", voList.size());
 
         int start = userStarTweetBo.getPage() * pageSize;
