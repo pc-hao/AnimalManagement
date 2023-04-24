@@ -122,8 +122,11 @@ public class AdminController {
     }
 
     @PostMapping("/animal/addrecord")
-    public BaseResponse animalAddRecord() {
-        return null;
+    public BaseResponse animalAddRecord(@RequestBody AdminAnimalAddBo adminAnimalAddBo) {
+        animalService.adminAnimalAdd(adminAnimalAddBo);
+        return BaseResponse.builder()
+                .code(StatusEnum.SUCCESS.getCode())
+                .build();
     }
 
     @PostMapping("/help/get")

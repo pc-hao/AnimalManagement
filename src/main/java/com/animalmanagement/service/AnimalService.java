@@ -28,6 +28,8 @@ public class AnimalService {
 
     private final static String PICTURE_SAVE_PATH = ImageConfig.savePath + "/animal/";
 
+    private final static String DEFAULT_IMAGE_PATH = ImageConfig.savePath + "/animal/default.png";
+
     @Autowired
     AnimalMapper animalMapper;
 
@@ -63,7 +65,7 @@ public class AnimalService {
 
     public AdminAnimalContentVo adminAnimalContent(AdminAnimalContentBo adminAnimalContentBo) {
         Animal animal = animalMapper.selectByPrimaryKey(adminAnimalContentBo.getRecordId());
-        if(Objects.isNull(animal)) {
+        if (Objects.isNull(animal)) {
             throw new RuntimeException("Animal ID Does Not Exist");
         }
 
@@ -75,17 +77,17 @@ public class AnimalService {
 
     public void adminAnimalModify(AdminAnimalModifyBo adminAnimalModifyBo) {
         Animal animal = animalMapper.selectByPrimaryKey(adminAnimalModifyBo.getRecordId());
-        if(Objects.isNull(animal)) {
+        if (Objects.isNull(animal)) {
             throw new RuntimeException("Animal ID Does Not Exist");
         }
 
-        if(!Objects.isNull(adminAnimalModifyBo.getAdopted()) && !adminAnimalModifyBo.getName().isEmpty()) {
+        if (!Objects.isNull(adminAnimalModifyBo.getAdopted()) && !adminAnimalModifyBo.getName().isEmpty()) {
             animal.setName(adminAnimalModifyBo.getName());
         }
-        if(!Objects.isNull(adminAnimalModifyBo.getAdopted()) && !adminAnimalModifyBo.getIntro().isEmpty()) {
+        if (!Objects.isNull(adminAnimalModifyBo.getAdopted()) && !adminAnimalModifyBo.getIntro().isEmpty()) {
             animal.setIntro(adminAnimalModifyBo.getIntro());
         }
-        if(!Objects.isNull(adminAnimalModifyBo.getAdopted())) {
+        if (!Objects.isNull(adminAnimalModifyBo.getAdopted())) {
             animal.setAdopted(adminAnimalModifyBo.getAdopted());
         }
         if (!Objects.isNull(adminAnimalModifyBo.getAvatar())) {
@@ -102,7 +104,7 @@ public class AnimalService {
 
     public void adminAnimalDelete(AdminAnimalDeleteBo adminAnimalDeleteBo) {
         Animal animal = animalMapper.selectByPrimaryKey(adminAnimalDeleteBo.getRecordId());
-        if(Objects.isNull(animal)) {
+        if (Objects.isNull(animal)) {
             throw new RuntimeException("Animal ID Does Not Exist");
         }
 
@@ -137,5 +139,18 @@ public class AnimalService {
             map.put("animals", voList.subList(start, end));
         }
         return map;
+    }
+
+    public void adminAnimalAdd(AdminAnimalAddBo adminAnimalAddBo) {
+        Animal animal = new Animal();
+        animal.setAdopted(adminAnimalAddBo.getAdopted());
+        animal.setIntro(adminAnimalAddBo.getIntro());
+        animal.setName(adminAnimalAddBo.getName());
+        if (Objects.isNull(adminAnimalAddBo.getAvatar())) {
+            animal.setAvatar(DEFAULT_IMAGE_PATH);
+        } else {
+            animal.setAvatar(adminAnimalAddBo.getAvatar());
+        }
+        animalMapper.insertSelective(animal);
     }
 }
