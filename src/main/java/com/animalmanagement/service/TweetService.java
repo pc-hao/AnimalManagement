@@ -47,8 +47,9 @@ public class TweetService {
 
     public Map<String, Object> adminTweetGet(AdminTweetGetBo adminTweetGetBo) {
         TweetExample example = new TweetExample();
-        example.createCriteria().andDeletedEqualTo(false);
-        example.createCriteria().andIsHelpEqualTo(false);
+        example.createCriteria()
+            .andDeletedEqualTo(false)
+            .andIsHelpEqualTo(false);
 
         List<Tweet> tweetList = tweetMapper.selectByExample(example);
 
@@ -210,8 +211,9 @@ public class TweetService {
         }
 
         TweetLikeExample example = new TweetLikeExample();
-        example.createCriteria().andUserIdEqualTo(tweetLikeBo.getUserId());
-        example.createCriteria().andTweetIdEqualTo(tweetLikeBo.getTweetId());
+        example.createCriteria()
+            .andUserIdEqualTo(tweetLikeBo.getUserId())
+            .andTweetIdEqualTo(tweetLikeBo.getTweetId());
         TweetLikeKey tweetLike = tweetLikeMapper.selectOneByExample(example);
         if (Objects.isNull(tweetLike)) {
             TweetLikeKey insertTweetLike = TweetLikeKey.builder()
@@ -235,8 +237,9 @@ public class TweetService {
         }
 
         TweetLikeExample example = new TweetLikeExample();
-        example.createCriteria().andUserIdEqualTo(tweetLikeBo.getUserId());
-        example.createCriteria().andTweetIdEqualTo(tweetLikeBo.getTweetId());
+        example.createCriteria()
+            .andUserIdEqualTo(tweetLikeBo.getUserId())
+            .andTweetIdEqualTo(tweetLikeBo.getTweetId());
         TweetLikeKey tweetLike = tweetLikeMapper.selectOneByExample(example);
         if (!Objects.isNull(tweetLike)) {
             tweetLikeMapper.deleteByPrimaryKey(tweetLike);
@@ -256,8 +259,9 @@ public class TweetService {
         }
 
         TweetStarExample example = new TweetStarExample();
-        example.createCriteria().andUserIdEqualTo(tweetLikeBo.getUserId());
-        example.createCriteria().andTweetIdEqualTo(tweetLikeBo.getTweetId());
+        example.createCriteria()
+            .andUserIdEqualTo(tweetLikeBo.getUserId())
+            .andTweetIdEqualTo(tweetLikeBo.getTweetId());
         TweetStarKey tweetStar = tweetStarMapper.selectOneByExample(example);
         if (Objects.isNull(tweetStar)) {
             TweetStarKey insertTweetStar = TweetStarKey.builder()
@@ -281,8 +285,9 @@ public class TweetService {
         }
 
         TweetStarExample example = new TweetStarExample();
-        example.createCriteria().andUserIdEqualTo(tweetLikeBo.getUserId());
-        example.createCriteria().andTweetIdEqualTo(tweetLikeBo.getTweetId());
+        example.createCriteria()
+            .andUserIdEqualTo(tweetLikeBo.getUserId())
+            .andTweetIdEqualTo(tweetLikeBo.getTweetId());
         TweetStarKey tweetStar = tweetStarMapper.selectOneByExample(example);
         if (!Objects.isNull(tweetStar)) {
             tweetStarMapper.deleteByPrimaryKey(tweetStar);
@@ -350,9 +355,10 @@ public class TweetService {
         }
 
         TweetExample tweetExample = new TweetExample();
-        tweetExample.createCriteria().andUserIdEqualTo(userSelfTweetBo.getUserId());
-        tweetExample.createCriteria().andIsHelpEqualTo(false);
-        tweetExample.createCriteria().andTitleLike("%" + userSelfTweetBo.getContext() + "%");
+        tweetExample.createCriteria()
+            .andUserIdEqualTo(userSelfTweetBo.getUserId())
+            .andIsHelpEqualTo(false)
+            .andTitleLike("%" + userSelfTweetBo.getContext() + "%");
         
         List<Tweet> tweetList = tweetMapper.selectByExample(tweetExample);
 
@@ -387,9 +393,10 @@ public class TweetService {
         }
 
         TweetExample tweetExample = new TweetExample();
-        tweetExample.createCriteria().andUserIdEqualTo(userSelfHelpBo.getUserId());
-        tweetExample.createCriteria().andIsHelpEqualTo(true);
-        tweetExample.createCriteria().andTitleLike("%" + userSelfHelpBo.getContext() + "%");
+        tweetExample.createCriteria()
+            .andUserIdEqualTo(userSelfHelpBo.getUserId())
+            .andIsHelpEqualTo(true)
+            .andTitleLike("%" + userSelfHelpBo.getContext() + "%");
         
         List<Tweet> tweetList = tweetMapper.selectByExample(tweetExample);
 

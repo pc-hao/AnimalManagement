@@ -46,16 +46,12 @@ public class HelpService {
 
     public Map<String, Object> adminHelpGet(AdminHelpGetBo adminHelpGetBo) {
         TweetExample example = new TweetExample();
-        example.createCriteria().andDeletedEqualTo(false);
-        example.createCriteria().andIsHelpEqualTo(true);
-        if(!Objects.isNull(adminHelpGetBo) && !adminHelpGetBo.getContext().isEmpty()) {
-            example.createCriteria().andTitleLike(adminHelpGetBo.getContext());
-        }
-        if(adminHelpGetBo.getIsPass()) {
-            example.createCriteria().andCensoredGreaterThan(0);
-        } else {
-            example.createCriteria().andCensoredEqualTo(0);
-        }
+        example.createCriteria()
+            .andDeletedEqualTo(false)
+            .andIsHelpEqualTo(true)
+            .andTitleLike("%" + adminHelpGetBo.getContext() + "%")
+            .andCensoredEqualTo(adminHelpGetBo.getCensored())
+            .andSolvedEqualTo(adminHelpGetBo.getSolved());
 
         List<Tweet> helpList = tweetMapper.selectByExample(example);
 
@@ -219,8 +215,9 @@ public class HelpService {
         }
 
         TweetLikeExample example = new TweetLikeExample();
-        example.createCriteria().andUserIdEqualTo(tweetLikeBo.getUserId());
-        example.createCriteria().andTweetIdEqualTo(tweetLikeBo.getTweetId());
+        example.createCriteria()
+            .andUserIdEqualTo(tweetLikeBo.getUserId())
+            .andTweetIdEqualTo(tweetLikeBo.getTweetId());
         TweetLikeKey tweetLike = tweetLikeMapper.selectOneByExample(example);
         if (Objects.isNull(tweetLike)) {
             TweetLikeKey insertTweetLike = TweetLikeKey.builder()
@@ -244,8 +241,9 @@ public class HelpService {
         }
 
         TweetLikeExample example = new TweetLikeExample();
-        example.createCriteria().andUserIdEqualTo(tweetLikeBo.getUserId());
-        example.createCriteria().andTweetIdEqualTo(tweetLikeBo.getTweetId());
+        example.createCriteria()
+            .andUserIdEqualTo(tweetLikeBo.getUserId())
+            .andTweetIdEqualTo(tweetLikeBo.getTweetId());
         TweetLikeKey tweetLike = tweetLikeMapper.selectOneByExample(example);
         if (!Objects.isNull(tweetLike)) {
             tweetLikeMapper.deleteByPrimaryKey(tweetLike);
@@ -265,8 +263,9 @@ public class HelpService {
         }
 
         TweetStarExample example = new TweetStarExample();
-        example.createCriteria().andUserIdEqualTo(tweetLikeBo.getUserId());
-        example.createCriteria().andTweetIdEqualTo(tweetLikeBo.getTweetId());
+        example.createCriteria()
+            .andUserIdEqualTo(tweetLikeBo.getUserId())
+            .andTweetIdEqualTo(tweetLikeBo.getTweetId());
         TweetStarKey tweetStar = tweetStarMapper.selectOneByExample(example);
         if (Objects.isNull(tweetStar)) {
             TweetStarKey insertTweetStar = TweetStarKey.builder()
@@ -290,8 +289,9 @@ public class HelpService {
         }
 
         TweetStarExample example = new TweetStarExample();
-        example.createCriteria().andUserIdEqualTo(tweetLikeBo.getUserId());
-        example.createCriteria().andTweetIdEqualTo(tweetLikeBo.getTweetId());
+        example.createCriteria()
+            .andUserIdEqualTo(tweetLikeBo.getUserId())
+            .andTweetIdEqualTo(tweetLikeBo.getTweetId());
         TweetStarKey tweetStar = tweetStarMapper.selectOneByExample(example);
         if (!Objects.isNull(tweetStar)) {
             tweetStarMapper.deleteByPrimaryKey(tweetStar);
