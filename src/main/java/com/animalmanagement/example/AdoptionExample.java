@@ -1,5 +1,6 @@
 package com.animalmanagement.example;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -411,6 +412,66 @@ public class AdoptionExample {
 
         public Criteria andCensoredNotBetween(Integer value1, Integer value2) {
             addCriterion("censored not between", value1, value2, "censored");
+            return (Criteria) this;
+        }
+
+        public Criteria andTimeIsNull() {
+            addCriterion("`time` is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andTimeIsNotNull() {
+            addCriterion("`time` is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andTimeEqualTo(LocalDateTime value) {
+            addCriterion("`time` =", value, "time");
+            return (Criteria) this;
+        }
+
+        public Criteria andTimeNotEqualTo(LocalDateTime value) {
+            addCriterion("`time` <>", value, "time");
+            return (Criteria) this;
+        }
+
+        public Criteria andTimeGreaterThan(LocalDateTime value) {
+            addCriterion("`time` >", value, "time");
+            return (Criteria) this;
+        }
+
+        public Criteria andTimeGreaterThanOrEqualTo(LocalDateTime value) {
+            addCriterion("`time` >=", value, "time");
+            return (Criteria) this;
+        }
+
+        public Criteria andTimeLessThan(LocalDateTime value) {
+            addCriterion("`time` <", value, "time");
+            return (Criteria) this;
+        }
+
+        public Criteria andTimeLessThanOrEqualTo(LocalDateTime value) {
+            addCriterion("`time` <=", value, "time");
+            return (Criteria) this;
+        }
+
+        public Criteria andTimeIn(List<LocalDateTime> values) {
+            addCriterion("`time` in", values, "time");
+            return (Criteria) this;
+        }
+
+        public Criteria andTimeNotIn(List<LocalDateTime> values) {
+            addCriterion("`time` not in", values, "time");
+            return (Criteria) this;
+        }
+
+        public Criteria andTimeBetween(LocalDateTime value1, LocalDateTime value2) {
+            addCriterion("`time` between", value1, value2, "time");
+            return (Criteria) this;
+        }
+
+        public Criteria andTimeNotBetween(LocalDateTime value1, LocalDateTime value2) {
+            addCriterion("`time` not between", value1, value2, "time");
             return (Criteria) this;
         }
     }
