@@ -11,4 +11,5 @@ public class UserStarTweetBo {
     private Integer userId;
     private Integer page;
     private Integer type;
+    private String context;
 }
