@@ -237,6 +237,17 @@ CREATE TABLE `verification`
   AUTO_INCREMENT = 3
   DEFAULT CHARSET = utf8mb4;
 
+CREATE TABLE `adoption`
+(
+    `user_id`   int(32)         NOT NULL,
+    `animal_id` int(32)         NOT NULL,
+    `document`  varchar(64)     NOT NULL,
+    PRIMARY KEY (`user_id`, `animal_id`),
+    FOREIGN KEY (`user_id`) REFERENCES `sys_user`(`id`),
+    FOREIGN KEY (`animal_id`) REFERENCES `animal`(`id`)
+);
+
+insert into adoption (user_id,animal_id,document) values (3,1,"");
 
 DROP EVENT IF EXISTS clean_verification_event;
 CREATE EVENT clean_verification_event
