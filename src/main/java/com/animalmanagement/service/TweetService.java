@@ -181,6 +181,7 @@ public class TweetService {
                 .andPublishedEqualTo(true)
                 .andCensoredEqualTo(CensorStatusEnum.PASS.getCode())
                 .andDeletedEqualTo(false)
+                .andIsHelpEqualTo(false)
                 .andTitleLike("%" + getTweetsBo.getMatch() + "%");
         List<Tweet> tweetList = tweetMapper.selectByExample(example);
 
