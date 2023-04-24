@@ -90,7 +90,7 @@ CREATE TABLE `tweet`
     `id`           int(32)  NOT NULL AUTO_INCREMENT,
     `user_id`      int(32)  NOT NULL,
     `title`        varchar(100)      DEFAULT NULL,
-    `content`      text     NOT NULL,
+    `content`      varchar(1024)     NOT NULL,
     `images`       varchar(320)      DEFAULT NULL,
     `time`         datetime NOT NULL DEFAULT now(),
     `views`        int(32)  NOT NULL DEFAULT 0,
@@ -117,7 +117,7 @@ CREATE TABLE `comment`
     `id`       int(32)  NOT NULL AUTO_INCREMENT,
     `user_id`  int(32)  NOT NULL,
     `tweet_id` int(32)  NOT NULL,
-    `content`  text     NOT NULL,
+    `content`  varchar(1024)     NOT NULL,
     `time`     datetime NOT NULL DEFAULT now(),
     `likes`    int(32)  NOT NULL DEFAULT 0,
     `is_help`  boolean  NOT NULL DEFAULT FALSE,
@@ -182,7 +182,7 @@ CREATE TABLE `message`
 (
     `id`      int(32) NOT NULL AUTO_INCREMENT,
     `user_id` int(32) NOT NULL,
-    `content` text    NOT NULL,
+    `content` varchar(1024)    NOT NULL,
     PRIMARY KEY (`id`),
     FOREIGN KEY (`user_id`) REFERENCES `sys_user` (`id`)
 );

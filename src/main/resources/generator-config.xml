@@ -61,11 +61,9 @@
         <!-- <table tableName="comment" domainObjectName="Comment">
            <columnOverride column="time" javaType="java.time.LocalDateTime" jdbcType="TIMESTAMP"/>
         </table> -->
-<!--        <table tableName="tweetstar" domainObjectName="TweetStar">-->
-<!--           -->
-<!--        </table>-->
-        <table tableName="animal" domainObjectName="Animal">
-           
-        </table>
+       <table tableName="tweet" domainObjectName="Tweet">
+         
+       </table>
+        
     </context>
 </generatorConfiguration>

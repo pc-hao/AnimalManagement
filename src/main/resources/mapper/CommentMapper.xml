@@ -5,14 +5,12 @@
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="user_id" jdbcType="INTEGER" property="userId" />
     <result column="tweet_id" jdbcType="INTEGER" property="tweetId" />
+    <result column="content" jdbcType="VARCHAR" property="content" />
     <result column="time" jdbcType="TIMESTAMP" property="time" />
     <result column="likes" jdbcType="INTEGER" property="likes" />
     <result column="is_help" jdbcType="BIT" property="isHelp" />
     <result column="censored" jdbcType="INTEGER" property="censored" />
     <result column="deleted" jdbcType="BIT" property="deleted" />
-  </resultMap>
-  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.animalmanagement.entity.Comment">
-    <result column="content" jdbcType="LONGVARCHAR" property="content" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -73,27 +71,8 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, user_id, tweet_id, `time`, likes, is_help, censored, deleted
+    id, user_id, tweet_id, content, `time`, likes, is_help, censored, deleted
   </sql>
-  <sql id="Blob_Column_List">
-    content
-  </sql>
-  <select id="selectByExampleWithBLOBs" parameterType="com.animalmanagement.example.CommentExample" resultMap="ResultMapWithBLOBs">
-    select
-    <if test="distinct">
-      distinct
-    </if>
-    <include refid="Base_Column_List" />
-    ,
-    <include refid="Blob_Column_List" />
-    from comment
-    <if test="_parameter != null">
-      <include refid="Example_Where_Clause" />
-    </if>
-    <if test="orderByClause != null">
-      order by ${orderByClause}
-    </if>
-  </select>
   <select id="selectByExample" parameterType="com.animalmanagement.example.CommentExample" resultMap="BaseResultMap">
     select
     <if test="distinct">
@@ -108,11 +87,9 @@
       order by ${orderByClause}
     </if>
   </select>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="ResultMapWithBLOBs">
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
-    ,
-    <include refid="Blob_Column_List" />
     from comment
     where id = #{id,jdbcType=INTEGER}
   </select>
@@ -128,13 +105,11 @@
   </delete>
   <insert id="insert" parameterType="com.animalmanagement.entity.Comment">
     insert into comment (id, user_id, tweet_id, 
-      `time`, likes, is_help, 
-      censored, deleted, content
-      )
+      content, `time`, likes, 
+      is_help, censored, deleted)
     values (#{id,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{tweetId,jdbcType=INTEGER}, 
-      #{time,jdbcType=TIMESTAMP}, #{likes,jdbcType=INTEGER}, #{isHelp,jdbcType=BIT}, 
-      #{censored,jdbcType=INTEGER}, #{deleted,jdbcType=BIT}, #{content,jdbcType=LONGVARCHAR}
-      )
+      #{content,jdbcType=VARCHAR}, #{time,jdbcType=TIMESTAMP}, #{likes,jdbcType=INTEGER}, 
+      #{isHelp,jdbcType=BIT}, #{censored,jdbcType=INTEGER}, #{deleted,jdbcType=BIT})
   </insert>
   <insert id="insertSelective" parameterType="com.animalmanagement.entity.Comment">
     insert into comment
@@ -147,6 +122,9 @@
       </if>
       <if test="tweetId != null">
         tweet_id,
+      </if>
+      <if test="content != null">
+        content,
       </if>
       <if test="time != null">
         `time`,
@@ -163,9 +141,6 @@
       <if test="deleted != null">
         deleted,
       </if>
-      <if test="content != null">
-        content,
-      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -176,6 +151,9 @@
       </if>
       <if test="tweetId != null">
         #{tweetId,jdbcType=INTEGER},
+      </if>
+      <if test="content != null">
+        #{content,jdbcType=VARCHAR},
       </if>
       <if test="time != null">
         #{time,jdbcType=TIMESTAMP},
@@ -191,9 +169,6 @@
       </if>
       <if test="deleted != null">
         #{deleted,jdbcType=BIT},
-      </if>
-      <if test="content != null">
-        #{content,jdbcType=LONGVARCHAR},
       </if>
     </trim>
   </insert>
@@ -215,6 +190,9 @@
       <if test="record.tweetId != null">
         tweet_id = #{record.tweetId,jdbcType=INTEGER},
       </if>
+      <if test="record.content != null">
+        content = #{record.content,jdbcType=VARCHAR},
+      </if>
       <if test="record.time != null">
         `time` = #{record.time,jdbcType=TIMESTAMP},
       </if>
@@ -230,25 +208,7 @@
       <if test="record.deleted != null">
         deleted = #{record.deleted,jdbcType=BIT},
       </if>
-      <if test="record.content != null">
-        content = #{record.content,jdbcType=LONGVARCHAR},
-      </if>
     </set>
-    <if test="_parameter != null">
-      <include refid="Update_By_Example_Where_Clause" />
-    </if>
-  </update>
-  <update id="updateByExampleWithBLOBs" parameterType="map">
-    update comment
-    set id = #{record.id,jdbcType=INTEGER},
-      user_id = #{record.userId,jdbcType=INTEGER},
-      tweet_id = #{record.tweetId,jdbcType=INTEGER},
-      `time` = #{record.time,jdbcType=TIMESTAMP},
-      likes = #{record.likes,jdbcType=INTEGER},
-      is_help = #{record.isHelp,jdbcType=BIT},
-      censored = #{record.censored,jdbcType=INTEGER},
-      deleted = #{record.deleted,jdbcType=BIT},
-      content = #{record.content,jdbcType=LONGVARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -258,6 +218,7 @@
     set id = #{record.id,jdbcType=INTEGER},
       user_id = #{record.userId,jdbcType=INTEGER},
       tweet_id = #{record.tweetId,jdbcType=INTEGER},
+      content = #{record.content,jdbcType=VARCHAR},
       `time` = #{record.time,jdbcType=TIMESTAMP},
       likes = #{record.likes,jdbcType=INTEGER},
       is_help = #{record.isHelp,jdbcType=BIT},
@@ -276,6 +237,9 @@
       <if test="tweetId != null">
         tweet_id = #{tweetId,jdbcType=INTEGER},
       </if>
+      <if test="content != null">
+        content = #{content,jdbcType=VARCHAR},
+      </if>
       <if test="time != null">
         `time` = #{time,jdbcType=TIMESTAMP},
       </if>
@@ -291,28 +255,14 @@
       <if test="deleted != null">
         deleted = #{deleted,jdbcType=BIT},
       </if>
-      <if test="content != null">
-        content = #{content,jdbcType=LONGVARCHAR},
-      </if>
     </set>
-    where id = #{id,jdbcType=INTEGER}
-  </update>
-  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.animalmanagement.entity.Comment">
-    update comment
-    set user_id = #{userId,jdbcType=INTEGER},
-      tweet_id = #{tweetId,jdbcType=INTEGER},
-      `time` = #{time,jdbcType=TIMESTAMP},
-      likes = #{likes,jdbcType=INTEGER},
-      is_help = #{isHelp,jdbcType=BIT},
-      censored = #{censored,jdbcType=INTEGER},
-      deleted = #{deleted,jdbcType=BIT},
-      content = #{content,jdbcType=LONGVARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.animalmanagement.entity.Comment">
     update comment
     set user_id = #{userId,jdbcType=INTEGER},
       tweet_id = #{tweetId,jdbcType=INTEGER},
+      content = #{content,jdbcType=VARCHAR},
       `time` = #{time,jdbcType=TIMESTAMP},
       likes = #{likes,jdbcType=INTEGER},
       is_help = #{isHelp,jdbcType=BIT},
@@ -336,41 +286,6 @@
       order by ${orderByClause}
     </if>
     limit 1
-  </select>
-  <select id="selectOneByExampleWithBLOBs" parameterType="com.animalmanagement.example.CommentExample" resultMap="ResultMapWithBLOBs">
-    <!--
-      WARNING - @mbg.generated
-      This element is automatically generated by MyBatis Generator, do not modify.
-      @project https://github.com/itfsw/mybatis-generator-plugin
-    -->
-    select
-    <include refid="Base_Column_List" />
-    ,
-    <include refid="Blob_Column_List" />
-    from comment
-    <if test="_parameter != null">
-      <include refid="Example_Where_Clause" />
-    </if>
-    <if test="orderByClause != null">
-      order by ${orderByClause}
-    </if>
-    limit 1
-  </select>
-  <select id="selectByExampleWithBLOBsWithRowbounds" parameterType="com.animalmanagement.example.CommentExample" resultMap="ResultMapWithBLOBs">
-    select
-    <if test="distinct">
-      distinct
-    </if>
-    <include refid="Base_Column_List" />
-    ,
-    <include refid="Blob_Column_List" />
-    from comment
-    <if test="_parameter != null">
-      <include refid="Example_Where_Clause" />
-    </if>
-    <if test="orderByClause != null">
-      order by ${orderByClause}
-    </if>
   </select>
   <select id="selectByExampleWithRowbounds" parameterType="com.animalmanagement.example.CommentExample" resultMap="BaseResultMap">
     select

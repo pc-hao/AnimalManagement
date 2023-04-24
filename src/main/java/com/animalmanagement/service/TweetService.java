@@ -49,7 +49,7 @@ public class TweetService {
         example.createCriteria().andDeletedEqualTo(false);
         example.createCriteria().andIsHelpEqualTo(false);
 
-        List<Tweet> tweetList = tweetMapper.selectByExampleWithBLOBs(example);
+        List<Tweet> tweetList = tweetMapper.selectByExample(example);
 
         Map<Integer, UserInfo> userInfoMap = userService.getUserInfoByIdList(
                 tweetList.stream().map(Tweet::getUserId).distinct().toList());
@@ -312,7 +312,7 @@ public class TweetService {
         }
         tweetExample.createCriteria().andTitleLike("%" + userStarTweetBo.getContext() + "%");
         
-        List<Tweet> tweetList = tweetMapper.selectByExampleWithBLOBs(tweetExample);
+        List<Tweet> tweetList = tweetMapper.selectByExample(tweetExample);
 
         List<UserStarTweetVo> voList = tweetList
                 .stream()
@@ -349,7 +349,7 @@ public class TweetService {
         tweetExample.createCriteria().andIsHelpEqualTo(false);
         tweetExample.createCriteria().andTitleLike("%" + userSelfTweetBo.getContext() + "%");
         
-        List<Tweet> tweetList = tweetMapper.selectByExampleWithBLOBs(tweetExample);
+        List<Tweet> tweetList = tweetMapper.selectByExample(tweetExample);
 
         List<UserSelfTweetVo> voList = tweetList
                 .stream()
@@ -386,7 +386,7 @@ public class TweetService {
         tweetExample.createCriteria().andIsHelpEqualTo(true);
         tweetExample.createCriteria().andTitleLike("%" + userSelfHelpBo.getContext() + "%");
         
-        List<Tweet> tweetList = tweetMapper.selectByExampleWithBLOBs(tweetExample);
+        List<Tweet> tweetList = tweetMapper.selectByExample(tweetExample);
 
         List<UserSelfHelpVo> voList = tweetList
                 .stream()
