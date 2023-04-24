@@ -424,4 +424,37 @@ public class TweetService {
         }
         return map;
     }
+
+    public Map<String, Object> helpGet(UserHelpGetBo userHelpGetBo) {
+        int pageSize = userHelpGetBo.getPageNum();
+
+        TweetExample tweetExample = new TweetExample();
+        tweetExample.createCriteria()
+            .andIsHelpEqualTo(true)
+            .andTitleLike("%" + userHelpGetBo.getContext() + "%");
+        
+        List<Tweet> tweetList = tweetMapper.selectByExample(tweetExample);
+
+        tweetList.sort(Comparator.comparing(Tweet::getTime));
+
+        List<UserHelpGetVo> voList = tweetList
+                .stream()
+                .map(e -> {
+                    UserHelpGetVo vo = new UserHelpGetVo();
+                    BeanUtils.copyProperties(e, vo);
+                    return vo;
+                }).toList();
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("sumNum", voList.size());
+
+        int start = userHelpGetBo.getPage() * pageSize;
+        if (start >= voList.size()) {
+            map.put("tweets", null);
+        } else {
+            int end = Math.min(start + pageSize, voList.size());
+            map.put("tweets", voList.subList(start, end));
+        }
+        return map;
+    }
 }
