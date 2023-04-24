@@ -57,7 +57,7 @@ public class HelpService {
             example.createCriteria().andCensoredEqualTo(0);
         }
 
-        List<Tweet> helpList = tweetMapper.selectByExampleWithBLOBs(example);
+        List<Tweet> helpList = tweetMapper.selectByExample(example);
 
         Map<Integer, UserInfo> userInfoMap = userService.getUserInfoByIdList(
                 helpList.stream().map(Tweet::getUserId).distinct().toList());

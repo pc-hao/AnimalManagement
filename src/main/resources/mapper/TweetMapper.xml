@@ -5,6 +5,7 @@
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="user_id" jdbcType="INTEGER" property="userId" />
     <result column="title" jdbcType="VARCHAR" property="title" />
+    <result column="content" jdbcType="VARCHAR" property="content" />
     <result column="images" jdbcType="VARCHAR" property="images" />
     <result column="time" jdbcType="TIMESTAMP" property="time" />
     <result column="views" jdbcType="INTEGER" property="views" />
@@ -17,9 +18,6 @@
     <result column="censored" jdbcType="INTEGER" property="censored" />
     <result column="published" jdbcType="BIT" property="published" />
     <result column="deleted" jdbcType="BIT" property="deleted" />
-  </resultMap>
-  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.animalmanagement.entity.Tweet">
-    <result column="content" jdbcType="LONGVARCHAR" property="content" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -80,28 +78,9 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, user_id, title, images, `time`, views, views_weekly, likes, stars, comments, 
+    id, user_id, title, content, images, `time`, views, views_weekly, likes, stars, comments, 
     is_help, solved, censored, published, deleted
   </sql>
-  <sql id="Blob_Column_List">
-    content
-  </sql>
-  <select id="selectByExampleWithBLOBs" parameterType="com.animalmanagement.example.TweetExample" resultMap="ResultMapWithBLOBs">
-    select
-    <if test="distinct">
-      distinct
-    </if>
-    <include refid="Base_Column_List" />
-    ,
-    <include refid="Blob_Column_List" />
-    from tweet
-    <if test="_parameter != null">
-      <include refid="Example_Where_Clause" />
-    </if>
-    <if test="orderByClause != null">
-      order by ${orderByClause}
-    </if>
-  </select>
   <select id="selectByExample" parameterType="com.animalmanagement.example.TweetExample" resultMap="BaseResultMap">
     select
     <if test="distinct">
@@ -116,11 +95,9 @@
       order by ${orderByClause}
     </if>
   </select>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="ResultMapWithBLOBs">
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
-    ,
-    <include refid="Blob_Column_List" />
     from tweet
     where id = #{id,jdbcType=INTEGER}
   </select>
@@ -136,17 +113,17 @@
   </delete>
   <insert id="insert" parameterType="com.animalmanagement.entity.Tweet">
     insert into tweet (id, user_id, title, 
-      images, `time`, views, 
-      views_weekly, likes, stars, 
-      comments, is_help, solved, censored, 
-      published, deleted, content
-      )
+      content, images, `time`, 
+      views, views_weekly, likes, 
+      stars, comments, is_help, 
+      solved, censored, published, 
+      deleted)
     values (#{id,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{title,jdbcType=VARCHAR}, 
-      #{images,jdbcType=VARCHAR}, #{time,jdbcType=TIMESTAMP}, #{views,jdbcType=INTEGER}, 
-      #{viewsWeekly,jdbcType=INTEGER}, #{likes,jdbcType=INTEGER}, #{stars,jdbcType=INTEGER}, 
-      #{comments,jdbcType=INTEGER}, #{isHelp,jdbcType=BIT}, #{solved,jdbcType=BIT}, #{censored,jdbcType=INTEGER}, 
-      #{published,jdbcType=BIT}, #{deleted,jdbcType=BIT}, #{content,jdbcType=LONGVARCHAR}
-      )
+      #{content,jdbcType=VARCHAR}, #{images,jdbcType=VARCHAR}, #{time,jdbcType=TIMESTAMP}, 
+      #{views,jdbcType=INTEGER}, #{viewsWeekly,jdbcType=INTEGER}, #{likes,jdbcType=INTEGER}, 
+      #{stars,jdbcType=INTEGER}, #{comments,jdbcType=INTEGER}, #{isHelp,jdbcType=BIT}, 
+      #{solved,jdbcType=BIT}, #{censored,jdbcType=INTEGER}, #{published,jdbcType=BIT}, 
+      #{deleted,jdbcType=BIT})
   </insert>
   <insert id="insertSelective" parameterType="com.animalmanagement.entity.Tweet">
     insert into tweet
@@ -159,6 +136,9 @@
       </if>
       <if test="title != null">
         title,
+      </if>
+      <if test="content != null">
+        content,
       </if>
       <if test="images != null">
         images,
@@ -196,9 +176,6 @@
       <if test="deleted != null">
         deleted,
       </if>
-      <if test="content != null">
-        content,
-      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -209,6 +186,9 @@
       </if>
       <if test="title != null">
         #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null">
+        #{content,jdbcType=VARCHAR},
       </if>
       <if test="images != null">
         #{images,jdbcType=VARCHAR},
@@ -246,9 +226,6 @@
       <if test="deleted != null">
         #{deleted,jdbcType=BIT},
       </if>
-      <if test="content != null">
-        #{content,jdbcType=LONGVARCHAR},
-      </if>
     </trim>
   </insert>
   <select id="countByExample" parameterType="com.animalmanagement.example.TweetExample" resultType="java.lang.Long">
@@ -268,6 +245,9 @@
       </if>
       <if test="record.title != null">
         title = #{record.title,jdbcType=VARCHAR},
+      </if>
+      <if test="record.content != null">
+        content = #{record.content,jdbcType=VARCHAR},
       </if>
       <if test="record.images != null">
         images = #{record.images,jdbcType=VARCHAR},
@@ -305,32 +285,7 @@
       <if test="record.deleted != null">
         deleted = #{record.deleted,jdbcType=BIT},
       </if>
-      <if test="record.content != null">
-        content = #{record.content,jdbcType=LONGVARCHAR},
-      </if>
     </set>
-    <if test="_parameter != null">
-      <include refid="Update_By_Example_Where_Clause" />
-    </if>
-  </update>
-  <update id="updateByExampleWithBLOBs" parameterType="map">
-    update tweet
-    set id = #{record.id,jdbcType=INTEGER},
-      user_id = #{record.userId,jdbcType=INTEGER},
-      title = #{record.title,jdbcType=VARCHAR},
-      images = #{record.images,jdbcType=VARCHAR},
-      `time` = #{record.time,jdbcType=TIMESTAMP},
-      views = #{record.views,jdbcType=INTEGER},
-      views_weekly = #{record.viewsWeekly,jdbcType=INTEGER},
-      likes = #{record.likes,jdbcType=INTEGER},
-      stars = #{record.stars,jdbcType=INTEGER},
-      comments = #{record.comments,jdbcType=INTEGER},
-      is_help = #{record.isHelp,jdbcType=BIT},
-      solved = #{record.solved,jdbcType=BIT},
-      censored = #{record.censored,jdbcType=INTEGER},
-      published = #{record.published,jdbcType=BIT},
-      deleted = #{record.deleted,jdbcType=BIT},
-      content = #{record.content,jdbcType=LONGVARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -340,6 +295,7 @@
     set id = #{record.id,jdbcType=INTEGER},
       user_id = #{record.userId,jdbcType=INTEGER},
       title = #{record.title,jdbcType=VARCHAR},
+      content = #{record.content,jdbcType=VARCHAR},
       images = #{record.images,jdbcType=VARCHAR},
       `time` = #{record.time,jdbcType=TIMESTAMP},
       views = #{record.views,jdbcType=INTEGER},
@@ -364,6 +320,9 @@
       </if>
       <if test="title != null">
         title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null">
+        content = #{content,jdbcType=VARCHAR},
       </if>
       <if test="images != null">
         images = #{images,jdbcType=VARCHAR},
@@ -401,35 +360,14 @@
       <if test="deleted != null">
         deleted = #{deleted,jdbcType=BIT},
       </if>
-      <if test="content != null">
-        content = #{content,jdbcType=LONGVARCHAR},
-      </if>
     </set>
-    where id = #{id,jdbcType=INTEGER}
-  </update>
-  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.animalmanagement.entity.Tweet">
-    update tweet
-    set user_id = #{userId,jdbcType=INTEGER},
-      title = #{title,jdbcType=VARCHAR},
-      images = #{images,jdbcType=VARCHAR},
-      `time` = #{time,jdbcType=TIMESTAMP},
-      views = #{views,jdbcType=INTEGER},
-      views_weekly = #{viewsWeekly,jdbcType=INTEGER},
-      likes = #{likes,jdbcType=INTEGER},
-      stars = #{stars,jdbcType=INTEGER},
-      comments = #{comments,jdbcType=INTEGER},
-      is_help = #{isHelp,jdbcType=BIT},
-      solved = #{solved,jdbcType=BIT},
-      censored = #{censored,jdbcType=INTEGER},
-      published = #{published,jdbcType=BIT},
-      deleted = #{deleted,jdbcType=BIT},
-      content = #{content,jdbcType=LONGVARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.animalmanagement.entity.Tweet">
     update tweet
     set user_id = #{userId,jdbcType=INTEGER},
       title = #{title,jdbcType=VARCHAR},
+      content = #{content,jdbcType=VARCHAR},
       images = #{images,jdbcType=VARCHAR},
       `time` = #{time,jdbcType=TIMESTAMP},
       views = #{views,jdbcType=INTEGER},
@@ -460,41 +398,6 @@
       order by ${orderByClause}
     </if>
     limit 1
-  </select>
-  <select id="selectOneByExampleWithBLOBs" parameterType="com.animalmanagement.example.TweetExample" resultMap="ResultMapWithBLOBs">
-    <!--
-      WARNING - @mbg.generated
-      This element is automatically generated by MyBatis Generator, do not modify.
-      @project https://github.com/itfsw/mybatis-generator-plugin
-    -->
-    select
-    <include refid="Base_Column_List" />
-    ,
-    <include refid="Blob_Column_List" />
-    from tweet
-    <if test="_parameter != null">
-      <include refid="Example_Where_Clause" />
-    </if>
-    <if test="orderByClause != null">
-      order by ${orderByClause}
-    </if>
-    limit 1
-  </select>
-  <select id="selectByExampleWithBLOBsWithRowbounds" parameterType="com.animalmanagement.example.TweetExample" resultMap="ResultMapWithBLOBs">
-    select
-    <if test="distinct">
-      distinct
-    </if>
-    <include refid="Base_Column_List" />
-    ,
-    <include refid="Blob_Column_List" />
-    from tweet
-    <if test="_parameter != null">
-      <include refid="Example_Where_Clause" />
-    </if>
-    <if test="orderByClause != null">
-      order by ${orderByClause}
-    </if>
   </select>
   <select id="selectByExampleWithRowbounds" parameterType="com.animalmanagement.example.TweetExample" resultMap="BaseResultMap">
     select

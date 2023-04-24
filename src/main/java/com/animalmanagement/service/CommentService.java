@@ -40,6 +40,8 @@ public class CommentService {
     public Map<String, Object> adminGetComments(AdminGetCommentsBo adminGetCommentsBo) {
         List<Comment> commentList = commentMapper.selectByExample(new CommentExample());
 
+        commentList.sort(Comparator.comparing(Comment::getTime));
+
         List<AdminCommentGetVo> voList = commentList
                 .stream()
                 .map(e -> {
@@ -49,9 +51,9 @@ public class CommentService {
                     vo.setUsername(userInfo.getUsername());
                     return vo;
                 }).toList();
-        voList.sort(Comparator.comparing(AdminCommentGetVo::getTime));
 
         Map<String, Object> map = new HashMap<>();
+
         map.put("sumNum", voList.size());
 
         int start = adminGetCommentsBo.getPage() * adminGetCommentsBo.getPageNum();
