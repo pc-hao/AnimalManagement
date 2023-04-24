@@ -1,5 +1,6 @@
 package com.animalmanagement.example;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -284,73 +285,73 @@ public class AdoptionExample {
             return (Criteria) this;
         }
 
-        public Criteria andDocumentIsNull() {
-            addCriterion("document is null");
+        public Criteria andReasonIsNull() {
+            addCriterion("reason is null");
             return (Criteria) this;
         }
 
-        public Criteria andDocumentIsNotNull() {
-            addCriterion("document is not null");
+        public Criteria andReasonIsNotNull() {
+            addCriterion("reason is not null");
             return (Criteria) this;
         }
 
-        public Criteria andDocumentEqualTo(String value) {
-            addCriterion("document =", value, "document");
+        public Criteria andReasonEqualTo(String value) {
+            addCriterion("reason =", value, "reason");
             return (Criteria) this;
         }
 
-        public Criteria andDocumentNotEqualTo(String value) {
-            addCriterion("document <>", value, "document");
+        public Criteria andReasonNotEqualTo(String value) {
+            addCriterion("reason <>", value, "reason");
             return (Criteria) this;
         }
 
-        public Criteria andDocumentGreaterThan(String value) {
-            addCriterion("document >", value, "document");
+        public Criteria andReasonGreaterThan(String value) {
+            addCriterion("reason >", value, "reason");
             return (Criteria) this;
         }
 
-        public Criteria andDocumentGreaterThanOrEqualTo(String value) {
-            addCriterion("document >=", value, "document");
+        public Criteria andReasonGreaterThanOrEqualTo(String value) {
+            addCriterion("reason >=", value, "reason");
             return (Criteria) this;
         }
 
-        public Criteria andDocumentLessThan(String value) {
-            addCriterion("document <", value, "document");
+        public Criteria andReasonLessThan(String value) {
+            addCriterion("reason <", value, "reason");
             return (Criteria) this;
         }
 
-        public Criteria andDocumentLessThanOrEqualTo(String value) {
-            addCriterion("document <=", value, "document");
+        public Criteria andReasonLessThanOrEqualTo(String value) {
+            addCriterion("reason <=", value, "reason");
             return (Criteria) this;
         }
 
-        public Criteria andDocumentLike(String value) {
-            addCriterion("document like", value, "document");
+        public Criteria andReasonLike(String value) {
+            addCriterion("reason like", value, "reason");
             return (Criteria) this;
         }
 
-        public Criteria andDocumentNotLike(String value) {
-            addCriterion("document not like", value, "document");
+        public Criteria andReasonNotLike(String value) {
+            addCriterion("reason not like", value, "reason");
             return (Criteria) this;
         }
 
-        public Criteria andDocumentIn(List<String> values) {
-            addCriterion("document in", values, "document");
+        public Criteria andReasonIn(List<String> values) {
+            addCriterion("reason in", values, "reason");
             return (Criteria) this;
         }
 
-        public Criteria andDocumentNotIn(List<String> values) {
-            addCriterion("document not in", values, "document");
+        public Criteria andReasonNotIn(List<String> values) {
+            addCriterion("reason not in", values, "reason");
             return (Criteria) this;
         }
 
-        public Criteria andDocumentBetween(String value1, String value2) {
-            addCriterion("document between", value1, value2, "document");
+        public Criteria andReasonBetween(String value1, String value2) {
+            addCriterion("reason between", value1, value2, "reason");
             return (Criteria) this;
         }
 
-        public Criteria andDocumentNotBetween(String value1, String value2) {
-            addCriterion("document not between", value1, value2, "document");
+        public Criteria andReasonNotBetween(String value1, String value2) {
+            addCriterion("reason not between", value1, value2, "reason");
             return (Criteria) this;
         }
 
@@ -411,6 +412,66 @@ public class AdoptionExample {
 
         public Criteria andCensoredNotBetween(Integer value1, Integer value2) {
             addCriterion("censored not between", value1, value2, "censored");
+            return (Criteria) this;
+        }
+
+        public Criteria andTimeIsNull() {
+            addCriterion("`time` is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andTimeIsNotNull() {
+            addCriterion("`time` is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andTimeEqualTo(LocalDateTime value) {
+            addCriterion("`time` =", value, "time");
+            return (Criteria) this;
+        }
+
+        public Criteria andTimeNotEqualTo(LocalDateTime value) {
+            addCriterion("`time` <>", value, "time");
+            return (Criteria) this;
+        }
+
+        public Criteria andTimeGreaterThan(LocalDateTime value) {
+            addCriterion("`time` >", value, "time");
+            return (Criteria) this;
+        }
+
+        public Criteria andTimeGreaterThanOrEqualTo(LocalDateTime value) {
+            addCriterion("`time` >=", value, "time");
+            return (Criteria) this;
+        }
+
+        public Criteria andTimeLessThan(LocalDateTime value) {
+            addCriterion("`time` <", value, "time");
+            return (Criteria) this;
+        }
+
+        public Criteria andTimeLessThanOrEqualTo(LocalDateTime value) {
+            addCriterion("`time` <=", value, "time");
+            return (Criteria) this;
+        }
+
+        public Criteria andTimeIn(List<LocalDateTime> values) {
+            addCriterion("`time` in", values, "time");
+            return (Criteria) this;
+        }
+
+        public Criteria andTimeNotIn(List<LocalDateTime> values) {
+            addCriterion("`time` not in", values, "time");
+            return (Criteria) this;
+        }
+
+        public Criteria andTimeBetween(LocalDateTime value1, LocalDateTime value2) {
+            addCriterion("`time` between", value1, value2, "time");
+            return (Criteria) this;
+        }
+
+        public Criteria andTimeNotBetween(LocalDateTime value1, LocalDateTime value2) {
+            addCriterion("`time` not between", value1, value2, "time");
             return (Criteria) this;
         }
     }

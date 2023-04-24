@@ -13,4 +13,6 @@ public class AdminAdoptionGetVo {
     private Integer id;
     private String username;
     private String aniname;
+    private String reason;
+    private LocalDateTime time;
 }
