@@ -223,7 +223,7 @@ CREATE TABLE `tweetstar`
     FOREIGN KEY (`tweet_id`) REFERENCES `tweet`(`id`)
 );
 
--- insert into tweetstar (user_id,tweet_id) values (2,1);
+insert into tweetstar (user_id,tweet_id) values (3,1);
 
 DROP TABLE IF EXISTS `verification`;
 

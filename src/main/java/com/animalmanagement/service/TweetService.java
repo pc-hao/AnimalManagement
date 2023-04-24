@@ -311,12 +311,8 @@ public class TweetService {
             TweetExample tweetExample = new TweetExample();
             tweetExample.createCriteria()
                 .andIdIn(idList)
-                .andTitleLike("%" + userStarTweetBo.getContext() + "%");
-            if(userStarTweetBo.getType() == 0) {
-                tweetExample.createCriteria().andIsHelpEqualTo(false);
-            } else {
-                tweetExample.createCriteria().andIsHelpEqualTo(true);
-            }
+                .andTitleLike("%" + userStarTweetBo.getContext() + "%")
+                .andIsHelpEqualTo(userStarTweetBo.getType() != 0);
 
             tweetList = tweetMapper.selectByExample(tweetExample);
 
