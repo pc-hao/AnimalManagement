@@ -55,6 +55,8 @@ public class HelpService {
 
         List<Tweet> helpList = tweetMapper.selectByExample(example);
 
+        helpList.sort(Comparator.comparing(Tweet::getTime));
+
         Map<Integer, UserInfo> userInfoMap = userService.getUserInfoByIdList(
                 helpList.stream().map(Tweet::getUserId).distinct().toList());
 
@@ -67,7 +69,6 @@ public class HelpService {
                     vo.setUsername(userInfo.getUsername());
                     return vo;
                 }).toList();
-        voList.sort(Comparator.comparing(AdminHelpGetVo::getTime));
 
         Map<String, Object> map = new HashMap<>();
         map.put("sumNum", voList.size());

@@ -53,6 +53,8 @@ public class TweetService {
 
         List<Tweet> tweetList = tweetMapper.selectByExample(example);
 
+        tweetList.sort(Comparator.comparing(Tweet::getTime));
+
         Map<Integer, UserInfo> userInfoMap = userService.getUserInfoByIdList(
                 tweetList.stream().map(Tweet::getUserId).distinct().toList());
 
@@ -65,7 +67,6 @@ public class TweetService {
                     vo.setUsername(userInfo.getUsername());
                     return vo;
                 }).toList();
-        voList.sort(Comparator.comparing(AdminTweetGetVo::getTime));
 
         Map<String, Object> map = new HashMap<>();
         map.put("sumNum", voList.size());
@@ -362,6 +363,8 @@ public class TweetService {
         
         List<Tweet> tweetList = tweetMapper.selectByExample(tweetExample);
 
+        tweetList.sort(Comparator.comparing(Tweet::getTime));
+
         List<UserSelfTweetVo> voList = tweetList
                 .stream()
                 .map(e -> {
@@ -369,7 +372,6 @@ public class TweetService {
                     BeanUtils.copyProperties(e, vo);
                     return vo;
                 }).toList();
-        voList.sort(Comparator.comparing(UserSelfTweetVo::getId));
 
         Map<String, Object> map = new HashMap<>();
         map.put("sumNum", voList.size());
@@ -400,6 +402,8 @@ public class TweetService {
         
         List<Tweet> tweetList = tweetMapper.selectByExample(tweetExample);
 
+        tweetList.sort(Comparator.comparing(Tweet::getTime));
+
         List<UserSelfHelpVo> voList = tweetList
                 .stream()
                 .map(e -> {
@@ -407,7 +411,6 @@ public class TweetService {
                     BeanUtils.copyProperties(e, vo);
                     return vo;
                 }).toList();
-        voList.sort(Comparator.comparing(UserSelfHelpVo::getId));
 
         Map<String, Object> map = new HashMap<>();
         map.put("sumNum", voList.size());
