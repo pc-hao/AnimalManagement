@@ -32,21 +32,34 @@ public class CommentService {
     SysUserMapper sysUserMapper;
 
     @Autowired
+    UserInfoMapper userInfoMapper;
+
+    @Autowired
     CommentLikeMapper commentLikeMapper;
 
     public Map<String, Object> adminGetComments(AdminGetCommentsBo adminGetCommentsBo) {
         List<Comment> commentList = commentMapper.selectByExample(new CommentExample());
 
-        Map<String, Object> map = new HashMap<>();
-        map.put("sumNum", commentList.size());
+        List<AdminCommentGetVo> voList = commentList
+                .stream()
+                .map(e -> {
+                    AdminCommentGetVo vo = new AdminCommentGetVo();
+                    BeanUtils.copyProperties(e, vo);
+                    UserInfo userInfo = userInfoMapper.selectByPrimaryKey(e.getUserId());
+                    vo.setUsername(userInfo.getUsername());
+                    return vo;
+                }).toList();
+        voList.sort(Comparator.comparing(AdminCommentGetVo::getTime));
 
-        commentList.sort(Comparator.comparing(Comment::getTime));
+        Map<String, Object> map = new HashMap<>();
+        map.put("sumNum", voList.size());
+
         int start = adminGetCommentsBo.getPage() * adminGetCommentsBo.getPageNum();
-        if (start >= commentList.size()) {
+        if (start >= voList.size()) {
             map.put("comments", null);
         } else {
-            int end = Math.min(start + adminGetCommentsBo.getPageNum(), commentList.size());
-            map.put("comments", commentList.subList(start, end));
+            int end = Math.min(start + adminGetCommentsBo.getPageNum(), voList.size());
+            map.put("comments", voList.subList(start, end));
         }
         return map;
     }
