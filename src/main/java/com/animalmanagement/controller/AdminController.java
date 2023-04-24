@@ -29,6 +29,9 @@ public class AdminController {
     @Autowired
     HelpService helpService;
 
+    @Autowired
+    AdoptionService adoptionService;
+
     @RequestMapping("/user/get")
     public BaseResponse getUsers(@RequestBody AdminGetUserBo adminGetUserBo) {
         return BaseResponse.builder()
@@ -156,6 +159,22 @@ public class AdminController {
     @PostMapping("/help/deny")
     public BaseResponse helpDeny(@RequestBody AdminHelpDenyBo adminHelpDenyBo) {
         helpService.adminHelpDeny(adminHelpDenyBo);
+        return BaseResponse.builder()
+                .code(StatusEnum.SUCCESS.getCode())
+                .build();
+    }
+
+    @PostMapping("/adoption/get")
+    public BaseResponse adoptionGet(@RequestBody AdminAdoptionGetBo adminAdoptionGetBo) {
+        return BaseResponse.builder()
+                .code(StatusEnum.SUCCESS.getCode())
+                .body(adoptionService.adminAdoptionGet(adminAdoptionGetBo))
+                .build();
+    }
+
+    @PostMapping("/adoption/censor")
+    public BaseResponse adoptionCensor(@RequestBody AdminAdoptionCensorBo adminAdoptionCensorBo) {
+        adoptionService.adminAdoptionCensor(adminAdoptionCensorBo);
         return BaseResponse.builder()
                 .code(StatusEnum.SUCCESS.getCode())
                 .build();

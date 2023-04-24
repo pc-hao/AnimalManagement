@@ -11,4 +11,5 @@ public class UserHelpGetBo {
     private Integer pageNum;
     private Integer page;
     private String context;
+    private String type;
 }
