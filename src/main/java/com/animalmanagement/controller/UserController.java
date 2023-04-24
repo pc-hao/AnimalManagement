@@ -21,6 +21,9 @@ public class UserController {
     @Autowired
     UserService userService;
 
+    @Autowired
+    TweetService tweetService;
+
     @PostMapping("/resetPasswordVerify")
     public BaseResponse resetPassword(@RequestBody ResetPasswordBo resetPasswordBo) {
         accountService.verifyCode(resetPasswordBo.getEmail(), DEFAULT_PASSWORD);
@@ -61,7 +64,34 @@ public class UserController {
         return BaseResponse.builder()
             .code(StatusEnum.SUCCESS.getCode())
             .body(userService.mainPage(userMainPageBo))
-            .message("修改成功")
+            .message("")
+            .build();
+    }
+
+    @PostMapping("/starTweet")
+    public BaseResponse starTweet(@RequestBody UserStarTweetBo userStarTweetBo) {
+        return BaseResponse.builder()
+            .code(StatusEnum.SUCCESS.getCode())
+            .body(tweetService.starTweet(userStarTweetBo))
+            .message("")
+            .build();
+    }
+
+    @PostMapping("/selfTweet")
+    public BaseResponse selfTweet(@RequestBody UserSelfTweetBo userSelfTweetBo) {
+        return BaseResponse.builder()
+            .code(StatusEnum.SUCCESS.getCode())
+            .body(tweetService.selfTweet(userSelfTweetBo))
+            .message("")
+            .build();
+    }
+
+    @PostMapping("/selfHelp")
+    public BaseResponse selfHelp(@RequestBody UserSelfHelpBo userSelfHelpBo) {
+        return BaseResponse.builder()
+            .code(StatusEnum.SUCCESS.getCode())
+            .body(tweetService.selfHelp(userSelfHelpBo))
+            .message("")
             .build();
     }
 }

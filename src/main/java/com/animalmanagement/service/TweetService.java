@@ -289,4 +289,122 @@ public class TweetService {
             tweetMapper.updateByPrimaryKeySelective(tweet);
         }
     }
+
+    public Map<String, Object> starTweet(UserStarTweetBo userStarTweetBo) {
+        int pageSize = 8;
+
+        SysUser sysUser = sysUserMapper.selectByPrimaryKey(userStarTweetBo.getUserId());
+        if(sysUser == null) {
+            throw new RuntimeException("User ID Does Not Exist");
+        }
+
+        TweetStarExample tweetStarExample = new TweetStarExample();
+        tweetStarExample.createCriteria().andUserIdEqualTo(userStarTweetBo.getUserId());
+        List<TweetStarKey> tweetStarList = tweetStarMapper.selectByExample(tweetStarExample);
+        List<Integer> idList = tweetStarList.stream().map(TweetStarKey::getUserId).distinct().toList();
+
+        TweetExample tweetExample = new TweetExample();
+        tweetExample.createCriteria().andIdIn(idList);
+        if(userStarTweetBo.getType() == 0) {
+            tweetExample.createCriteria().andIsHelpEqualTo(false);
+        } else {
+            tweetExample.createCriteria().andIsHelpEqualTo(true);
+        }
+        
+        List<Tweet> tweetList = tweetMapper.selectByExampleWithBLOBs(tweetExample);
+
+        List<UserStarTweetVo> voList = tweetList
+                .stream()
+                .map(e -> {
+                    UserStarTweetVo vo = new UserStarTweetVo();
+                    BeanUtils.copyProperties(e, vo);
+                    return vo;
+                }).toList();
+        voList.sort(Comparator.comparing(UserStarTweetVo::getId));
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("sumNum", voList.size());
+
+        int start = userStarTweetBo.getPage() * pageSize;
+        if (start >= voList.size()) {
+            map.put("tweets", null);
+        } else {
+            int end = Math.min(start + pageSize, voList.size());
+            map.put("tweets", voList.subList(start, end));
+        }
+        return map;
+    }
+
+    public Map<String, Object> selfTweet(UserSelfTweetBo userSelfTweetBo) {
+        int pageSize = 8;
+
+        SysUser sysUser = sysUserMapper.selectByPrimaryKey(userSelfTweetBo.getUserId());
+        if(sysUser == null) {
+            throw new RuntimeException("User ID Does Not Exist");
+        }
+
+        TweetExample tweetExample = new TweetExample();
+        tweetExample.createCriteria().andUserIdEqualTo(userSelfTweetBo.getUserId());
+        tweetExample.createCriteria().andIsHelpEqualTo(false);
+        
+        List<Tweet> tweetList = tweetMapper.selectByExampleWithBLOBs(tweetExample);
+
+        List<UserSelfTweetVo> voList = tweetList
+                .stream()
+                .map(e -> {
+                    UserSelfTweetVo vo = new UserSelfTweetVo();
+                    BeanUtils.copyProperties(e, vo);
+                    return vo;
+                }).toList();
+        voList.sort(Comparator.comparing(UserSelfTweetVo::getId));
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("sumNum", voList.size());
+
+        int start = userSelfTweetBo.getPage() * pageSize;
+        if (start >= voList.size()) {
+            map.put("tweets", null);
+        } else {
+            int end = Math.min(start + pageSize, voList.size());
+            map.put("tweets", voList.subList(start, end));
+        }
+        return map;
+    }
+
+    public Map<String, Object> selfHelp(UserSelfHelpBo userSelfHelpBo) {
+        int pageSize = userSelfHelpBo.getPageNum();
+
+        SysUser sysUser = sysUserMapper.selectByPrimaryKey(userSelfHelpBo.getUserId());
+        if(sysUser == null) {
+            throw new RuntimeException("User ID Does Not Exist");
+        }
+
+        TweetExample tweetExample = new TweetExample();
+        tweetExample.createCriteria().andUserIdEqualTo(userSelfHelpBo.getUserId());
+        tweetExample.createCriteria().andIsHelpEqualTo(true);
+        tweetExample.createCriteria().andTitleLike("%" + userSelfHelpBo.getContext() + "%");
+        
+        List<Tweet> tweetList = tweetMapper.selectByExampleWithBLOBs(tweetExample);
+
+        List<UserSelfHelpVo> voList = tweetList
+                .stream()
+                .map(e -> {
+                    UserSelfHelpVo vo = new UserSelfHelpVo();
+                    BeanUtils.copyProperties(e, vo);
+                    return vo;
+                }).toList();
+        voList.sort(Comparator.comparing(UserSelfHelpVo::getId));
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("sumNum", voList.size());
+
+        int start = userSelfHelpBo.getPage() * pageSize;
+        if (start >= voList.size()) {
+            map.put("tweets", null);
+        } else {
+            int end = Math.min(start + pageSize, voList.size());
+            map.put("tweets", voList.subList(start, end));
+        }
+        return map;
+    }
 }
