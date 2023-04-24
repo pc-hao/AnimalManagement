@@ -34,16 +34,22 @@ public class AnimalService {
     public Map<String, Object> adminAnimalGet(AdminAnimalGetBo adminAnimalGetBo) {
         AnimalExample example = new AnimalExample();
 
-        if(!adminAnimalGetBo.getContext().isEmpty()) {
-            example.createCriteria().andNameLike(adminAnimalGetBo.getContext());
-        }
+        example.createCriteria().andNameLike("%" + adminAnimalGetBo.getContext() + "%");
 
         List<Animal> animalList = animalMapper.selectByExample(example);
 
-        Map<String, Object> map = new HashMap<>();
-        map.put("sumNum", animalList.size());
+        List<AdminAnimalGetVo> voList = animalList
+                .stream()
+                .map(e -> {
+                    AdminAnimalGetVo vo = new AdminAnimalGetVo();
+                    BeanUtils.copyProperties(e, vo);
+                    return vo;
+                }).toList();
+        voList.sort(Comparator.comparing(AdminAnimalGetVo::getName));
 
-        animalList.sort(Comparator.comparing(Animal::getName));
+        Map<String, Object> map = new HashMap<>();
+        map.put("sumNum", voList.size());
+
         int start = adminAnimalGetBo.getPage() * adminAnimalGetBo.getPageNum();
         if (start >= animalList.size()) {
             map.put("records", null);
@@ -100,5 +106,34 @@ public class AnimalService {
         }
 
         animalMapper.deleteByPrimaryKey(animal.getId());
+    }
+
+    public Map<String, Object> animalGet(AnimalGetBo animalGetBo) {
+        AnimalExample example = new AnimalExample();
+
+        example.createCriteria().andNameLike("%" + animalGetBo.getContext() + "%");
+
+        List<Animal> animalList = animalMapper.selectByExample(example);
+
+        List<AnimalGetVo> voList = animalList
+                .stream()
+                .map(e -> {
+                    AnimalGetVo vo = new AnimalGetVo();
+                    BeanUtils.copyProperties(e, vo);
+                    return vo;
+                }).toList();
+        voList.sort(Comparator.comparing(AnimalGetVo::getName));
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("sumNum", voList.size());
+
+        int start = animalGetBo.getPage() * animalGetBo.getPageNum();
+        if (start >= voList.size()) {
+            map.put("animals", null);
+        } else {
+            int end = Math.min(start + animalGetBo.getPageNum(), voList.size());
+            map.put("animals", voList.subList(start, end));
+        }
+        return map;
     }
 }
