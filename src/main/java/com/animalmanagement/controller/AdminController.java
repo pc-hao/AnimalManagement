@@ -121,6 +121,11 @@ public class AdminController {
                 .build();
     }
 
+    @PostMapping("/animal/addrecord")
+    public BaseResponse animalAddRecord() {
+        return null;
+    }
+
     @PostMapping("/help/get")
     public BaseResponse helpGet(@RequestBody AdminHelpGetBo adminHelpGetBo) {
         return BaseResponse.builder()
