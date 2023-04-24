@@ -373,4 +373,11 @@ public class UserService {
         userInfoExample.createCriteria().andIdIn(idList);
         return userInfoMapper.selectByExample(userInfoExample).stream().collect(Collectors.toMap(UserInfo::getId, Function.identity()));
     }
+
+    public Map<Integer, UserInfo> getAllAdminMap() {
+        RoleUserExample example = new RoleUserExample();
+        example.createCriteria().andRoleIdEqualTo(RoleEnum.ADMIN.getCode());
+        List<Integer> idList = roleUserMapper.selectByExample(example).stream().map(RoleUser::getUserId).toList();
+        return getUserInfoByIdList(idList);
+    }
 }

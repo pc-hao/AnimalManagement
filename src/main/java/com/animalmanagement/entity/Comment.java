@@ -1,11 +1,15 @@
 package com.animalmanagement.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Comment implements Serializable {
     private Integer id;
 

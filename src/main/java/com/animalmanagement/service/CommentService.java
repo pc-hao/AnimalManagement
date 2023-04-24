@@ -11,12 +11,8 @@ import com.animalmanagement.example.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDateTime;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
-import java.util.Objects;
 
 import org.springframework.stereotype.Service;
 
@@ -155,6 +151,7 @@ public class CommentService {
 
         Map<Integer, UserInfo> userInfoMap = userService.getUserInfoByIdList(
                 commentList.stream().map(Comment::getUserId).distinct().toList());
+        Map<Integer, UserInfo> adminMap = userService.getAllAdminMap();
 
         List<CommentVo> commentVoList = commentList
                 .stream()
@@ -165,8 +162,16 @@ public class CommentService {
                     commentVo.setAvatar(userInfo.getAvatar());
                     commentVo.setUsername(userInfo.getUsername());
                     return commentVo;
+                }).sorted((o1, o2) -> {
+                    if ((adminMap.containsKey(o1.getId()) && adminMap.containsKey(o2.getId())) ||
+                            (!adminMap.containsKey(o1.getId()) && !adminMap.containsKey(o2.getId()))) {
+                        return o1.getTime().compareTo(o2.getTime());
+                    } else if (adminMap.containsKey(o1.getId())) {
+                        return 1;
+                    } else {
+                        return -1;
+                    }
                 }).toList();
-        commentVoList.sort(Comparator.comparing(CommentVo::getTime));
 
         Map<String, Object> resultMap = new HashMap<>();
         int start = getCommentsBo.getCommentPage() * PAGE_SIZE;
