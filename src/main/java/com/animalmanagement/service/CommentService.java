@@ -120,8 +120,9 @@ public class CommentService {
         }
 
         CommentLikeExample example = new CommentLikeExample();
-        example.createCriteria().andUserIdEqualTo(commentLikeBo.getUserId());
-        example.createCriteria().andCommentIdEqualTo(commentLikeBo.getCommentId());
+        example.createCriteria()
+            .andUserIdEqualTo(commentLikeBo.getUserId())
+            .andCommentIdEqualTo(commentLikeBo.getCommentId());
         CommentLikeKey commentLike = commentLikeMapper.selectOneByExample(example);
         if (Objects.isNull(commentLike)) {
             CommentLikeKey insertCommentLike = CommentLikeKey.builder()
@@ -145,8 +146,9 @@ public class CommentService {
         }
 
         CommentLikeExample example = new CommentLikeExample();
-        example.createCriteria().andUserIdEqualTo(commentLikeBo.getUserId());
-        example.createCriteria().andCommentIdEqualTo(commentLikeBo.getCommentId());
+        example.createCriteria()
+            .andUserIdEqualTo(commentLikeBo.getUserId())
+            .andCommentIdEqualTo(commentLikeBo.getCommentId());
         CommentLikeKey commentLike = commentLikeMapper.selectOneByExample(example);
         if (!Objects.isNull(commentLike)) {
             commentLikeMapper.deleteByPrimaryKey(commentLike);
