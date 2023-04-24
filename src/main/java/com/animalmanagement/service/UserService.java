@@ -272,6 +272,9 @@ public class UserService {
     public Map<String, Object> adminGetUsers(AdminGetUserBo adminGetUserBo) {
         List<UserInfo> userList = userInfoMapper.selectByExample(new UserInfoExample());
 
+        Map<Integer, UserInfo> adminMap = getAllAdminMap();
+        userList = userList.stream().filter(e -> !adminMap.containsKey(e.getId())).toList();
+
         //只查找已拉黑的用户
         if (adminGetUserBo.getIsBlack()) {
             userList = userList.stream().filter(UserInfo::getBlacked).collect(Collectors.toList());
