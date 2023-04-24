@@ -31,3 +31,6 @@ build/
 
 ### VS Code ###
 .vscode/
+
+src/main/java/com/animalmanagement/config/HttpConfig.java
+#src/main/resources/application.yml

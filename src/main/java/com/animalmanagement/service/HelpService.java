@@ -18,7 +18,7 @@ import java.util.Map;
 import java.util.Objects;
 
 @Service
-public class TweetService {
+public class HelpService {
 
     @Autowired
     TweetMapper tweetMapper;
@@ -44,42 +44,50 @@ public class TweetService {
     @Autowired
     UserInfoMapper userInfoMapper;
 
-    public Map<String, Object> adminTweetGet(AdminTweetGetBo adminTweetGetBo) {
+    public Map<String, Object> adminHelpGet(AdminHelpGetBo adminHelpGetBo) {
         TweetExample example = new TweetExample();
         example.createCriteria().andDeletedEqualTo(false);
-        example.createCriteria().andIsHelpEqualTo(false);
+        example.createCriteria().andIsHelpEqualTo(true);
+        if(!Objects.isNull(adminHelpGetBo) && !adminHelpGetBo.getContext().isEmpty()) {
+            example.createCriteria().andTitleLike(adminHelpGetBo.getContext());
+        }
+        if(adminHelpGetBo.getIsPass()) {
+            example.createCriteria().andCensoredGreaterThan(0);
+        } else {
+            example.createCriteria().andCensoredEqualTo(0);
+        }
 
-        List<Tweet> tweetList = tweetMapper.selectByExampleWithBLOBs(example);
+        List<Tweet> helpList = tweetMapper.selectByExampleWithBLOBs(example);
 
         Map<Integer, UserInfo> userInfoMap = userService.getUserInfoByIdList(
-                tweetList.stream().map(Tweet::getUserId).distinct().toList());
+                helpList.stream().map(Tweet::getUserId).distinct().toList());
 
-        List<AdminTweetGetVo> voList = tweetList
+        List<AdminHelpGetVo> voList = helpList
                 .stream()
                 .map(e -> {
-                    AdminTweetGetVo vo = new AdminTweetGetVo();
+                    AdminHelpGetVo vo = new AdminHelpGetVo();
                     BeanUtils.copyProperties(e, vo);
                     UserInfo userInfo = userInfoMap.get(e.getUserId());
                     vo.setUsername(userInfo.getUsername());
                     return vo;
                 }).toList();
-        voList.sort(Comparator.comparing(AdminTweetGetVo::getTime));
+        voList.sort(Comparator.comparing(AdminHelpGetVo::getTime));
 
         Map<String, Object> map = new HashMap<>();
         map.put("sumNum", voList.size());
 
-        int start = adminTweetGetBo.getPage() * adminTweetGetBo.getPageNum();
+        int start = adminHelpGetBo.getPage() * adminHelpGetBo.getPageNum();
         if (start >= voList.size()) {
-            map.put("tweets", null);
+            map.put("helps", null);
         } else {
-            int end = Math.min(start + adminTweetGetBo.getPageNum(), voList.size());
-            map.put("tweets", voList.subList(start, end));
+            int end = Math.min(start + adminHelpGetBo.getPageNum(), voList.size());
+            map.put("helps", voList.subList(start, end));
         }
         return map;
     }
 
-    public Map<String, Object> adminTweetGetContent(AdminTweetContentBo adminTweetContentBo) {
-        Tweet tweet = tweetMapper.selectByPrimaryKey(adminTweetContentBo.getTweetId());
+    public Map<String, Object> adminHelpContent(AdminHelpContentBo adminHelpContentBo) {
+        Tweet tweet = tweetMapper.selectByPrimaryKey(adminHelpContentBo.getHelpId());
         if(Objects.isNull(tweet)) {
             throw new RuntimeException("Tweet ID Does Not Exist");
         }
@@ -104,23 +112,26 @@ public class TweetService {
         return map;
     }
 
-    public void adminTweetCensor(TweetCensorBo tweetCensorBo) {
-        Integer tweetId = tweetCensorBo.getTweetId();
-        checkIdExists(tweetId);
-        Tweet tweet = tweetMapper.selectByPrimaryKey(tweetId);
-        if (tweetCensorBo.getOperate() == 0) {
-            tweet.setCensored(CensorStatusEnum.PASS.getCode());
-        } else {
-            tweet.setCensored(CensorStatusEnum.REJECT.getCode());
+    public void adminHelpPass(AdminHelpPassBo adminHelpPassBo) {
+        Tweet tweet = tweetMapper.selectByPrimaryKey(adminHelpPassBo.getHelpId());
+        if(Objects.isNull(tweet)) {
+            throw new RuntimeException("Help ID Does Not Exist");
         }
+
+        tweet.setCensored(CensorStatusEnum.PASS.getCode());
+
         tweetMapper.updateByPrimaryKeySelective(tweet);
     }
 
-    public void checkIdExists(Integer tweetId) {
-        Tweet tweet = tweetMapper.selectByPrimaryKey(tweetId);
-        if (tweet == null) {
-            throw new RuntimeException("TweetId Does Not Exist");
+    public void adminHelpDeny(AdminHelpDenyBo adminHelpDenyBo) {
+        Tweet tweet = tweetMapper.selectByPrimaryKey(adminHelpDenyBo.getHelpId());
+        if(Objects.isNull(tweet)) {
+            throw new RuntimeException("Help ID Does Not Exist");
         }
+
+        tweet.setCensored(CensorStatusEnum.REJECT.getCode());
+        
+        tweetMapper.updateByPrimaryKeySelective(tweet);
     }
 
     public TweetContentVo getTweetContent(TweetContentBo tweetContentBo) {
@@ -177,8 +188,7 @@ public class TweetService {
         example.createCriteria()
                 .andPublishedEqualTo(true)
                 .andCensoredEqualTo(CensorStatusEnum.PASS.getCode())
-                .andDeletedEqualTo(false)
-                .andTitleLike("%" + getTweetsBo.getMatch() + "%");
+                .andDeletedEqualTo(false);
         List<Tweet> tweetList = tweetMapper.selectByExample(example);
 
         Map<String, Object> map = new HashMap<>();
@@ -192,7 +202,7 @@ public class TweetService {
         if (start >= tweetList.size()) {
             map.put("tweets", null);
         } else {
-            int end = Math.min(start + pageSize, tweetList.size());
+            int end = Math.min(start + getTweetsBo.getCommentpage(), pageSize);
             map.put("tweets", tweetList.subList(start, end));
         }
         return map;

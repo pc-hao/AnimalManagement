@@ -7,9 +7,8 @@ import lombok.Data;
 @Builder
 @Data
 @AllArgsConstructor
-public class GetTweetsBo {
-    private Integer userId;
-    private Integer commentpage;
-    private String type;
-    private String match;
+public class AdminAnimalGetBo {
+    private Integer pageNum;//每页多少项
+    private Integer page;//页码
+    private String  context;
 }

@@ -1,26 +1,26 @@
 package com.animalmanagement.service;
 
-import com.animalmanagement.bean.bo.AdminGetUserBo;
-import com.animalmanagement.bean.bo.ChangeUserStatusBo;
-import com.animalmanagement.bean.bo.ModifyUserInfoBo;
-import com.animalmanagement.bean.bo.RegisterBo;
+import com.animalmanagement.bean.bo.*;
+import com.animalmanagement.bean.vo.*;
 import com.animalmanagement.entity.*;
-import com.animalmanagement.enums.RoleEnum;
-import com.animalmanagement.example.RoleUserExample;
-import com.animalmanagement.example.SysUserExample;
-import com.animalmanagement.example.UserInfoExample;
-import com.animalmanagement.example.VerificationExample;
 import com.animalmanagement.mapper.*;
-import com.animalmanagement.utils.EncodeUtil;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
+import com.animalmanagement.example.*;
+import com.animalmanagement.enums.*;
 
-import java.util.*;
-import java.util.function.Function;
+import org.springframework.beans.BeanUtils;
+import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.Objects;
+import java.util.Random;
+import java.util.function.Function;
+
+import com.animalmanagement.utils.EncodeUtil;
 
 @Service
 public class UserService {
@@ -372,6 +372,11 @@ public class UserService {
         UserInfoExample userInfoExample = new UserInfoExample();
         userInfoExample.createCriteria().andIdIn(idList);
         return userInfoMapper.selectByExample(userInfoExample).stream().collect(Collectors.toMap(UserInfo::getId, Function.identity()));
+    }
+
+    public UserMainPageVo mainPage(UserMainPageBo userMainPageBo) {
+        UserInfo userInfo = userInfoMapper.selectByPrimaryKey(userMainPageBo.getUserId());
+        return new UserMainPageVo(userInfo.getUsername(), userInfo.getAvatar(), userInfo.getBio());
     }
 
     public Map<Integer, UserInfo> getAllAdminMap() {

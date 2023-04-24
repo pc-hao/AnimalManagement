@@ -1,20 +1,19 @@
 package com.animalmanagement.service;
 
 import com.animalmanagement.bean.bo.*;
-import com.animalmanagement.bean.vo.CommentVo;
-import com.animalmanagement.enums.CensorStatusEnum;
-import org.springframework.beans.BeanUtils;
-import org.springframework.stereotype.Service;
+import com.animalmanagement.bean.vo.*;
 import com.animalmanagement.entity.*;
 import com.animalmanagement.mapper.*;
 import com.animalmanagement.example.*;
+import com.animalmanagement.enums.*;
+
+import org.springframework.beans.BeanUtils;
+import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
-
-import org.springframework.stereotype.Service;
 
 @Service
 public class CommentService {
@@ -42,7 +41,7 @@ public class CommentService {
         map.put("sumNum", commentList.size());
 
         commentList.sort(Comparator.comparing(Comment::getTime));
-        int start = (adminGetCommentsBo.getPage() - 1) * adminGetCommentsBo.getPageNum();
+        int start = adminGetCommentsBo.getPage() * adminGetCommentsBo.getPageNum();
         if (start >= commentList.size()) {
             map.put("comments", null);
         } else {

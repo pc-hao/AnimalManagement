@@ -7,9 +7,9 @@ import lombok.Data;
 @Builder
 @Data
 @AllArgsConstructor
-public class GetTweetsBo {
-    private Integer userId;
-    private Integer commentpage;
-    private String type;
-    private String match;
+public class AdminAnimalModifyBo {
+    private Integer recordId;
+    private String name;
+    private String intro;
+    private Boolean adopted;
 }

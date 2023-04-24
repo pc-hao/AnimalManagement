@@ -2,15 +2,15 @@ package com.animalmanagement.controller;
 
 import com.animalmanagement.bean.BaseResponse;
 import com.animalmanagement.bean.bo.*;
-import com.animalmanagement.enums.StatusEnum;
-import com.animalmanagement.service.AccountService;
-import com.animalmanagement.service.UserService;
+import com.animalmanagement.service.*;
+import com.animalmanagement.enums.*;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@PreAuthorize("hasRole('USER')")
+//@PreAuthorize("hasRole('USER')")
 @RequestMapping("/user")
 public class UserController {
     private final static String DEFAULT_PASSWORD = "123456";
@@ -54,5 +54,14 @@ public class UserController {
     public BaseResponse modifyUserInfo(@RequestBody ModifyUserInfoBo modifyUserInfoBo) {
         userService.modifyUserInfo(modifyUserInfoBo);
         return BaseResponse.builder().code(StatusEnum.SUCCESS.getCode()).message("修改成功").build();
+    }
+
+    @PostMapping("/mainPage")
+    public BaseResponse mainPage(@RequestBody UserMainPageBo userMainPageBo) {
+        return BaseResponse.builder()
+            .code(StatusEnum.SUCCESS.getCode())
+            .body(userService.mainPage(userMainPageBo))
+            .message("修改成功")
+            .build();
     }
 }

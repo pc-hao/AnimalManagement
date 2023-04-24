@@ -3,13 +3,12 @@ package com.animalmanagement.bean.bo;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Builder
 @Data
 @AllArgsConstructor
-public class GetTweetsBo {
-    private Integer userId;
-    private Integer commentpage;
-    private String type;
-    private String match;
+@NoArgsConstructor
+public class AdminHelpDenyBo {
+    private Integer helpId;
 }
