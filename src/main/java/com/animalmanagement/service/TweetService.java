@@ -49,7 +49,8 @@ public class TweetService {
         TweetExample example = new TweetExample();
         example.createCriteria()
             .andDeletedEqualTo(false)
-            .andIsHelpEqualTo(false);
+            .andIsHelpEqualTo(false)
+                .andCensoredEqualTo(CensorStatusEnum.UNREVIEWED.getCode());
 
         List<Tweet> tweetList = tweetMapper.selectByExample(example);
 
@@ -361,7 +362,7 @@ public class TweetService {
             .andUserIdEqualTo(userSelfTweetBo.getUserId())
             .andIsHelpEqualTo(false)
             .andTitleLike("%" + userSelfTweetBo.getContext() + "%");
-        
+
         List<Tweet> tweetList = tweetMapper.selectByExample(tweetExample);
 
         tweetList.sort(Comparator.comparing(Tweet::getTime));
@@ -400,7 +401,7 @@ public class TweetService {
             .andUserIdEqualTo(userSelfHelpBo.getUserId())
             .andIsHelpEqualTo(true)
             .andTitleLike("%" + userSelfHelpBo.getContext() + "%");
-        
+
         List<Tweet> tweetList = tweetMapper.selectByExample(tweetExample);
 
         tweetList.sort(Comparator.comparing(Tweet::getTime));
@@ -433,7 +434,7 @@ public class TweetService {
         tweetExample.createCriteria()
             .andIsHelpEqualTo(true)
             .andTitleLike("%" + userHelpGetBo.getContext() + "%");
-        
+
         List<Tweet> tweetList = tweetMapper.selectByExample(tweetExample);
 
         if(userHelpGetBo.getType().equals("时间")) {
