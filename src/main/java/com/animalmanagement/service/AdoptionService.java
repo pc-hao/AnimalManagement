@@ -86,10 +86,10 @@ public class AdoptionService {
 
         int start = adminAdoptionGetBo.getPage() * adminAdoptionGetBo.getPageNum();
         if (start >= voList.size()) {
-            map.put("helps", null);
+            map.put("adoptions", null);
         } else {
             int end = Math.min(start + adminAdoptionGetBo.getPageNum(), voList.size());
-            map.put("helps", voList.subList(start, end));
+            map.put("adoptions", voList.subList(start, end));
         }
         return map;
     }
