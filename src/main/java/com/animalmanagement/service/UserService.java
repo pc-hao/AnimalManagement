@@ -396,7 +396,7 @@ public class UserService {
 
     public UserMainPageVo mainPage(UserMainPageBo userMainPageBo) {
         UserInfo userInfo = userInfoMapper.selectByPrimaryKey(userMainPageBo.getUserId());
-        return new UserMainPageVo(userInfo.getUsername(), userInfo.getAvatar(), userInfo.getBio());
+        return new UserMainPageVo(userInfo.getUsername(), userInfo.getAvatar(), userInfo.getBio(), userInfo.getPhone());
     }
 
     public Map<Integer, UserInfo> getAllAdminMap() {
