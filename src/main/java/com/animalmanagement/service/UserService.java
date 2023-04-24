@@ -292,7 +292,7 @@ public class UserService {
         map.put("sumNum", userList.size());
 
         userList.sort(Comparator.comparingInt(UserInfo::getId));
-        int start = (adminGetUserBo.getPage() - 1) * adminGetUserBo.getPageNum();
+        int start = adminGetUserBo.getPage() * adminGetUserBo.getPageNum();
         if (start >= userList.size()) {
             map.put("users", null);
         } else {
