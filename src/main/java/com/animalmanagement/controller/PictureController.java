@@ -1,6 +1,7 @@
 package com.animalmanagement.controller;
 
 import com.animalmanagement.bean.BaseResponse;
+import com.animalmanagement.config.ImageConfig;
 import com.animalmanagement.enums.StatusEnum;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,9 +16,7 @@ import java.util.*;
 @RestController
 @RequestMapping("/picture")
 public class PictureController {
-    private static final String ProfilePhotoSavePath = "/root/AnimalManagement/images";
-
-    private static final List<String> suffixNameList = Arrays.asList("jpg", "jpeg", "png");
+    private static final List<String> suffixNameList = Arrays.asList(".jpg", ".jpeg", ".png");
 
     @PostMapping("/upload")
     public BaseResponse profilePhotoUpload(@RequestParam("image") MultipartFile fileUpload, @RequestParam("type") String fileType) throws IOException {
@@ -32,11 +31,11 @@ public class PictureController {
         fileName = UUID.randomUUID() + suffixName;
         String filePath = null;
         if ("animal".equals(fileType)) {
-            filePath = ProfilePhotoSavePath + "/animal" + fileName;
+            filePath = ImageConfig.savePath + "/animal/temp/" + fileName;
         } else if ("tweet".equals(fileType) || "help".equals(fileType)) {
-            filePath = ProfilePhotoSavePath + "/tweet" + fileName;
+            filePath = ImageConfig.savePath + "/tweet/temp/" + fileName;
         } else if ("user".equals(fileType)) {
-            filePath = ProfilePhotoSavePath + "/user" + fileName;
+            filePath = ImageConfig.savePath + "/user/temp/" + fileName;
         }
         if (Objects.isNull(filePath)) {
             throw new RuntimeException("Image Type Is Illegal!");
