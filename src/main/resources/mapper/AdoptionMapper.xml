@@ -5,7 +5,7 @@
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="user_id" jdbcType="INTEGER" property="userId" />
     <result column="animal_id" jdbcType="INTEGER" property="animalId" />
-    <result column="document" jdbcType="VARCHAR" property="document" />
+    <result column="reason" jdbcType="VARCHAR" property="reason" />
     <result column="censored" jdbcType="INTEGER" property="censored" />
   </resultMap>
   <sql id="Example_Where_Clause">
@@ -67,7 +67,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, user_id, animal_id, document, censored
+    id, user_id, animal_id, reason, censored
   </sql>
   <select id="selectByExample" parameterType="com.animalmanagement.example.AdoptionExample" resultMap="BaseResultMap">
     select
@@ -101,9 +101,9 @@
   </delete>
   <insert id="insert" parameterType="com.animalmanagement.entity.Adoption">
     insert into adoption (id, user_id, animal_id, 
-      document, censored)
+      reason, censored)
     values (#{id,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{animalId,jdbcType=INTEGER}, 
-      #{document,jdbcType=VARCHAR}, #{censored,jdbcType=INTEGER})
+      #{reason,jdbcType=VARCHAR}, #{censored,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="com.animalmanagement.entity.Adoption">
     insert into adoption
@@ -117,8 +117,8 @@
       <if test="animalId != null">
         animal_id,
       </if>
-      <if test="document != null">
-        document,
+      <if test="reason != null">
+        reason,
       </if>
       <if test="censored != null">
         censored,
@@ -134,8 +134,8 @@
       <if test="animalId != null">
         #{animalId,jdbcType=INTEGER},
       </if>
-      <if test="document != null">
-        #{document,jdbcType=VARCHAR},
+      <if test="reason != null">
+        #{reason,jdbcType=VARCHAR},
       </if>
       <if test="censored != null">
         #{censored,jdbcType=INTEGER},
@@ -160,8 +160,8 @@
       <if test="record.animalId != null">
         animal_id = #{record.animalId,jdbcType=INTEGER},
       </if>
-      <if test="record.document != null">
-        document = #{record.document,jdbcType=VARCHAR},
+      <if test="record.reason != null">
+        reason = #{record.reason,jdbcType=VARCHAR},
       </if>
       <if test="record.censored != null">
         censored = #{record.censored,jdbcType=INTEGER},
@@ -176,7 +176,7 @@
     set id = #{record.id,jdbcType=INTEGER},
       user_id = #{record.userId,jdbcType=INTEGER},
       animal_id = #{record.animalId,jdbcType=INTEGER},
-      document = #{record.document,jdbcType=VARCHAR},
+      reason = #{record.reason,jdbcType=VARCHAR},
       censored = #{record.censored,jdbcType=INTEGER}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -191,8 +191,8 @@
       <if test="animalId != null">
         animal_id = #{animalId,jdbcType=INTEGER},
       </if>
-      <if test="document != null">
-        document = #{document,jdbcType=VARCHAR},
+      <if test="reason != null">
+        reason = #{reason,jdbcType=VARCHAR},
       </if>
       <if test="censored != null">
         censored = #{censored,jdbcType=INTEGER},
@@ -204,7 +204,7 @@
     update adoption
     set user_id = #{userId,jdbcType=INTEGER},
       animal_id = #{animalId,jdbcType=INTEGER},
-      document = #{document,jdbcType=VARCHAR},
+      reason = #{reason,jdbcType=VARCHAR},
       censored = #{censored,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}
   </update>
