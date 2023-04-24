@@ -92,7 +92,7 @@ CREATE TABLE `tweet`
     `title`        varchar(100)      DEFAULT NULL,
     `content`      text     NOT NULL,
     `images`       varchar(320)      DEFAULT NULL,
-    `time`         datetime NOT NULL,
+    `time`         datetime NOT NULL DEFAULT now(),
     `views`        int(32)  NOT NULL DEFAULT 0,
     `views_weekly` int(32)  NOT NULL DEFAULT 0,
     `likes`        int(32)  NOT NULL DEFAULT 0,
@@ -118,15 +118,20 @@ CREATE TABLE `comment`
     `user_id`  int(32)  NOT NULL,
     `tweet_id` int(32)  NOT NULL,
     `content`  text     NOT NULL,
-    `time`     datetime NOT NULL,
+    `time`     datetime NOT NULL DEFAULT now(),
     `likes`    int(32)  NOT NULL DEFAULT 0,
-    `is_help`  boolean  NOT NULL,
+    `is_help`  boolean  NOT NULL DEFAULT FALSE,
     `censored` int(32)  NOT NULL DEFAULT 0,
     `deleted`  boolean  NOT NULL DEFAULT FALSE,
     PRIMARY KEY (`id`),
     FOREIGN KEY (`user_id`) REFERENCES `sys_user` (`id`),
     FOREIGN KEY (`tweet_id`) REFERENCES `tweet` (`id`)
 );
+
+insert into comment (user_id,tweet_id,content) values (3,1,"你在h什么？");
+insert into comment (user_id,tweet_id,content) values (3,2,"太长了，不看");
+insert into comment (user_id,tweet_id,content,is_help) values (3,3,"你说得对，但是原神是一款开放世界第一人称射击游戏",true);
+insert into comment (user_id,tweet_id,content,is_help) values (3,3,"现在，我要点名一个游戏",true);
 
 CREATE TABLE `application`
 (
@@ -142,7 +147,7 @@ CREATE TABLE `track`
 (
     `id`         int(32)  NOT NULL AUTO_INCREMENT,
     `animal_id`  int(32)  NOT NULL,
-    `time`       datetime NOT NULL,
+    `time`       datetime NOT NULL DEFAULT now(),
     `location_x` int(32)  NOT NULL,
     `location_y` int(32)  NOT NULL,
     PRIMARY KEY (`id`),
