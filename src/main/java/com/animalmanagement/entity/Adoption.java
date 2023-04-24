@@ -9,7 +9,7 @@ public class Adoption implements Serializable {
 
     private Integer animalId;
 
-    private String document;
+    private String reason;
 
     private Integer censored;
 
@@ -39,12 +39,12 @@ public class Adoption implements Serializable {
         this.animalId = animalId;
     }
 
-    public String getDocument() {
-        return document;
+    public String getReason() {
+        return reason;
     }
 
-    public void setDocument(String document) {
-        this.document = document == null ? null : document.trim();
+    public void setReason(String reason) {
+        this.reason = reason == null ? null : reason.trim();
     }
 
     public Integer getCensored() {
@@ -66,7 +66,7 @@ public class Adoption implements Serializable {
         id("id"),
         userId("user_id"),
         animalId("animal_id"),
-        document("document"),
+        reason("reason"),
         censored("censored");
 
         /**

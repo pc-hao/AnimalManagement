@@ -284,73 +284,73 @@ public class AdoptionExample {
             return (Criteria) this;
         }
 
-        public Criteria andDocumentIsNull() {
-            addCriterion("document is null");
+        public Criteria andReasonIsNull() {
+            addCriterion("reason is null");
             return (Criteria) this;
         }
 
-        public Criteria andDocumentIsNotNull() {
-            addCriterion("document is not null");
+        public Criteria andReasonIsNotNull() {
+            addCriterion("reason is not null");
             return (Criteria) this;
         }
 
-        public Criteria andDocumentEqualTo(String value) {
-            addCriterion("document =", value, "document");
+        public Criteria andReasonEqualTo(String value) {
+            addCriterion("reason =", value, "reason");
             return (Criteria) this;
         }
 
-        public Criteria andDocumentNotEqualTo(String value) {
-            addCriterion("document <>", value, "document");
+        public Criteria andReasonNotEqualTo(String value) {
+            addCriterion("reason <>", value, "reason");
             return (Criteria) this;
         }
 
-        public Criteria andDocumentGreaterThan(String value) {
-            addCriterion("document >", value, "document");
+        public Criteria andReasonGreaterThan(String value) {
+            addCriterion("reason >", value, "reason");
             return (Criteria) this;
         }
 
-        public Criteria andDocumentGreaterThanOrEqualTo(String value) {
-            addCriterion("document >=", value, "document");
+        public Criteria andReasonGreaterThanOrEqualTo(String value) {
+            addCriterion("reason >=", value, "reason");
             return (Criteria) this;
         }
 
-        public Criteria andDocumentLessThan(String value) {
-            addCriterion("document <", value, "document");
+        public Criteria andReasonLessThan(String value) {
+            addCriterion("reason <", value, "reason");
             return (Criteria) this;
         }
 
-        public Criteria andDocumentLessThanOrEqualTo(String value) {
-            addCriterion("document <=", value, "document");
+        public Criteria andReasonLessThanOrEqualTo(String value) {
+            addCriterion("reason <=", value, "reason");
             return (Criteria) this;
         }
 
-        public Criteria andDocumentLike(String value) {
-            addCriterion("document like", value, "document");
+        public Criteria andReasonLike(String value) {
+            addCriterion("reason like", value, "reason");
             return (Criteria) this;
         }
 
-        public Criteria andDocumentNotLike(String value) {
-            addCriterion("document not like", value, "document");
+        public Criteria andReasonNotLike(String value) {
+            addCriterion("reason not like", value, "reason");
             return (Criteria) this;
         }
 
-        public Criteria andDocumentIn(List<String> values) {
-            addCriterion("document in", values, "document");
+        public Criteria andReasonIn(List<String> values) {
+            addCriterion("reason in", values, "reason");
             return (Criteria) this;
         }
 
-        public Criteria andDocumentNotIn(List<String> values) {
-            addCriterion("document not in", values, "document");
+        public Criteria andReasonNotIn(List<String> values) {
+            addCriterion("reason not in", values, "reason");
             return (Criteria) this;
         }
 
-        public Criteria andDocumentBetween(String value1, String value2) {
-            addCriterion("document between", value1, value2, "document");
+        public Criteria andReasonBetween(String value1, String value2) {
+            addCriterion("reason between", value1, value2, "reason");
             return (Criteria) this;
         }
 
-        public Criteria andDocumentNotBetween(String value1, String value2) {
-            addCriterion("document not between", value1, value2, "document");
+        public Criteria andReasonNotBetween(String value1, String value2) {
+            addCriterion("reason not between", value1, value2, "reason");
             return (Criteria) this;
         }
 
