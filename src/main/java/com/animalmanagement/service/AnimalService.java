@@ -2,6 +2,7 @@ package com.animalmanagement.service;
 
 import com.animalmanagement.bean.bo.*;
 import com.animalmanagement.bean.vo.*;
+import com.animalmanagement.config.ImageConfig;
 import com.animalmanagement.entity.*;
 import com.animalmanagement.mapper.*;
 import com.animalmanagement.example.*;
@@ -11,6 +12,10 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -20,6 +25,8 @@ import java.util.Objects;
 @Service
 public class AnimalService {
     private final static Integer PAGE_SIZE = 10;
+
+    private final static String PICTURE_SAVE_PATH = ImageConfig.savePath + "/animal/";
 
     @Autowired
     AnimalMapper animalMapper;
@@ -52,10 +59,10 @@ public class AnimalService {
         if(Objects.isNull(animal)) {
             throw new RuntimeException("Animal ID Does Not Exist");
         }
-        
+
         AdminAnimalContentVo vo = new AdminAnimalContentVo();
         BeanUtils.copyProperties(animal, vo);
-        
+
         return vo;
     }
 
@@ -64,7 +71,7 @@ public class AnimalService {
         if(Objects.isNull(animal)) {
             throw new RuntimeException("Animal ID Does Not Exist");
         }
-        
+
         if(!Objects.isNull(adminAnimalModifyBo.getAdopted()) && !adminAnimalModifyBo.getName().isEmpty()) {
             animal.setName(adminAnimalModifyBo.getName());
         }
@@ -74,7 +81,16 @@ public class AnimalService {
         if(!Objects.isNull(adminAnimalModifyBo.getAdopted())) {
             animal.setAdopted(adminAnimalModifyBo.getAdopted());
         }
-        animalMapper.updateByPrimaryKey(animal);
+        if (!Objects.isNull(adminAnimalModifyBo.getAvatar())) {
+            String newAvatar = PICTURE_SAVE_PATH + adminAnimalModifyBo.getRecordId() + ".png";
+            try {
+                Files.move(Paths.get(adminAnimalModifyBo.getAvatar()), Paths.get(newAvatar), StandardCopyOption.REPLACE_EXISTING);
+            } catch (IOException e) {
+                throw new RuntimeException(e.getMessage());
+            }
+            animal.setAvatar(newAvatar);
+        }
+        animalMapper.updateByPrimaryKeySelective(animal);
     }
 
     public void adminAnimalDelete(AdminAnimalDeleteBo adminAnimalDeleteBo) {
@@ -82,7 +98,7 @@ public class AnimalService {
         if(Objects.isNull(animal)) {
             throw new RuntimeException("Animal ID Does Not Exist");
         }
-        
+
         animalMapper.deleteByPrimaryKey(animal.getId());
     }
 }

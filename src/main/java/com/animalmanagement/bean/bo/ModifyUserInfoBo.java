@@ -14,4 +14,5 @@ public class ModifyUserInfoBo {
     private String passwordConfirm;
     private String phone;
     private String bio;
+    private String avatar;
 }

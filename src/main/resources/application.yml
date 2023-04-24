@@ -38,6 +38,11 @@ spring:
         max-file-size: 15M #单个文件大小
         max-request-size: 100M # 总文件大小（允许存储文件的文件夹大小）
 
+
+image:
+  savePath: C:/Users/86135/Desktop/images
+
+
 mybatis:
   mapper-locations: classpath:mapper/*.xml
 

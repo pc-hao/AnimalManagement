@@ -12,4 +12,5 @@ public class AdminAnimalModifyBo {
     private String name;
     private String intro;
     private Boolean adopted;
+    private String avatar;
 }

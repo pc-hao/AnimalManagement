@@ -2,6 +2,7 @@ package com.animalmanagement.service;
 
 import com.animalmanagement.bean.bo.*;
 import com.animalmanagement.bean.vo.*;
+import com.animalmanagement.config.ImageConfig;
 import com.animalmanagement.entity.*;
 import com.animalmanagement.mapper.*;
 import com.animalmanagement.example.*;
@@ -11,6 +12,11 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -24,6 +30,8 @@ import com.animalmanagement.utils.EncodeUtil;
 
 @Service
 public class UserService {
+    private static final String PICTURE_SAVE_PATH = ImageConfig.savePath + "/user/";
+
     @Autowired
     SysUserMapper sysUserMapper;
 
@@ -129,6 +137,15 @@ public class UserService {
         }
         if (!modifyUserInfoBo.getBio().isEmpty()) {
             userInfo.setBio(modifyUserInfoBo.getBio());
+        }
+        if (!modifyUserInfoBo.getAvatar().isEmpty()) {
+            String newAvatar = PICTURE_SAVE_PATH + userInfo.getId() + ".png";
+            try {
+                Files.move(Paths.get(modifyUserInfoBo.getAvatar()), Paths.get(newAvatar), StandardCopyOption.REPLACE_EXISTING);
+            } catch (IOException e) {
+                throw new RuntimeException(e.getMessage());
+            }
+            userInfo.setAvatar(newAvatar);
         }
 
         sysUserMapper.updateByPrimaryKeySelective(sysUser);
