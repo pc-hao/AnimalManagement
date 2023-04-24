@@ -38,7 +38,10 @@ public class CommentService {
     CommentLikeMapper commentLikeMapper;
 
     public Map<String, Object> adminGetComments(AdminGetCommentsBo adminGetCommentsBo) {
-        List<Comment> commentList = commentMapper.selectByExample(new CommentExample());
+        CommentExample example = new CommentExample();
+        example.createCriteria().andCensoredEqualTo(CensorStatusEnum.UNREVIEWED.getCode());
+
+        List<Comment> commentList = commentMapper.selectByExample(example);
 
         commentList.sort(Comparator.comparing(Comment::getTime));
 
@@ -67,22 +70,17 @@ public class CommentService {
     }
 
     public void adminCommentCensor(CommentCensorBo commentCensorBo) {
-        Integer commentId = commentCensorBo.getCommentId();
-        checkIdExists(commentId);
-        Comment comment = commentMapper.selectByPrimaryKey(commentId);
+        Comment comment = commentMapper.selectByPrimaryKey(commentCensorBo.getCommentId());
+        if(comment == null) {
+            throw new RuntimeException("Comment ID Does Not Exist");
+        }
+        
         if (commentCensorBo.getOperate() == 0) {
             comment.setCensored(CensorStatusEnum.PASS.getCode());
         } else {
             comment.setCensored(CensorStatusEnum.REJECT.getCode());
         }
         commentMapper.updateByPrimaryKeySelective(comment);
-    }
-
-    public void checkIdExists(Integer commentId) {
-        Comment comment = commentMapper.selectByPrimaryKey(commentId);
-        if (comment == null) {
-            throw new RuntimeException("CommentId Does Not Exist");
-        }
     }
 
     public void addComment(AddCommentBo addCommentBo) {
