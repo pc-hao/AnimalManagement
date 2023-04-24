@@ -94,4 +94,13 @@ public class UserController {
             .message("")
             .build();
     }
+
+    @PostMapping("/help/get")
+    public BaseResponse helpGet(@RequestBody UserHelpGetBo userHelpGetBo) {
+        return BaseResponse.builder()
+            .code(StatusEnum.SUCCESS.getCode())
+            .body(tweetService.helpGet(userHelpGetBo))
+            .message("")
+            .build();
+    }
 }
