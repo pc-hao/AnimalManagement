@@ -33,6 +33,10 @@ spring:
           starttls:
             enable: true
             required: true
+    servlet:
+      multipart:
+        max-file-size: 15M #单个文件大小
+        max-request-size: 100M # 总文件大小（允许存储文件的文件夹大小）
 
 mybatis:
   mapper-locations: classpath:mapper/*.xml
