@@ -436,7 +436,11 @@ public class TweetService {
         
         List<Tweet> tweetList = tweetMapper.selectByExample(tweetExample);
 
-        tweetList.sort(Comparator.comparing(Tweet::getTime));
+        if(userHelpGetBo.getType().equals("时间")) {
+            tweetList.sort(Comparator.comparing(Tweet::getTime));
+        } else {
+            tweetList.sort(Comparator.comparing(Tweet::getViewsWeekly));
+        }
 
         List<UserHelpGetVo> voList = tweetList
                 .stream()
