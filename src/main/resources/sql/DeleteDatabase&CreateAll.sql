@@ -244,6 +244,7 @@ CREATE TABLE `adoption`
     `animal_id` int(32)         NOT NULL,
     `reason`    varchar(1024)   NOT NULL,
     `censored`  int(32)         NOT NULL DEFAULT 0,
+    `time`      DATETIME        NOT NULL DEFAULT now(),
     PRIMARY KEY (`id`),
     FOREIGN KEY (`user_id`) REFERENCES `sys_user`(`id`),
     FOREIGN KEY (`animal_id`) REFERENCES `animal`(`id`)
