@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
@@ -108,7 +109,7 @@ public class CommentService {
         tweetMapper.updateByPrimaryKeySelective(tweet);
     }
 
-    public void commentLike(CommentLikeBo commentLikeBo) {
+    public Boolean commentLike(CommentLikeBo commentLikeBo) {
         SysUser sysUser = sysUserMapper.selectByPrimaryKey(commentLikeBo.getUserId());
         if (Objects.isNull(sysUser)) {
             throw new RuntimeException("UserId Does Not Exist");
@@ -131,28 +132,12 @@ public class CommentService {
             commentLikeMapper.insertSelective(insertCommentLike);
             comment.setLikes(comment.getLikes() + 1);
             commentMapper.updateByPrimaryKeySelective(comment);
-        }
-    }
-
-    public void commentUnlike(CommentLikeBo commentLikeBo) {
-        SysUser sysUser = sysUserMapper.selectByPrimaryKey(commentLikeBo.getUserId());
-        if (Objects.isNull(sysUser)) {
-            throw new RuntimeException("UserId Does Not Exist");
-        }
-        Comment comment = commentMapper.selectByPrimaryKey(commentLikeBo.getCommentId());
-        if (Objects.isNull(comment)) {
-            throw new RuntimeException("CommentId Does Not Exist");
-        }
-
-        CommentLikeExample example = new CommentLikeExample();
-        example.createCriteria()
-                .andUserIdEqualTo(commentLikeBo.getUserId())
-                .andCommentIdEqualTo(commentLikeBo.getCommentId());
-        CommentLikeKey commentLike = commentLikeMapper.selectOneByExample(example);
-        if (!Objects.isNull(commentLike)) {
+            return true;
+        } else {
             commentLikeMapper.deleteByPrimaryKey(commentLike);
             comment.setLikes(comment.getLikes() - 1);
             commentMapper.updateByPrimaryKeySelective(comment);
+            return false;
         }
     }
 
@@ -174,12 +159,13 @@ public class CommentService {
                     UserInfo userInfo = userInfoMap.get(e.getUserId());
                     commentVo.setAvatar(userInfo.getAvatar());
                     commentVo.setUsername(userInfo.getUsername());
+                    commentVo.setIsAdmin(adminMap.containsKey(e.getUserId()));
+                    commentVo.setLikeNum(e.getLikes());
                     return commentVo;
                 }).sorted((o1, o2) -> {
-                    if ((adminMap.containsKey(o1.getId()) && adminMap.containsKey(o2.getId())) ||
-                            (!adminMap.containsKey(o1.getId()) && !adminMap.containsKey(o2.getId()))) {
+                    if ((o1.getIsAdmin() && o2.getIsAdmin()) || (!o1.getIsAdmin() && !o2.getIsAdmin())) {
                         return o1.getTime().compareTo(o2.getTime());
-                    } else if (adminMap.containsKey(o1.getId())) {
+                    } else if (o1.getIsAdmin()) {
                         return 1;
                     } else {
                         return -1;
@@ -187,8 +173,20 @@ public class CommentService {
                 }).toList();
     }
 
+    public void fillInIsLike(List<CommentVo> commentVoList, Integer userId) {
+        /** 用户查询自己所点赞的评论列表，下面流操作时填写CommentVo的isLike字段 */
+        CommentLikeExample example = new CommentLikeExample();
+        example.createCriteria().andUserIdEqualTo(userId);
+        List<Integer> userCommentLikeList = commentLikeMapper.selectByExample(example)
+                .stream().map(CommentLikeKey::getCommentId).toList();
+        commentVoList.forEach(e -> {
+            e.setIsLike(userCommentLikeList.contains(e.getId()));
+        });
+    }
+
     public Map<String, Object> getComments(UserGetCommentsBo getCommentsBo) {
         List<CommentVo> commentVoList = getCommentVoListByTweetId(getCommentsBo.getTweetId());
+        fillInIsLike(commentVoList, getCommentsBo.getUserId());
 
         Map<String, Object> resultMap = new HashMap<>();
         int start = getCommentsBo.getCommentPage() * PAGE_SIZE;
