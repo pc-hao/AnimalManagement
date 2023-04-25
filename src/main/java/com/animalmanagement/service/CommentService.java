@@ -71,10 +71,10 @@ public class CommentService {
 
     public void adminCommentCensor(CommentCensorBo commentCensorBo) {
         Comment comment = commentMapper.selectByPrimaryKey(commentCensorBo.getCommentId());
-        if(comment == null) {
+        if (comment == null) {
             throw new RuntimeException("Comment ID Does Not Exist");
         }
-        
+
         if (commentCensorBo.getOperate() == 0) {
             comment.setCensored(CensorStatusEnum.PASS.getCode());
         } else {
@@ -104,7 +104,7 @@ public class CommentService {
                 .build();
         commentMapper.insertSelective(insertComment);
 
-        tweet.setComments(tweet.getComments() + 1);
+        tweet.setComments(tweet.getComments() + 1); //todo 感觉这个帖子的评论数可以删了，我看了一下整个项目只有这里用了，因为添加地评论需要过审，没过审的评论拿不到
         tweetMapper.updateByPrimaryKeySelective(tweet);
     }
 
@@ -120,8 +120,8 @@ public class CommentService {
 
         CommentLikeExample example = new CommentLikeExample();
         example.createCriteria()
-            .andUserIdEqualTo(commentLikeBo.getUserId())
-            .andCommentIdEqualTo(commentLikeBo.getCommentId());
+                .andUserIdEqualTo(commentLikeBo.getUserId())
+                .andCommentIdEqualTo(commentLikeBo.getCommentId());
         CommentLikeKey commentLike = commentLikeMapper.selectOneByExample(example);
         if (Objects.isNull(commentLike)) {
             CommentLikeKey insertCommentLike = CommentLikeKey.builder()
@@ -146,8 +146,8 @@ public class CommentService {
 
         CommentLikeExample example = new CommentLikeExample();
         example.createCriteria()
-            .andUserIdEqualTo(commentLikeBo.getUserId())
-            .andCommentIdEqualTo(commentLikeBo.getCommentId());
+                .andUserIdEqualTo(commentLikeBo.getUserId())
+                .andCommentIdEqualTo(commentLikeBo.getCommentId());
         CommentLikeKey commentLike = commentLikeMapper.selectOneByExample(example);
         if (!Objects.isNull(commentLike)) {
             commentLikeMapper.deleteByPrimaryKey(commentLike);
@@ -156,9 +156,9 @@ public class CommentService {
         }
     }
 
-    public Map<String, Object> getComments(UserGetCommentsBo getCommentsBo) {
+    public List<CommentVo> getCommentVoListByTweetId(Integer tweetId) {
         CommentExample commentExample = new CommentExample();
-        commentExample.createCriteria().andTweetIdEqualTo(getCommentsBo.getTweetId());
+        commentExample.createCriteria().andTweetIdEqualTo(tweetId);
         List<Comment> commentList = commentMapper.selectByExample(commentExample);
         commentList = commentList.stream().filter(this::checkCommentValid).collect(Collectors.toList());
 
@@ -166,7 +166,7 @@ public class CommentService {
                 commentList.stream().map(Comment::getUserId).distinct().toList());
         Map<Integer, UserInfo> adminMap = userService.getAllAdminMap();
 
-        List<CommentVo> commentVoList = commentList
+        return commentList
                 .stream()
                 .map(e -> {
                     CommentVo commentVo = new CommentVo();
@@ -185,6 +185,10 @@ public class CommentService {
                         return -1;
                     }
                 }).toList();
+    }
+
+    public Map<String, Object> getComments(UserGetCommentsBo getCommentsBo) {
+        List<CommentVo> commentVoList = getCommentVoListByTweetId(getCommentsBo.getTweetId());
 
         Map<String, Object> resultMap = new HashMap<>();
         int start = getCommentsBo.getCommentPage() * PAGE_SIZE;
