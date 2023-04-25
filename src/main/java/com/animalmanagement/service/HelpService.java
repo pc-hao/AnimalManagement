@@ -11,6 +11,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -55,20 +56,26 @@ public class HelpService {
 
         List<Tweet> helpList = tweetMapper.selectByExample(example);
 
-        helpList.sort(Comparator.comparing(Tweet::getTime));
+        List<AdminHelpGetVo> voList = new ArrayList<>();
 
-        Map<Integer, UserInfo> userInfoMap = userService.getUserInfoByIdList(
-                helpList.stream().map(Tweet::getUserId).distinct().toList());
+        if(helpList.isEmpty()) {
+            voList = new ArrayList<>();
+        } else {
+            helpList.sort(Comparator.comparing(Tweet::getTime));
 
-        List<AdminHelpGetVo> voList = helpList
-                .stream()
-                .map(e -> {
-                    AdminHelpGetVo vo = new AdminHelpGetVo();
-                    BeanUtils.copyProperties(e, vo);
-                    UserInfo userInfo = userInfoMap.get(e.getUserId());
-                    vo.setUsername(userInfo.getUsername());
-                    return vo;
-                }).toList();
+            Map<Integer, UserInfo> userInfoMap = userService.getUserInfoByIdList(
+                    helpList.stream().map(Tweet::getUserId).distinct().toList());
+    
+                    voList = helpList
+                    .stream()
+                    .map(e -> {
+                        AdminHelpGetVo vo = new AdminHelpGetVo();
+                        BeanUtils.copyProperties(e, vo);
+                        UserInfo userInfo = userInfoMap.get(e.getUserId());
+                        vo.setUsername(userInfo.getUsername());
+                        return vo;
+                    }).toList();
+        }
 
         Map<String, Object> map = new HashMap<>();
         map.put("sumNum", voList.size());
