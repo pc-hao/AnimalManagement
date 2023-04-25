@@ -135,8 +135,6 @@ public class TweetService {
         Tweet tweet = getTweetById(tweetContentBo.getTweetId());
         checkTweetValid(tweet);
 
-        tweet.setComments(commentService.getCommentVoListByTweetId(tweetContentBo.getTweetId()).size());
-
         TweetContentVo tweetContentVo = new TweetContentVo();
         BeanUtils.copyProperties(tweet, tweetContentVo);
         tweetContentVo.setUsername(userInfo.getUsername());
@@ -149,6 +147,8 @@ public class TweetService {
         StarExample starExample = new StarExample();
         starExample.createCriteria().andUserIdEqualTo(userInfo.getId()).andTweetIdEqualTo(tweet.getId());
         tweetContentVo.setHasStarred(Objects.nonNull(starMapper.selectByExample(starExample)));
+
+        tweetContentVo.setComments(commentService.getCommentVoListByTweetId(tweetContentBo.getTweetId()).size());
 
         return tweetContentVo;
     }
