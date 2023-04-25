@@ -25,7 +25,7 @@ public class TweetController {
     @Autowired
     CommentService commentService;
 
-    @PostMapping("/tweet/content")
+    @PostMapping("/content")
     public BaseResponse getTweetContent(@RequestBody TweetContentBo tweetContentBo) {
         return BaseResponse.builder()
                 .code(StatusEnum.SUCCESS.getCode())
