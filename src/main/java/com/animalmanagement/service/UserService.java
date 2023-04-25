@@ -392,6 +392,9 @@ public class UserService {
     }
 
     public Map<Integer, UserInfo> getUserInfoByIdList(List<Integer> idList) {
+        if (idList.isEmpty()) {
+            return new HashMap<>();
+        }
         UserInfoExample userInfoExample = new UserInfoExample();
         userInfoExample.createCriteria().andIdIn(idList);
         return userInfoMapper.selectByExample(userInfoExample).stream().collect(Collectors.toMap(UserInfo::getId, Function.identity()));
