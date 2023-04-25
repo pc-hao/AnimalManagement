@@ -132,6 +132,9 @@ insert into comment (user_id,tweet_id,content) values (3,1,"你在h什么？");
 insert into comment (user_id,tweet_id,content) values (3,2,"太长了，不看");
 insert into comment (user_id,tweet_id,content,is_help) values (3,3,"你说得对，但是原神是一款开放世界第一人称射击游戏",true);
 insert into comment (user_id,tweet_id,content,is_help) values (3,3,"现在，我要点名一个游戏",true);
+insert into `comment` (user_id, tweet_id, content, time, censored) values (3, 1, "这个帖子不错", now(), 1);
+insert into `comment` (user_id, tweet_id, content, time, censored) values (2, 1, "我是管理员", now(), 1);
+insert into `comment` (user_id, tweet_id, content, time, censored) values (3, 1, "你再看？", now(), 1);
 
 CREATE TABLE `application`
 (
