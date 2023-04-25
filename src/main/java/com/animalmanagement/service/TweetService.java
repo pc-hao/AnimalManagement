@@ -50,16 +50,21 @@ public class TweetService {
         example.createCriteria()
             .andDeletedEqualTo(false)
             .andIsHelpEqualTo(false)
-                .andCensoredEqualTo(CensorStatusEnum.UNREVIEWED.getCode());
+            .andCensoredEqualTo(CensorStatusEnum.UNREVIEWED.getCode());
 
         List<Tweet> tweetList = tweetMapper.selectByExample(example);
 
-        tweetList.sort(Comparator.comparing(Tweet::getTime));
+        List<AdminTweetGetVo> voList;
 
-        Map<Integer, UserInfo> userInfoMap = userService.getUserInfoByIdList(
+        if(tweetList.isEmpty()) {
+            voList = new ArrayList<>();
+        } else {
+            tweetList.sort(Comparator.comparing(Tweet::getTime));
+
+            Map<Integer, UserInfo> userInfoMap = userService.getUserInfoByIdList(
                 tweetList.stream().map(Tweet::getUserId).distinct().toList());
 
-        List<AdminTweetGetVo> voList = tweetList
+            voList = tweetList
                 .stream()
                 .map(e -> {
                     AdminTweetGetVo vo = new AdminTweetGetVo();
@@ -68,6 +73,7 @@ public class TweetService {
                     vo.setUsername(userInfo.getUsername());
                     return vo;
                 }).toList();
+        }
 
         Map<String, Object> map = new HashMap<>();
         map.put("sumNum", voList.size());
