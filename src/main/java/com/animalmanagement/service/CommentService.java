@@ -100,7 +100,6 @@ public class CommentService {
                 .userId(addCommentBo.getUserId())
                 .tweetId(addCommentBo.getTweetId())
                 .time(LocalDateTime.now())
-                .isHelp(false)
                 .content(addCommentBo.getComment())
                 .build();
         commentMapper.insertSelective(insertComment);

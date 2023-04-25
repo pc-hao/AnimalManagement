@@ -8,7 +8,10 @@ import com.animalmanagement.enums.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Objects;
 
 @RestController
 @PreAuthorize("hasRole('ADMIN')")
@@ -159,6 +162,16 @@ public class AdminController {
     @PostMapping("/help/deny")
     public BaseResponse helpDeny(@RequestBody AdminHelpDenyBo adminHelpDenyBo) {
         helpService.adminHelpDeny(adminHelpDenyBo);
+        return BaseResponse.builder()
+                .code(StatusEnum.SUCCESS.getCode())
+                .build();
+    }
+
+    @PostMapping("/help/reply")
+    public BaseResponse helpReply(@RequestBody AdminHelpReplyBo adminHelpReplyBo) {
+        Integer userId = Integer.parseInt((String) SecurityContextHolder.getContext().getAuthentication().getCredentials());
+        AddCommentBo addCommentBo = AddCommentBo.builder().userId(userId).tweetId(adminHelpReplyBo.getHelpId()).comment(adminHelpReplyBo.getContent()).build();
+        commentService.addComment(addCommentBo);
         return BaseResponse.builder()
                 .code(StatusEnum.SUCCESS.getCode())
                 .build();
