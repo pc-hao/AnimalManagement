@@ -30,9 +30,11 @@ import com.animalmanagement.utils.EncodeUtil;
 
 @Service
 public class UserService {
+    private static final String PICTURE_SAVE_PATH_FRONT = ImageConfig.frontPath + "/user/";
+
     private static final String PICTURE_SAVE_PATH = ImageConfig.savePath + "/user/";
 
-    private static final String DEFAULT_IMAGE_PATH = ImageConfig.savePath + "/user/default.png";
+    private static final String DEFAULT_IMAGE_PATH = ImageConfig.frontPath + "/user/default.png";
 
     @Autowired
     SysUserMapper sysUserMapper;
@@ -141,14 +143,15 @@ public class UserService {
         if (!modifyUserInfoBo.getBio().isEmpty()) {
             userInfo.setBio(modifyUserInfoBo.getBio());
         }
-        if (modifyUserInfoBo.getAvatar() != null) {
+        if (modifyUserInfoBo.getAvatar() != null && !modifyUserInfoBo.getAvatar().isEmpty()) {
             String newAvatar = PICTURE_SAVE_PATH + userInfo.getId() + ".png";
+            String newAvatarFront = PICTURE_SAVE_PATH_FRONT + userInfo.getId() + ".png";
             try {
                 Files.move(Paths.get(modifyUserInfoBo.getAvatar()), Paths.get(newAvatar), StandardCopyOption.REPLACE_EXISTING);
             } catch (IOException e) {
                 throw new RuntimeException(e.getMessage());
             }
-            userInfo.setAvatar(newAvatar);
+            userInfo.setAvatar(newAvatarFront);
         }
 
         sysUserMapper.updateByPrimaryKeySelective(sysUser);

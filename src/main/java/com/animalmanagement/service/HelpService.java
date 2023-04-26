@@ -150,11 +150,11 @@ public class HelpService {
 
         TweetLikeExample likeExample = new TweetLikeExample();
         likeExample.createCriteria().andUserIdEqualTo(userInfo.getId()).andTweetIdEqualTo(tweet.getId());
-        tweetContentVo.setHasLiked(Objects.nonNull(likeMapper.selectByExample(likeExample)));
+        tweetContentVo.setHasLiked(Objects.nonNull(likeMapper.selectOneByExample(likeExample)));
 
         StarExample starExample = new StarExample();
         starExample.createCriteria().andUserIdEqualTo(userInfo.getId()).andTweetIdEqualTo(tweet.getId());
-        tweetContentVo.setHasStarred(Objects.nonNull(starMapper.selectByExample(starExample)));
+        tweetContentVo.setHasStarred(Objects.nonNull(starMapper.selectOneByExample(starExample)));
 
         return tweetContentVo;
     }

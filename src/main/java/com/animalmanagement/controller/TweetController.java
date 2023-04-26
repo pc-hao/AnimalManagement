@@ -9,6 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @RestController
 @RequestMapping("/tweet")
 public class TweetController {
@@ -60,31 +63,28 @@ public class TweetController {
 
     @PostMapping("/like")
     public BaseResponse like(@RequestBody TweetLikeBo tweetLikeBo) {
-        tweetService.tweetLike(tweetLikeBo);
+        boolean isLike = tweetService.tweetLike(tweetLikeBo);
+        Map<Object, Object> map = new HashMap<>();
+        map.put("isLike", isLike);
         return BaseResponse.builder()
                 .code(StatusEnum.SUCCESS.getCode())
-                .build();
-    }
-
-    @PostMapping("/unlike")
-    public BaseResponse unlike(@RequestBody TweetLikeBo tweetLikeBo) {
-        tweetService.tweetUnlike(tweetLikeBo);
-        return BaseResponse.builder()
-                .code(StatusEnum.SUCCESS.getCode())
+                .body(map)
                 .build();
     }
 
     @PostMapping("/star")
     public BaseResponse star(@RequestBody TweetLikeBo tweetLikeBo) {
-        tweetService.tweetStar(tweetLikeBo);
+        boolean isLike = tweetService.tweetStar(tweetLikeBo);
+        Map<Object, Object> map = new HashMap<>();
+        map.put("isStar", isLike);
         return BaseResponse.builder()
                 .code(StatusEnum.SUCCESS.getCode())
                 .build();
     }
 
-    @PostMapping("/unstar")
-    public BaseResponse unstar(@RequestBody TweetLikeBo tweetLikeBo) {
-        tweetService.tweetUnstar(tweetLikeBo);
+    @PostMapping("/create")
+    public BaseResponse create(@RequestBody TweetCreateBo tweetCreateBo) {
+        tweetService.tweetCreate(tweetCreateBo);
         return BaseResponse.builder()
                 .code(StatusEnum.SUCCESS.getCode())
                 .build();
