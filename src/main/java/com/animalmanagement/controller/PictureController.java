@@ -13,6 +13,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
+import javax.management.RuntimeErrorException;
+
 @RestController
 @RequestMapping("/image")
 public class PictureController {
@@ -36,6 +38,8 @@ public class PictureController {
             filePath = ImageConfig.savePath + "/tweet/temp/" + fileName;
         } else if ("user".equals(fileType)) {
             filePath = ImageConfig.savePath + "/user/temp/" + fileName;
+        } else {
+            throw new RuntimeException("Invalid type")
         }
         if (Objects.isNull(filePath)) {
             throw new RuntimeException("Image Type Is Illegal!");
