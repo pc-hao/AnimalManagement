@@ -164,6 +164,12 @@ CREATE TABLE `tag`
     PRIMARY KEY (`id`)
 );
 
+insert into tag (content) values ("馆长");
+insert into tag (content) values ("提米");
+insert into tag (content) values ("狗");
+insert into tag (content) values ("猫");
+insert into tag (content) values ("白色");
+
 CREATE TABLE `tweettag`
 (
     `tweet_id` int(32) NOT NULL,
