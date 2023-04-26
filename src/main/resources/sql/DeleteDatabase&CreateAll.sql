@@ -59,10 +59,10 @@ CREATE TABLE `userinfo`
     `id`       int(32)     NOT NULL,
     `username` varchar(32) NOT NULL UNIQUE,
     `email`    varchar(64) NOT NULL UNIQUE,
-    `phone`    varchar(12),
-    `bio`      varchar(64),
-    `avatar`   varchar(64),
-    `blacked`  boolean NOT NULL DEFAULT false,
+    `phone`    varchar(12) NOT NULL DEFAULT "Empty",
+    `bio`      varchar(64) NOT NULL DEFAULT "这个人是个OP，还没有个性签名",
+    `avatar`   varchar(64) DEFAULT NULL,
+    `blacked`  boolean     NOT NULL DEFAULT false,
     PRIMARY KEY (`id`),
     FOREIGN KEY (`id`) REFERENCES `sys_user` (`id`)
 );
@@ -76,9 +76,9 @@ CREATE TABLE `animal`
 (
     `id`        int(32)         NOT NULL AUTO_INCREMENT,
     `name`      varchar(32)     NOT NULL UNIQUE,
-    `intro`     varchar(256)    NOT NULL,
-    `adopted`   boolean         NOT NULL,
-    `avatar`    varchar(64),
+    `intro`     varchar(256)    NOT NULL DEFAULT "管理员是个OP，还没设置动物介绍",
+    `adopted`   boolean         NOT NULL DEFAULT false,
+    `avatar`    varchar(64)     DEFAULT NULL,
     PRIMARY KEY (`id`)
 );
 
@@ -90,7 +90,7 @@ CREATE TABLE `tweet`
     `id`           int(32)  NOT NULL AUTO_INCREMENT,
     `user_id`      int(32)  NOT NULL,
     `title`        varchar(100)      DEFAULT NULL,
-    `content`      varchar(1024)     NOT NULL,
+    `content`      varchar(1024)     NOT NULL DEFAULT "",
     `images`       varchar(320)      DEFAULT NULL,
     `time`         datetime NOT NULL DEFAULT now(),
     `views`        int(32)  NOT NULL DEFAULT 0,
@@ -98,7 +98,7 @@ CREATE TABLE `tweet`
     `likes`        int(32)  NOT NULL DEFAULT 0,
     `stars`        int(32)  NOT NULL DEFAULT 0,
     `comments`     int(32)  NOT NULL DEFAULT 0,
-    `is_help`      boolean  NOT NULL,
+    `is_help`      boolean  NOT NULL DEFAULT FALSE,
     `solved`       boolean  NOT NULL DEFAULT FALSE,
     `censored`     int(32)  NOT NULL DEFAULT 0,
     `published`    boolean  NOT NULL DEFAULT FALSE,
@@ -222,8 +222,6 @@ CREATE TABLE `tweetstar`
     FOREIGN KEY (`user_id`) REFERENCES `sys_user`(`id`),
     FOREIGN KEY (`tweet_id`) REFERENCES `tweet`(`id`)
 );
-
-insert into tweetstar (user_id,tweet_id) values (3,1);
 
 DROP TABLE IF EXISTS `verification`;
 
