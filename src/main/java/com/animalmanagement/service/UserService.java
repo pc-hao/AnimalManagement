@@ -141,7 +141,7 @@ public class UserService {
         if (!modifyUserInfoBo.getBio().isEmpty()) {
             userInfo.setBio(modifyUserInfoBo.getBio());
         }
-        if (!modifyUserInfoBo.getAvatar() == null) {
+        if (modifyUserInfoBo.getAvatar() != null) {
             String newAvatar = PICTURE_SAVE_PATH + userInfo.getId() + ".png";
             try {
                 Files.move(Paths.get(modifyUserInfoBo.getAvatar()), Paths.get(newAvatar), StandardCopyOption.REPLACE_EXISTING);
