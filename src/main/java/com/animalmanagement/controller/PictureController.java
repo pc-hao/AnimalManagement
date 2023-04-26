@@ -39,13 +39,15 @@ public class PictureController {
         } else if ("user".equals(fileType)) {
             filePath = ImageConfig.savePath + "/user/temp/" + fileName;
         } else {
-            throw new RuntimeException("Invalid type")
+            throw new RuntimeException("Invalid type");
         }
         if (Objects.isNull(filePath)) {
             throw new RuntimeException("Image Type Is Illegal!");
         }
         //将图片保存到文件夹里
+	filePath = "/root/AnimalManagement/src/main/resources/static/images/user/temp/1.png";
         fileUpload.transferTo(new File(filePath));
+	System.out.println(filePath);
 
         HashMap<String, String> result = new HashMap<>();
         result.put("imagePath", filePath);
