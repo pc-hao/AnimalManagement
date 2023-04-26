@@ -14,7 +14,7 @@ import java.io.IOException;
 import java.util.*;
 
 @RestController
-@RequestMapping("/picture")
+@RequestMapping("/image")
 public class PictureController {
     private static final List<String> suffixNameList = Arrays.asList(".jpg", ".jpeg", ".png");
 
