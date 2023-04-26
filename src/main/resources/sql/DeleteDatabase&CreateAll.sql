@@ -61,7 +61,7 @@ CREATE TABLE `userinfo`
     `email`    varchar(64) NOT NULL UNIQUE,
     `phone`    varchar(12) NOT NULL DEFAULT "Empty",
     `bio`      varchar(64) NOT NULL DEFAULT "这个人是个OP，还没有个性签名",
-    `avatar`   varchar(64) DEFAULT NULL,
+    `avatar`   varchar(128) DEFAULT NULL,
     `blacked`  boolean     NOT NULL DEFAULT false,
     PRIMARY KEY (`id`),
     FOREIGN KEY (`id`) REFERENCES `sys_user` (`id`)
@@ -78,7 +78,7 @@ CREATE TABLE `animal`
     `name`      varchar(32)     NOT NULL UNIQUE,
     `intro`     varchar(256)    NOT NULL DEFAULT "管理员是个OP，还没设置动物介绍",
     `adopted`   boolean         NOT NULL DEFAULT false,
-    `avatar`    varchar(64)     DEFAULT NULL,
+    `avatar`    varchar(128)     DEFAULT NULL,
     PRIMARY KEY (`id`)
 );
 
@@ -91,7 +91,7 @@ CREATE TABLE `tweet`
     `user_id`      int(32)  NOT NULL,
     `title`        varchar(100)      DEFAULT NULL,
     `content`      varchar(1024)     NOT NULL DEFAULT "",
-    `images`       varchar(320)      DEFAULT NULL,
+    `images`       varchar(640)      DEFAULT NULL,
     `time`         datetime NOT NULL DEFAULT now(),
     `views`        int(32)  NOT NULL DEFAULT 0,
     `views_weekly` int(32)  NOT NULL DEFAULT 0,

@@ -89,4 +89,12 @@ public class TweetController {
                 .code(StatusEnum.SUCCESS.getCode())
                 .build();
     }
+
+    @PostMapping("/create")
+    public BaseResponse create(@RequestBody TweetCreateBo tweetCreateBo) {
+        tweetService.tweetCreate(tweetCreateBo);
+        return BaseResponse.builder()
+                .code(StatusEnum.SUCCESS.getCode())
+                .build();
+    }
 }
