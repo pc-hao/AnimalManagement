@@ -33,22 +33,22 @@ public class PictureController {
         fileName = UUID.randomUUID() + suffixName;
         String filePath = null;
         if ("animal".equals(fileType)) {
-            filePath = ImageConfig.savePath + "/animal/temp/" + fileName;
+            filePath = ImageConfig.savePath + "/animal/temp/";
         } else if ("tweet".equals(fileType) || "help".equals(fileType)) {
-            filePath = ImageConfig.savePath + "/tweet/temp/" + fileName;
+            filePath = ImageConfig.savePath + "/tweet/temp/";
         } else if ("user".equals(fileType)) {
-            filePath = ImageConfig.savePath + "/user/temp/" + fileName;
+            filePath = ImageConfig.savePath + "/user/temp/";
         } else {
-            throw new RuntimeException("Invalid type")
+            throw new RuntimeException("Invalid type");
         }
         if (Objects.isNull(filePath)) {
             throw new RuntimeException("Image Type Is Illegal!");
         }
         //将图片保存到文件夹里
-        fileUpload.transferTo(new File(filePath));
+        fileUpload.transferTo(new File(filePath,fileName));
 
         HashMap<String, String> result = new HashMap<>();
-        result.put("imagePath", filePath);
+        result.put("imagePath", filePath+fileName);
         return BaseResponse.builder().code(StatusEnum.SUCCESS.getCode()).body(result).build();
     }
 }
