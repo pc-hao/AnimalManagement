@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @AllArgsConstructor
 @Data
@@ -30,4 +31,6 @@ public class TweetContentVo {
 
     private Boolean isHelp;
     private Boolean solved;
+
+    private List<String> tags;
 }

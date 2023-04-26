@@ -43,6 +43,12 @@ public class TweetService {
     TweetStarMapper tweetStarMapper;
 
     @Autowired
+    TweetTagMapper tweetTagMapper;
+
+    @Autowired
+    TagMapper tagMapper;
+
+    @Autowired
     UserInfoMapper userInfoMapper;
 
     @Autowired
@@ -153,6 +159,18 @@ public class TweetService {
         StarExample starExample = new StarExample();
         starExample.createCriteria().andUserIdEqualTo(userInfo.getId()).andTweetIdEqualTo(tweet.getId());
         tweetContentVo.setHasStarred(Objects.nonNull(starMapper.selectByExample(starExample)));
+
+        TweetTagExample tweetTagExample = new TweetTagExample();
+        tweetTagExample.createCriteria().andTweetIdEqualTo(tweetContentBo.getTweetId());
+        List<TweetTagKey> tweetTagKeyList = tweetTagMapper.selectByExample(tweetTagExample);
+        List<Integer> tagIdList = tweetTagKeyList.stream().map(TweetTagKey::getTagId).toList();
+
+        TagExample tagExample = new TagExample();
+        tagExample.createCriteria().andIdIn(tagIdList);
+        List<Tag> tagList = tagMapper.selectByExample(tagExample);
+        List<String> tagNameList = tagList.stream().map(Tag::getContent).toList();
+        
+        tweetContentVo.setTags(tagNameList);
 
         return tweetContentVo;
     }
