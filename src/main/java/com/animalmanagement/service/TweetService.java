@@ -28,9 +28,6 @@ public class TweetService {
     UserService userService;
 
     @Autowired
-    TweetLikeMapper likeMapper;
-
-    @Autowired
     StarMapper starMapper;
 
     @Autowired
@@ -154,11 +151,13 @@ public class TweetService {
 
         TweetLikeExample likeExample = new TweetLikeExample();
         likeExample.createCriteria().andUserIdEqualTo(userInfo.getId()).andTweetIdEqualTo(tweet.getId());
-        tweetContentVo.setHasLiked(Objects.nonNull(likeMapper.selectByExample(likeExample)));
+        tweetContentVo.setHasLiked(Objects.nonNull(tweetLikeMapper.selectOneByExample(likeExample)));
 
         StarExample starExample = new StarExample();
         starExample.createCriteria().andUserIdEqualTo(userInfo.getId()).andTweetIdEqualTo(tweet.getId());
-        tweetContentVo.setHasStarred(Objects.nonNull(starMapper.selectByExample(starExample)));
+        tweetContentVo.setHasStarred(Objects.nonNull(starMapper.selectOneByExample(starExample)));
+
+        tweetContentVo.setComments(commentService.getCommentVoListByTweetId(tweetContentBo.getTweetId()).size());
 
         TweetTagExample tweetTagExample = new TweetTagExample();
         tweetTagExample.createCriteria().andTweetIdEqualTo(tweetContentBo.getTweetId());
@@ -230,7 +229,7 @@ public class TweetService {
         return map;
     }
 
-    public void tweetLike(TweetLikeBo tweetLikeBo) {
+    public Boolean tweetLike(TweetLikeBo tweetLikeBo) {
         SysUser sysUser = sysUserMapper.selectByPrimaryKey(tweetLikeBo.getUserId());
         if (Objects.isNull(sysUser)) {
             throw new RuntimeException("UserId Does Not Exist");
@@ -253,32 +252,16 @@ public class TweetService {
             tweetLikeMapper.insertSelective(insertTweetLike);
             tweet.setLikes(tweet.getLikes() + 1);
             tweetMapper.updateByPrimaryKeySelective(tweet);
-        }
-    }
-
-    public void tweetUnlike(TweetLikeBo tweetLikeBo) {
-        SysUser sysUser = sysUserMapper.selectByPrimaryKey(tweetLikeBo.getUserId());
-        if (Objects.isNull(sysUser)) {
-            throw new RuntimeException("UserId Does Not Exist");
-        }
-        Tweet tweet = tweetMapper.selectByPrimaryKey(tweetLikeBo.getTweetId());
-        if (Objects.isNull(tweet)) {
-            throw new RuntimeException("TweetId Does Not Exist");
-        }
-
-        TweetLikeExample example = new TweetLikeExample();
-        example.createCriteria()
-            .andUserIdEqualTo(tweetLikeBo.getUserId())
-            .andTweetIdEqualTo(tweetLikeBo.getTweetId());
-        TweetLikeKey tweetLike = tweetLikeMapper.selectOneByExample(example);
-        if (!Objects.isNull(tweetLike)) {
+            return true;
+        } else {
             tweetLikeMapper.deleteByPrimaryKey(tweetLike);
             tweet.setLikes(tweet.getLikes() - 1);
             tweetMapper.updateByPrimaryKeySelective(tweet);
+            return false;
         }
     }
 
-    public void tweetStar(TweetLikeBo tweetLikeBo) {
+    public Boolean tweetStar(TweetLikeBo tweetLikeBo) {
         SysUser sysUser = sysUserMapper.selectByPrimaryKey(tweetLikeBo.getUserId());
         if (Objects.isNull(sysUser)) {
             throw new RuntimeException("UserId Does Not Exist");
@@ -301,28 +284,12 @@ public class TweetService {
             tweetStarMapper.insertSelective(insertTweetStar);
             tweet.setStars(tweet.getStars() + 1);
             tweetMapper.updateByPrimaryKeySelective(tweet);
-        }
-    }
-
-    public void tweetUnstar(TweetLikeBo tweetLikeBo) {
-        SysUser sysUser = sysUserMapper.selectByPrimaryKey(tweetLikeBo.getUserId());
-        if (Objects.isNull(sysUser)) {
-            throw new RuntimeException("UserId Does Not Exist");
-        }
-        Tweet tweet = tweetMapper.selectByPrimaryKey(tweetLikeBo.getTweetId());
-        if (Objects.isNull(tweet)) {
-            throw new RuntimeException("TweetId Does Not Exist");
-        }
-
-        TweetStarExample example = new TweetStarExample();
-        example.createCriteria()
-            .andUserIdEqualTo(tweetLikeBo.getUserId())
-            .andTweetIdEqualTo(tweetLikeBo.getTweetId());
-        TweetStarKey tweetStar = tweetStarMapper.selectOneByExample(example);
-        if (!Objects.isNull(tweetStar)) {
+            return true;
+        } else {
             tweetStarMapper.deleteByPrimaryKey(tweetStar);
             tweet.setStars(tweet.getStars() - 1);
             tweetMapper.updateByPrimaryKeySelective(tweet);
+            return false;
         }
     }
 
