@@ -1,5 +1,6 @@
 package com.animalmanagement.service;
 
+import com.animalmanagement.bean.BaseResponse;
 import com.animalmanagement.bean.bo.*;
 import com.animalmanagement.bean.vo.*;
 import com.animalmanagement.config.ImageConfig;
@@ -12,18 +13,46 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 @Service
 public class AnimalService {
+    // 在服务器上记得一下这个，还有python文件也是
+    // todo 留意几个要修改的地方，此处、pycharm里
+    public static String LOCAL = "local";
+    public static String SERVER = "server";
+    private static String runMode = LOCAL;
+    private static HashMap<Integer, String> predictId2Name = new HashMap<>();
+
+    static {
+        predictId2Name.put(1, "馆长");
+        predictId2Name.put(2, "小2");
+        predictId2Name.put(3, "小3");
+        predictId2Name.put(4, "小4");
+        predictId2Name.put(5, "小5");
+        predictId2Name.put(6, "小6");
+        predictId2Name.put(7, "小7");
+        predictId2Name.put(8, "小8");
+        predictId2Name.put(9, "小9");
+        predictId2Name.put(10, "小10");
+        predictId2Name.put(11, "小11");
+        predictId2Name.put(12, "小12");
+        predictId2Name.put(13, "小13");
+        predictId2Name.put(14, "小14");
+        predictId2Name.put(15, "小15");
+        predictId2Name.put(16, "小16");
+        predictId2Name.put(17, "小17");
+        predictId2Name.put(18, "小18");
+        predictId2Name.put(19, "小19");
+        predictId2Name.put(20, "小20");
+    }
+
     private final static Integer PAGE_SIZE = 10;
 
     private final static String PICTURE_SAVE_PATH = ImageConfig.savePath + "/animal/";
@@ -153,4 +182,71 @@ public class AnimalService {
         }
         animalMapper.insertSelective(animal);
     }
+
+    public BaseResponse animalAIPredict(String imgPath) {
+        // todo 在java处按照训练的文件夹名字新建一个hashMap进行python文件返回后的结果
+        // 调用python进行预测
+        String serverPath = "/root/AnimalRecognitionAI/predictLabel.py";
+        String localPath = "D:/Software_data/Pycharm_prj/AnimalRecognitionAI/predictLabel.py";
+        String pyPath = runMode.equals(LOCAL) ? localPath : serverPath;
+        String[] cmd = {"C:\\Users\\Tantor\\.conda\\envs\\pytorch38\\python.exe", pyPath, "--img_path", imgPath, "--mode", runMode};
+
+        String predictTxtPath = runMode.equals(LOCAL) ? "C:/Users/Tantor/Desktop/predictLabel.txt" : "/root/AnimalManagement/temp/predictLabel.txt";
+        for (String str : cmd) {
+            System.out.print(str + " ");
+        }
+        System.out.println();
+
+        Process proc;
+        try {
+            proc = Runtime.getRuntime().exec(cmd);  // 执行py文件
+            System.out.println(proc.waitFor());
+            System.out.println("子程序运行完了");
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        // 加载txt文件，有关文件中的信息，去看pycharm中写的
+        Scanner scanner = null; // 不能在try-catch中定义Scanner，它对外界不可见。记得初始化为null
+        try {  // 在语句块内部定义的变量，作用域在语句块内部，外部不可见。
+            File file = new File(predictTxtPath);
+            scanner = new Scanner(new FileInputStream(file));
+        } catch (Exception e) {
+            throw new RuntimeException("error, can't find predictTxtPath");
+        }
+        int label = scanner.nextInt();
+        if (label == -1) {
+            // -1表示空地址
+            return BaseResponse.builder().code(1).message("No match animal").build();
+        } else if (label == -2) {
+            // -2表示图片不存在
+            return BaseResponse.builder().code(2).message("receive an empty img path").build();
+        } else if (label == -3) {
+            // -3表示没有匹配的动物
+            return BaseResponse.builder().code(3).message("no match animal").build();
+        } else {
+            String animalName = predictId2Name.get(label);
+            System.out.println("lable is " + Integer.toString(label));
+            System.out.println("name  is " + animalName);
+            AnimalExample animalExample = new AnimalExample();
+            animalExample.createCriteria().andNameEqualTo(animalName);
+            List<Animal> animals = animalMapper.selectByExample(animalExample);
+
+            // 数据库中没有找到这一只动物
+            if (animals.size() == 0) {
+                System.out.println("数据库中没有找到这只动物");
+                return BaseResponse.builder().code(1).message("There is a bug in the back end's SQL").build();
+            }
+
+            // 找到了这一只动物，返回相关信息
+            AnimalAIVo vo = new AnimalAIVo();
+            vo.setAnimalName(animalName);
+            vo.setAnimalId(animals.get(0).getId());
+            return BaseResponse.builder().code(0).message("success").body(vo).build();
+        }
+
+    }
+
 }

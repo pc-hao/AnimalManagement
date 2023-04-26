@@ -29,4 +29,10 @@ public class AnimalController {
                 .body(animalService.animalGet(animalGetBo))
                 .build();
     }
+
+
+    @PostMapping("/ai")
+    public BaseResponse animalAiDetect(@RequestBody AnimalAIBo animalAIBo) {
+        return animalService.animalAIPredict(animalAIBo.getImage());
+    }
 }
