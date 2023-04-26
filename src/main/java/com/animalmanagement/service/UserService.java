@@ -185,9 +185,9 @@ public class UserService {
         if (Objects.isNull(email)) {
             throw new RuntimeException("Email Is Empty");
         }
-        if (!email.endsWith("@buaa.edu.cn") || email.length() <= "@buaa.edu.cn".length()) {
-            throw new RuntimeException("Incorrect Email Format");
-        }
+//        if (!email.endsWith("@buaa.edu.cn") || email.length() <= "@buaa.edu.cn".length()) {
+//            throw new RuntimeException("Incorrect Email Format");
+//        }
     }
 
     public void checkPhone(String phone) {

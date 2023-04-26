@@ -39,7 +39,7 @@ public class PictureController {
         } else if ("user".equals(fileType)) {
             filePath = ImageConfig.savePath + "/user/temp/" + fileName;
         } else {
-            throw new RuntimeException("Invalid type")
+            throw new RuntimeException("Invalid type");
         }
         if (Objects.isNull(filePath)) {
             throw new RuntimeException("Image Type Is Illegal!");
