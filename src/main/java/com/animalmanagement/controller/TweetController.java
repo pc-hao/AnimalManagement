@@ -59,8 +59,32 @@ public class TweetController {
     }
 
     @PostMapping("/like")
-    public BaseResponse like(@RequestBody GetTweetsBo getTweetsBo) {
+    public BaseResponse like(@RequestBody TweetLikeBo tweetLikeBo) {
+        tweetService.tweetLike(tweetLikeBo);
+        return BaseResponse.builder()
+                .code(StatusEnum.SUCCESS.getCode())
+                .build();
+    }
 
+    @PostMapping("/unlike")
+    public BaseResponse unlike(@RequestBody TweetLikeBo tweetLikeBo) {
+        tweetService.tweetUnlike(tweetLikeBo);
+        return BaseResponse.builder()
+                .code(StatusEnum.SUCCESS.getCode())
+                .build();
+    }
+
+    @PostMapping("/star")
+    public BaseResponse star(@RequestBody TweetLikeBo tweetLikeBo) {
+        tweetService.tweetStar(tweetLikeBo);
+        return BaseResponse.builder()
+                .code(StatusEnum.SUCCESS.getCode())
+                .build();
+    }
+
+    @PostMapping("/unstar")
+    public BaseResponse unstar(@RequestBody TweetLikeBo tweetLikeBo) {
+        tweetService.tweetUnstar(tweetLikeBo);
         return BaseResponse.builder()
                 .code(StatusEnum.SUCCESS.getCode())
                 .build();

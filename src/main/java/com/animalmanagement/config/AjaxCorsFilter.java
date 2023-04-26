@@ -26,7 +26,7 @@ public class AjaxCorsFilter extends CorsFilter {
         List<String> allowedOrigins = Arrays.asList("*");
         corsConfig.setAllowedHeaders(allowedHeaders);
         corsConfig.setAllowedMethods(allowedMethods);
-        corsConfig.setAllowedOriginPatterns(allowedOrigins);
+        corsConfig.setAllowedOrigins(allowedOrigins);
         corsConfig.setExposedHeaders(exposedHeaders);
         corsConfig.setMaxAge(36000L);
         corsConfig.setAllowCredentials(true);
