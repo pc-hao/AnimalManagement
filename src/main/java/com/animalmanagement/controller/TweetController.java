@@ -6,7 +6,6 @@ import com.animalmanagement.service.*;
 import com.animalmanagement.enums.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -62,8 +61,8 @@ public class TweetController {
     }
 
     @PostMapping("/like")
-    public BaseResponse like(@RequestBody TweetLikeBo tweetLikeBo) {
-        boolean isLike = tweetService.tweetLike(tweetLikeBo);
+    public BaseResponse like(@RequestBody UserAndTweetIdBo userAndTweetIdBo) {
+        boolean isLike = tweetService.tweetLike(userAndTweetIdBo);
         Map<Object, Object> map = new HashMap<>();
         map.put("isLike", isLike);
         return BaseResponse.builder()
@@ -73,12 +72,13 @@ public class TweetController {
     }
 
     @PostMapping("/star")
-    public BaseResponse star(@RequestBody TweetLikeBo tweetLikeBo) {
-        boolean isLike = tweetService.tweetStar(tweetLikeBo);
+    public BaseResponse star(@RequestBody UserAndTweetIdBo userAndTweetIdBo) {
+        boolean isLike = tweetService.tweetStar(userAndTweetIdBo);
         Map<Object, Object> map = new HashMap<>();
         map.put("isStar", isLike);
         return BaseResponse.builder()
                 .code(StatusEnum.SUCCESS.getCode())
+                .body(map)
                 .build();
     }
 
