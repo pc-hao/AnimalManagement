@@ -6,12 +6,10 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
 @Getter
+@Setter
 @Component
 @ConfigurationProperties(prefix = "image")
 public class ImageConfig {
     public static String savePath;
-
-    public void setSavePath(String savePath) {
-        this.savePath = savePath;
-    }
+    public static String frontPath;
 }
