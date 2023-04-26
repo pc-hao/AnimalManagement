@@ -24,6 +24,7 @@ public class PictureController {
     public BaseResponse profilePhotoUpload(@RequestParam("image") MultipartFile fileUpload, @RequestParam("type") String fileType) throws IOException {
         //获取文件名
         String fileName = fileUpload.getOriginalFilename();
+        String frontFilePath;
         //获取文件后缀名
         String suffixName = fileName.substring(fileName.lastIndexOf("."));
         if (!suffixNameList.stream().anyMatch(e -> e.equals(suffixName))) {
@@ -34,10 +35,13 @@ public class PictureController {
         String filePath = null;
         if ("animal".equals(fileType)) {
             filePath = ImageConfig.savePath + "/animal/temp/" + fileName;
+            frontFilePath = "/images/animal/temp/" + fileName;
         } else if ("tweet".equals(fileType) || "help".equals(fileType)) {
             filePath = ImageConfig.savePath + "/tweet/temp/" + fileName;
+            frontFilePath = "/images/tweet/temp/" + fileName;
         } else if ("user".equals(fileType)) {
             filePath = ImageConfig.savePath + "/user/temp/" + fileName;
+            frontFilePath = "/images/user/temp/" + fileName;
         } else {
             throw new RuntimeException("Invalid type");
         }
@@ -45,12 +49,10 @@ public class PictureController {
             throw new RuntimeException("Image Type Is Illegal!");
         }
         //将图片保存到文件夹里
-	filePath = "/root/AnimalManagement/src/main/resources/static/images/user/temp/1.png";
         fileUpload.transferTo(new File(filePath));
-	System.out.println(filePath);
 
         HashMap<String, String> result = new HashMap<>();
-        result.put("imagePath", filePath);
+        result.put("imagePath", frontFilePath);
         return BaseResponse.builder().code(StatusEnum.SUCCESS.getCode()).body(result).build();
     }
 }
