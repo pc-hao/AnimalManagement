@@ -28,9 +28,6 @@ public class TweetService {
     UserService userService;
 
     @Autowired
-    TweetLikeMapper likeMapper;
-
-    @Autowired
     StarMapper starMapper;
 
     @Autowired
@@ -148,11 +145,11 @@ public class TweetService {
 
         TweetLikeExample likeExample = new TweetLikeExample();
         likeExample.createCriteria().andUserIdEqualTo(userInfo.getId()).andTweetIdEqualTo(tweet.getId());
-        tweetContentVo.setHasLiked(Objects.nonNull(likeMapper.selectByExample(likeExample)));
+        tweetContentVo.setHasLiked(Objects.nonNull(tweetLikeMapper.selectOneByExample(likeExample)));
 
         StarExample starExample = new StarExample();
         starExample.createCriteria().andUserIdEqualTo(userInfo.getId()).andTweetIdEqualTo(tweet.getId());
-        tweetContentVo.setHasStarred(Objects.nonNull(starMapper.selectByExample(starExample)));
+        tweetContentVo.setHasStarred(Objects.nonNull(starMapper.selectOneByExample(starExample)));
 
         tweetContentVo.setComments(commentService.getCommentVoListByTweetId(tweetContentBo.getTweetId()).size());
 
