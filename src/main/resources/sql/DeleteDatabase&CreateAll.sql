@@ -111,6 +111,15 @@ insert into tweet (user_id,title,`time`,content,is_help,published,censored) valu
 insert into tweet (user_id,title,`time`,content,is_help,published,censored) values (3, "hhhh2", now(),"这是另一个帖子",false,true,2);
 insert into tweet (user_id,title,`time`,content,is_help,published,censored) values (3, "help", now(),"这是一个求助帖",true,true,1);
 insert into tweet (user_id,title,`time`,content,is_help,published,censored) values (3, "help2", now(),"这是另一个求助帖",true,true,0);
+insert into tweet (user_id,title,`time`,content,is_help,published,censored) values (3, "从现在开始，本贴升级为原神贴", now(),"为贯彻原神为本群核心游戏的思想，进一步深化原神群改革，争取把我群升级为原神群，现对各群员提出以下要求:
+1、本群其他游戏玩家跟原神玩家说话前要添加敬语。
+2、本群原神玩家对话途中其他游戏玩家不允许插嘴。
+3、其他游戏玩家每天早晚都要向本群原神玩家问好。
+4、非原神玩家发言控制在14字以内，必须打标点符号，不允许出现反原言论，不允许使用QQ第一排以下的表情。
+5、非原神玩家不允许发表情包。
+6、非原神玩家发图或语音必须征得原神玩家同意。
+7、非原神玩家一天只能发10句话，超过必禁。
+8、22: 00后对非原神玩家实行宵禁。",false,true,1);
 
 CREATE TABLE `comment`
 (
@@ -169,6 +178,7 @@ insert into tag (content) values ("提米");
 insert into tag (content) values ("狗");
 insert into tag (content) values ("猫");
 insert into tag (content) values ("白色");
+insert into tag (content) values ("原神");
 
 CREATE TABLE `tweettag`
 (
@@ -178,6 +188,15 @@ CREATE TABLE `tweettag`
     FOREIGN KEY (tweet_id) REFERENCES tweet (id),
     FOREIGN KEY (tag_id) REFERENCES tag (id)
 );
+
+insert into tweettag(tweet_id,tag_id) values (1,1);
+insert into tweettag(tweet_id,tag_id) values (1,2);
+insert into tweettag(tweet_id,tag_id) values (2,1);
+insert into tweettag(tweet_id,tag_id) values (3,4);
+insert into tweettag(tweet_id,tag_id) values (4,2);
+insert into tweettag(tweet_id,tag_id) values (4,4);
+insert into tweettag(tweet_id,tag_id) values (4,5);
+insert into tweettag(tweet_id,tag_id) values (5,6);
 
 CREATE TABLE `token`
 (
