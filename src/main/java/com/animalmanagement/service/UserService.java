@@ -30,9 +30,9 @@ import com.animalmanagement.utils.EncodeUtil;
 
 @Service
 public class UserService {
-    private static final String PICTURE_SAVE_PATH = ImageConfig.savePath + "/user/";
+    private static final String PICTURE_SAVE_PATH = ImageConfig.frontPath + "/user/";
 
-    private static final String DEFAULT_IMAGE_PATH = ImageConfig.savePath + "/user/default.png";
+    private static final String DEFAULT_IMAGE_PATH = ImageConfig.frontPath + "/user/default.png";
 
     @Autowired
     SysUserMapper sysUserMapper;
