@@ -490,4 +490,8 @@ public class TweetService {
         }
         return map;
     }
+
+    public void tweetCreate(TweetCreateBo tweetCreateBo) {
+        
+    }
 }
