@@ -484,7 +484,13 @@ public class TweetService {
             .build();
         tweetMapper.insertSelective(insertTweet);
 
-        Integer id = insertTweet.getId();
+        TweetExample tweetExample = new TweetExample();
+        tweetExample.createCriteria().andUserIdEqualTo(tweetCreateBo.getUserId());
+        List<Tweet> tweetList = tweetMapper.selectByExample(tweetExample);
+        tweetList.sort(Comparator.comparing(Tweet::getTime));
+        Tweet tweet = tweetList.get(0);
+
+        Integer id = tweet.getId();
 
         if(!imageUrlList.isEmpty()) {
             String images = "";
