@@ -117,7 +117,6 @@ public class TweetService {
         map.put("username", userInfo.getUsername());
         map.put("title", tweet.getTitle());
         map.put("content", tweet.getContent());
-        map.put("images", tweet.getImages().split(";"));
         map.put("time", tweet.getTime());
         map.put("views", tweet.getViews());
         map.put("viewsWeekly", tweet.getViewsWeekly());
@@ -128,6 +127,13 @@ public class TweetService {
         map.put("solved", tweet.getSolved());
         map.put("published", tweet.getPublished());
         map.put("deleted", tweet.getDeleted());
+
+        if(tweet.getImages().isEmpty()) {
+            map.put("images", null);
+        } else {
+            List<String> images = Arrays.asList(tweet.getImages().split(";"));
+            map.put("images", images);
+        }
 
         return map;
     }
@@ -159,8 +165,12 @@ public class TweetService {
         TweetContentVo tweetContentVo = new TweetContentVo();
         BeanUtils.copyProperties(tweet, tweetContentVo);
 
-        List<String> images = Arrays.asList(tweet.getImages().split(";"));
-        tweetContentVo.setImages(images);
+        if(tweet.getImages().isEmpty()) {
+            tweetContentVo.setImages(null);
+        } else {
+            List<String> images = Arrays.asList(tweet.getImages().split(";"));
+            tweetContentVo.setImages(images);
+        }
 
         tweetContentVo.setUsername(userInfo.getUsername());
         tweetContentVo.setAvatar(userInfo.getAvatar());
