@@ -55,6 +55,8 @@ public class AnimalService {
 
     private final static Integer PAGE_SIZE = 10;
 
+    private static final String PICTURE_SAVE_PATH_FRONT = ImageConfig.frontPath + "/animal/";
+
     private final static String PICTURE_SAVE_PATH = ImageConfig.savePath + "/animal/";
 
     private static final String PICTURE_SAVE_PATH_FRONT = ImageConfig.frontPath + "/animal/";
