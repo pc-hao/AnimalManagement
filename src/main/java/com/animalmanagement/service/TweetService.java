@@ -500,10 +500,10 @@ public class TweetService {
                 images += newAvatarFront;
                 images += ";";
             }
-            tweetCreateSaveImage(imageUrlList.get(listLength - 1), insertTweet, listLength - 1);
+            tweetCreateSaveImage(imageUrlList.get(listLength - 1), tweet, listLength - 1);
             images += imageUrlList.get(tweetCreateBo.getImages().size() - 1);
-            insertTweet.setImages(images);
-            tweetMapper.updateByPrimaryKeySelective(insertTweet);
+            tweet.setImages(images);
+            tweetMapper.updateByPrimaryKeySelective(tweet);
         }
     }
 
