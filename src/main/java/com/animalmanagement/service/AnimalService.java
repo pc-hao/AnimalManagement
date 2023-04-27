@@ -59,8 +59,6 @@ public class AnimalService {
 
     private final static String PICTURE_SAVE_PATH = ImageConfig.savePath + "/animal/";
 
-    private static final String PICTURE_SAVE_PATH_FRONT = ImageConfig.frontPath + "/animal/";
-
     private static final String DEFAULT_IMAGE_PATH = ImageConfig.frontPath + "/animal/default.png";
 
     @Autowired
