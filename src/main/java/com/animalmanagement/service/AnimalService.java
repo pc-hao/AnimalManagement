@@ -55,9 +55,11 @@ public class AnimalService {
 
     private final static Integer PAGE_SIZE = 10;
 
+    private static final String PICTURE_SAVE_PATH_FRONT = ImageConfig.frontPath + "/animal/";
+
     private final static String PICTURE_SAVE_PATH = ImageConfig.savePath + "/animal/";
 
-    private final static String DEFAULT_IMAGE_PATH = ImageConfig.savePath + "/animal/default.png";
+    private static final String DEFAULT_IMAGE_PATH = ImageConfig.frontPath + "/animal/default.png";
 
     @Autowired
     AnimalMapper animalMapper;
@@ -121,12 +123,13 @@ public class AnimalService {
         }
         if (!Objects.isNull(adminAnimalModifyBo.getAvatar())) {
             String newAvatar = PICTURE_SAVE_PATH + adminAnimalModifyBo.getRecordId() + ".png";
+            String newAvatarFront = PICTURE_SAVE_PATH_FRONT + adminAnimalModifyBo.getRecordId() + ".png";
             try {
                 Files.move(Paths.get(adminAnimalModifyBo.getAvatar()), Paths.get(newAvatar), StandardCopyOption.REPLACE_EXISTING);
             } catch (IOException e) {
                 throw new RuntimeException(e.getMessage());
             }
-            animal.setAvatar(newAvatar);
+            animal.setAvatar(newAvatarFront);
         }
         animalMapper.updateByPrimaryKeySelective(animal);
     }

@@ -6,20 +6,30 @@ import com.animalmanagement.entity.*;
 import com.animalmanagement.mapper.*;
 import com.animalmanagement.example.*;
 import com.animalmanagement.enums.*;
+import com.animalmanagement.config.ImageConfig;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 
 @Service
 public class HelpService {
+
+    private static final String PICTURE_SAVE_PATH_FRONT = ImageConfig.frontPath + "/tweet/";
+
+    private static final String PICTURE_SAVE_PATH = ImageConfig.savePath + "/tweet/";
 
     @Autowired
     TweetMapper tweetMapper;
@@ -93,7 +103,7 @@ public class HelpService {
     public Map<String, Object> adminHelpContent(AdminHelpContentBo adminHelpContentBo) {
         Tweet tweet = tweetMapper.selectByPrimaryKey(adminHelpContentBo.getHelpId());
         if(Objects.isNull(tweet)) {
-            throw new RuntimeException("Tweet ID Does Not Exist");
+            throw new RuntimeException("Help ID Does Not Exist");
         }
         UserInfo userInfo = userInfoMapper.selectByPrimaryKey(tweet.getUserId());
 
@@ -101,7 +111,6 @@ public class HelpService {
         map.put("username", userInfo.getUsername());
         map.put("title", tweet.getTitle());
         map.put("content", tweet.getContent());
-        map.put("images", tweet.getImages());
         map.put("time", tweet.getTime());
         map.put("views", tweet.getViews());
         map.put("viewsWeekly", tweet.getViewsWeekly());
@@ -113,198 +122,92 @@ public class HelpService {
         map.put("published", tweet.getPublished());
         map.put("deleted", tweet.getDeleted());
 
+        if(tweet.getImages() == null) {
+            map.put("images", null);
+        } else {
+            List<String> images = Arrays.asList(tweet.getImages().split(";"));
+            map.put("images", images);
+        }
+
         return map;
     }
 
-    public void adminHelpPass(AdminHelpPassBo adminHelpPassBo) {
-        Tweet tweet = tweetMapper.selectByPrimaryKey(adminHelpPassBo.getHelpId());
-        if(Objects.isNull(tweet)) {
-            throw new RuntimeException("Help ID Does Not Exist");
+    public boolean changeStatusByUserSelf(Integer userId, Integer tweetId) {
+        SysUser sysUser = sysUserMapper.selectByPrimaryKey(userId);
+        if (Objects.isNull(sysUser)) {
+            throw new RuntimeException("UserId Does Not Exist");
+        }
+        Tweet tweet = tweetMapper.selectByPrimaryKey(tweetId);
+        if (Objects.isNull(tweet)) {
+            throw new RuntimeException("TweetId Does Not Exist");
         }
 
-        tweet.setCensored(CensorStatusEnum.PASS.getCode());
+        if(!Objects.equals(userId, tweet.getUserId())) {
+            throw new RuntimeException("不能修改他人的求助帖状态");
+        }
 
+        tweet.setSolved(!tweet.getSolved());
         tweetMapper.updateByPrimaryKeySelective(tweet);
+        return tweet.getSolved();
     }
 
-    public void adminHelpDeny(AdminHelpDenyBo adminHelpDenyBo) {
-        Tweet tweet = tweetMapper.selectByPrimaryKey(adminHelpDenyBo.getHelpId());
-        if(Objects.isNull(tweet)) {
-            throw new RuntimeException("Help ID Does Not Exist");
+    public boolean changeStatusByAdmin(Integer tweetId) {
+        Tweet tweet = tweetMapper.selectByPrimaryKey(tweetId);
+        if (Objects.isNull(tweet)) {
+            throw new RuntimeException("TweetId Does Not Exist");
         }
-
-        tweet.setCensored(CensorStatusEnum.REJECT.getCode());
-        
+        tweet.setSolved(!tweet.getSolved());
         tweetMapper.updateByPrimaryKeySelective(tweet);
+        return tweet.getSolved();
     }
 
-    public TweetContentVo getTweetContent(TweetContentBo tweetContentBo) {
-        UserInfo userInfo = userService.getUserInfoById(tweetContentBo.getUserId());
-        Tweet tweet = getTweetById(tweetContentBo.getTweetId());
-        checkTweetValid(tweet);
-
-        TweetContentVo tweetContentVo = new TweetContentVo();
-        BeanUtils.copyProperties(tweet, tweetContentVo);
-        tweetContentVo.setUsername(userInfo.getUsername());
-        tweetContentVo.setAvatar(userInfo.getAvatar());
-
-        TweetLikeExample likeExample = new TweetLikeExample();
-        likeExample.createCriteria().andUserIdEqualTo(userInfo.getId()).andTweetIdEqualTo(tweet.getId());
-        tweetContentVo.setHasLiked(Objects.nonNull(likeMapper.selectOneByExample(likeExample)));
-
-        StarExample starExample = new StarExample();
-        starExample.createCriteria().andUserIdEqualTo(userInfo.getId()).andTweetIdEqualTo(tweet.getId());
-        tweetContentVo.setHasStarred(Objects.nonNull(starMapper.selectOneByExample(starExample)));
-
-        return tweetContentVo;
-    }
-
-    /**
-     * 通过id获取帖子，id不存在直接报错
-     */
-    public Tweet getTweetById(Integer id) {
-        Tweet tweet = tweetMapper.selectByPrimaryKey(id);
-        if (Objects.isNull(tweet)) {
-            throw new RuntimeException("Tweet Id Does Not Exist");
+    public void helpCreate(HelpCreateBo helpCreateBo) {
+        SysUser sysUser = sysUserMapper.selectByPrimaryKey(helpCreateBo.getUserId());
+        if(sysUser == null) {
+            throw new RuntimeException("User ID Does Not Exist");
         }
-        return tweet;
-    }
 
-    /**
-     * 校验帖子是否过审、被删除、发布
-     */
-    private void checkTweetValid(Tweet tweet) {
-        if (!Objects.equals(tweet.getCensored(), CensorStatusEnum.PASS.getCode())) {
-            throw new RuntimeException("Tweet Is Not Censored");
-        }
-        if (tweet.getDeleted()) {
-            throw new RuntimeException("Tweet Has Deleted");
-        }
-        if (!tweet.getPublished()) {
-            throw new RuntimeException("Tweet Id Does Not Exist");
+        List<String> imageUrlList = helpCreateBo.getImages();
+        Integer listLength = helpCreateBo.getImages().size();
+
+        Tweet insertHelp = Tweet.builder()
+            .userId(helpCreateBo.getUserId())
+            .title(helpCreateBo.getTitle())
+            .content(helpCreateBo.getContent())
+            .isHelp(true)
+            .published(true)
+            .build();
+        tweetMapper.insertSelective(insertHelp);
+
+        TweetExample helpExample = new TweetExample();
+        helpExample.createCriteria().andUserIdEqualTo(helpCreateBo.getUserId());
+        List<Tweet> helpList = tweetMapper.selectByExample(helpExample);
+        helpList.sort(Comparator.comparing(Tweet::getTime));
+        Tweet help = helpList.get(helpList.size() - 1);
+
+        Integer id = help.getId();
+
+        if(!imageUrlList.isEmpty()) {
+            String images = "";
+            for(int i = 0;i < listLength - 1;i++) {
+                helpCreateSaveImage(imageUrlList.get(i), help, i);
+                String newAvatarFront = PICTURE_SAVE_PATH_FRONT + id + "_" + i + ".png";
+                images += newAvatarFront;
+                images += ";";
+            }
+            helpCreateSaveImage(imageUrlList.get(listLength - 1), help, listLength - 1);
+            images += PICTURE_SAVE_PATH_FRONT + id + "_" + (listLength - 1) + ".png";
+            help.setImages(images);
+            tweetMapper.updateByPrimaryKeySelective(help);
         }
     }
 
-    public Map<String, Object> getTweets(GetTweetsBo getTweetsBo) {
-        int pageSize = 8;
-
-        TweetExample example = new TweetExample();
-        example.createCriteria()
-                .andPublishedEqualTo(true)
-                .andCensoredEqualTo(CensorStatusEnum.PASS.getCode())
-                .andDeletedEqualTo(false);
-        List<Tweet> tweetList = tweetMapper.selectByExample(example);
-
-        Map<String, Object> map = new HashMap<>();
-
-        if (getTweetsBo.getType().equals("时间")) {
-            tweetList.sort(Comparator.comparing(Tweet::getTime));
-        } else {
-            tweetList.sort(Comparator.comparing(Tweet::getViewsWeekly));
-        }
-        int start = getTweetsBo.getCommentpage() * pageSize;
-        if (start >= tweetList.size()) {
-            map.put("tweets", null);
-        } else {
-            int end = Math.min(start + getTweetsBo.getCommentpage(), pageSize);
-            map.put("tweets", tweetList.subList(start, end));
-        }
-        return map;
-    }
-
-    public void tweetLike(TweetLikeBo tweetLikeBo) {
-        SysUser sysUser = sysUserMapper.selectByPrimaryKey(tweetLikeBo.getUserId());
-        if (Objects.isNull(sysUser)) {
-            throw new RuntimeException("UserId Does Not Exist");
-        }
-        Tweet tweet = tweetMapper.selectByPrimaryKey(tweetLikeBo.getTweetId());
-        if (Objects.isNull(tweet)) {
-            throw new RuntimeException("TweetId Does Not Exist");
-        }
-
-        TweetLikeExample example = new TweetLikeExample();
-        example.createCriteria()
-            .andUserIdEqualTo(tweetLikeBo.getUserId())
-            .andTweetIdEqualTo(tweetLikeBo.getTweetId());
-        TweetLikeKey tweetLike = tweetLikeMapper.selectOneByExample(example);
-        if (Objects.isNull(tweetLike)) {
-            TweetLikeKey insertTweetLike = TweetLikeKey.builder()
-                    .userId(tweetLikeBo.getUserId())
-                    .tweetId(tweetLikeBo.getTweetId())
-                    .build();
-            tweetLikeMapper.insertSelective(insertTweetLike);
-            tweet.setLikes(tweet.getLikes() + 1);
-            tweetMapper.updateByPrimaryKeySelective(tweet);
-        }
-    }
-
-    public void tweetUnlike(TweetLikeBo tweetLikeBo) {
-        SysUser sysUser = sysUserMapper.selectByPrimaryKey(tweetLikeBo.getUserId());
-        if (Objects.isNull(sysUser)) {
-            throw new RuntimeException("UserId Does Not Exist");
-        }
-        Tweet tweet = tweetMapper.selectByPrimaryKey(tweetLikeBo.getTweetId());
-        if (Objects.isNull(tweet)) {
-            throw new RuntimeException("TweetId Does Not Exist");
-        }
-
-        TweetLikeExample example = new TweetLikeExample();
-        example.createCriteria()
-            .andUserIdEqualTo(tweetLikeBo.getUserId())
-            .andTweetIdEqualTo(tweetLikeBo.getTweetId());
-        TweetLikeKey tweetLike = tweetLikeMapper.selectOneByExample(example);
-        if (!Objects.isNull(tweetLike)) {
-            tweetLikeMapper.deleteByPrimaryKey(tweetLike);
-            tweet.setLikes(tweet.getLikes() - 1);
-            tweetMapper.updateByPrimaryKeySelective(tweet);
-        }
-    }
-
-    public void tweetStar(TweetLikeBo tweetLikeBo) {
-        SysUser sysUser = sysUserMapper.selectByPrimaryKey(tweetLikeBo.getUserId());
-        if (Objects.isNull(sysUser)) {
-            throw new RuntimeException("UserId Does Not Exist");
-        }
-        Tweet tweet = tweetMapper.selectByPrimaryKey(tweetLikeBo.getTweetId());
-        if (Objects.isNull(tweet)) {
-            throw new RuntimeException("TweetId Does Not Exist");
-        }
-
-        TweetStarExample example = new TweetStarExample();
-        example.createCriteria()
-            .andUserIdEqualTo(tweetLikeBo.getUserId())
-            .andTweetIdEqualTo(tweetLikeBo.getTweetId());
-        TweetStarKey tweetStar = tweetStarMapper.selectOneByExample(example);
-        if (Objects.isNull(tweetStar)) {
-            TweetStarKey insertTweetStar = TweetStarKey.builder()
-                    .userId(tweetLikeBo.getUserId())
-                    .tweetId(tweetLikeBo.getTweetId())
-                    .build();
-            tweetStarMapper.insertSelective(insertTweetStar);
-            tweet.setStars(tweet.getStars() + 1);
-            tweetMapper.updateByPrimaryKeySelective(tweet);
-        }
-    }
-
-    public void tweetUnstar(TweetLikeBo tweetLikeBo) {
-        SysUser sysUser = sysUserMapper.selectByPrimaryKey(tweetLikeBo.getUserId());
-        if (Objects.isNull(sysUser)) {
-            throw new RuntimeException("UserId Does Not Exist");
-        }
-        Tweet tweet = tweetMapper.selectByPrimaryKey(tweetLikeBo.getTweetId());
-        if (Objects.isNull(tweet)) {
-            throw new RuntimeException("TweetId Does Not Exist");
-        }
-
-        TweetStarExample example = new TweetStarExample();
-        example.createCriteria()
-            .andUserIdEqualTo(tweetLikeBo.getUserId())
-            .andTweetIdEqualTo(tweetLikeBo.getTweetId());
-        TweetStarKey tweetStar = tweetStarMapper.selectOneByExample(example);
-        if (!Objects.isNull(tweetStar)) {
-            tweetStarMapper.deleteByPrimaryKey(tweetStar);
-            tweet.setStars(tweet.getStars() - 1);
-            tweetMapper.updateByPrimaryKeySelective(tweet);
+    private void helpCreateSaveImage(String url,Tweet help,int num) {
+        String imagePath = PICTURE_SAVE_PATH + help.getId() + "_" + num + ".png";
+        try {
+            Files.move(Paths.get(url), Paths.get(imagePath), StandardCopyOption.REPLACE_EXISTING);
+        } catch (IOException e) {
+            throw new RuntimeException(e.getMessage());
         }
     }
 }

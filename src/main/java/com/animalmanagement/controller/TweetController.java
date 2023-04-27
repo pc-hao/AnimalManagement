@@ -6,7 +6,6 @@ import com.animalmanagement.service.*;
 import com.animalmanagement.enums.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -62,8 +61,8 @@ public class TweetController {
     }
 
     @PostMapping("/like")
-    public BaseResponse like(@RequestBody TweetLikeBo tweetLikeBo) {
-        boolean isLike = tweetService.tweetLike(tweetLikeBo);
+    public BaseResponse like(@RequestBody UserAndTweetIdBo userAndTweetIdBo) {
+        boolean isLike = tweetService.tweetLike(userAndTweetIdBo.getUserId(), userAndTweetIdBo.getTweetId());
         Map<Object, Object> map = new HashMap<>();
         map.put("isLike", isLike);
         return BaseResponse.builder()
@@ -73,12 +72,13 @@ public class TweetController {
     }
 
     @PostMapping("/star")
-    public BaseResponse star(@RequestBody TweetLikeBo tweetLikeBo) {
-        boolean isLike = tweetService.tweetStar(tweetLikeBo);
+    public BaseResponse star(@RequestBody UserAndTweetIdBo userAndTweetIdBo) {
+        boolean isLike = tweetService.tweetStar(userAndTweetIdBo.getUserId(), userAndTweetIdBo.getTweetId());
         Map<Object, Object> map = new HashMap<>();
         map.put("isStar", isLike);
         return BaseResponse.builder()
                 .code(StatusEnum.SUCCESS.getCode())
+                .body(map)
                 .build();
     }
 
@@ -87,6 +87,14 @@ public class TweetController {
         tweetService.tweetCreate(tweetCreateBo);
         return BaseResponse.builder()
                 .code(StatusEnum.SUCCESS.getCode())
+                .build();
+    }
+
+    @PostMapping("/delete")
+    public BaseResponse delete(@RequestBody UserAndTweetIdBo userAndTweetIdBo) {
+        tweetService.deleteTweet(userAndTweetIdBo.getUserId(), userAndTweetIdBo.getTweetId());
+        return BaseResponse.builder()
+                .code(StatusEnum.SUCCESS.getCode()).message("删除成功")
                 .build();
     }
 }

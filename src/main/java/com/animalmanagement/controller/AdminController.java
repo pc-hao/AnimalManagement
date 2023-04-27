@@ -11,6 +11,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 @RestController
@@ -40,19 +42,20 @@ public class AdminController {
         return BaseResponse.builder()
                 .code(StatusEnum.SUCCESS.getCode())
                 .body(userService.adminGetUsers(adminGetUserBo))
+                .message("success")
                 .build();
     }
 
     @RequestMapping("user/black")
     public BaseResponse changeUserStatus(@RequestBody ChangeUserStatusBo changeUserStatusBo) {
         userService.changeUserStatus(changeUserStatusBo);
-        return BaseResponse.builder().code(StatusEnum.SUCCESS.getCode()).build();
+        return BaseResponse.builder().code(StatusEnum.SUCCESS.getCode()).message("success").build();
     }
 
     @RequestMapping("/user/modify")
     public BaseResponse modifyUser(@RequestBody ModifyUserInfoBo modifyUserInfoBo) {
         userService.modifyUserInfo(modifyUserInfoBo);
-        return BaseResponse.builder().code(StatusEnum.SUCCESS.getCode()).build();
+        return BaseResponse.builder().code(StatusEnum.SUCCESS.getCode()).message("success").build();
     }
 
     @PostMapping("/tweet/get")
@@ -60,6 +63,7 @@ public class AdminController {
         return BaseResponse.builder()
                 .code(StatusEnum.SUCCESS.getCode())
                 .body(tweetService.adminTweetGet(adminTweetGetBo))
+                .message("success")
                 .build();
     }
 
@@ -68,6 +72,7 @@ public class AdminController {
         return BaseResponse.builder()
                 .code(StatusEnum.SUCCESS.getCode())
                 .body(tweetService.adminTweetGetContent(adminTweetContentBo))
+                .message("success")
                 .build();
     }
 
@@ -76,6 +81,7 @@ public class AdminController {
         tweetService.adminTweetCensor(tweetCensorBo);
         return BaseResponse.builder()
                 .code(StatusEnum.SUCCESS.getCode())
+                .message("success")
                 .build();
     }
 
@@ -84,6 +90,7 @@ public class AdminController {
         return BaseResponse.builder()
                 .code(StatusEnum.SUCCESS.getCode())
                 .body(commentService.adminGetComments(adminGetCommentsBo))
+                .message("success")
                 .build();
     }
 
@@ -92,6 +99,7 @@ public class AdminController {
         commentService.adminCommentCensor(commentCensorBo);
         return BaseResponse.builder()
                 .code(StatusEnum.SUCCESS.getCode())
+                .message("success")
                 .build();
     }
 
@@ -100,6 +108,7 @@ public class AdminController {
         return BaseResponse.builder()
                 .code(StatusEnum.SUCCESS.getCode())
                 .body(animalService.adminAnimalGet(adminAnimalGetBo))
+                .message("success")
                 .build();
     }
 
@@ -108,6 +117,7 @@ public class AdminController {
         return BaseResponse.builder()
                 .code(StatusEnum.SUCCESS.getCode())
                 .body(animalService.adminAnimalContent(adminAnimalContentBo))
+                .message("success")
                 .build();
     }
 
@@ -116,6 +126,7 @@ public class AdminController {
         animalService.adminAnimalModify(adminAnimalModifyBo);
         return BaseResponse.builder()
                 .code(StatusEnum.SUCCESS.getCode())
+                .message("success")
                 .build();
     }
 
@@ -124,6 +135,7 @@ public class AdminController {
         animalService.adminAnimalDelete(adminAnimalDeleteBo);
         return BaseResponse.builder()
                 .code(StatusEnum.SUCCESS.getCode())
+                .message("success")
                 .build();
     }
 
@@ -132,6 +144,7 @@ public class AdminController {
         animalService.adminAnimalAdd(adminAnimalAddBo);
         return BaseResponse.builder()
                 .code(StatusEnum.SUCCESS.getCode())
+                .message("success")
                 .build();
     }
 
@@ -140,6 +153,7 @@ public class AdminController {
         return BaseResponse.builder()
                 .code(StatusEnum.SUCCESS.getCode())
                 .body(helpService.adminHelpGet(adminHelpGetBo))
+                .message("success")
                 .build();
     }
 
@@ -148,22 +162,7 @@ public class AdminController {
         return BaseResponse.builder()
                 .code(StatusEnum.SUCCESS.getCode())
                 .body(helpService.adminHelpContent(adminHelpContentBo))
-                .build();
-    }
-
-    @PostMapping("/help/pass")
-    public BaseResponse helpPass(@RequestBody AdminHelpPassBo adminHelpPassBo) {
-        helpService.adminHelpPass(adminHelpPassBo);
-        return BaseResponse.builder()
-                .code(StatusEnum.SUCCESS.getCode())
-                .build();
-    }
-
-    @PostMapping("/help/deny")
-    public BaseResponse helpDeny(@RequestBody AdminHelpDenyBo adminHelpDenyBo) {
-        helpService.adminHelpDeny(adminHelpDenyBo);
-        return BaseResponse.builder()
-                .code(StatusEnum.SUCCESS.getCode())
+                .message("success")
                 .build();
     }
 
@@ -174,6 +173,7 @@ public class AdminController {
         commentService.addComment(addCommentBo);
         return BaseResponse.builder()
                 .code(StatusEnum.SUCCESS.getCode())
+                .message("success")
                 .build();
     }
 
@@ -182,6 +182,7 @@ public class AdminController {
         return BaseResponse.builder()
                 .code(StatusEnum.SUCCESS.getCode())
                 .body(adoptionService.adminAdoptionGet(adminAdoptionGetBo))
+                .message("success")
                 .build();
     }
 
@@ -190,6 +191,19 @@ public class AdminController {
         adoptionService.adminAdoptionCensor(adminAdoptionCensorBo);
         return BaseResponse.builder()
                 .code(StatusEnum.SUCCESS.getCode())
+                .message("success")
+                .build();
+    }
+
+    @PostMapping("/help/changeStatus")
+    public BaseResponse changeHelpStatus(@RequestBody TweetIdBo tweetIdBo) {
+        boolean isLike = helpService.changeStatusByAdmin(tweetIdBo.getTweetId());
+        Map<Object, Object> map = new HashMap<>();
+        map.put("solved", isLike);
+        return BaseResponse.builder()
+                .code(StatusEnum.SUCCESS.getCode())
+                .body(map)
+                .message("success")
                 .build();
     }
 }

@@ -34,8 +34,6 @@ public class UserService {
 
     private static final String PICTURE_SAVE_PATH = ImageConfig.savePath + "/user/";
 
-    private static final String DEFAULT_IMAGE_PATH = ImageConfig.frontPath + "/user/default.png";
-
     @Autowired
     SysUserMapper sysUserMapper;
 
@@ -117,7 +115,6 @@ public class UserService {
         UserInfo userInfo = UserInfo.builder().id(sysUser.getId()).build();
         BeanUtils.copyProperties(registerBo, userInfo);
         userInfo.setBlacked(false);
-        userInfo.setAvatar(DEFAULT_IMAGE_PATH);
         userInfoMapper.insertSelective(userInfo);
     }
 
@@ -188,9 +185,9 @@ public class UserService {
         if (Objects.isNull(email)) {
             throw new RuntimeException("Email Is Empty");
         }
-        if (!email.endsWith("@buaa.edu.cn") || email.length() <= "@buaa.edu.cn".length()) {
-            throw new RuntimeException("Incorrect Email Format");
-        }
+//        if (!email.endsWith("@buaa.edu.cn") || email.length() <= "@buaa.edu.cn".length()) {
+//            throw new RuntimeException("Incorrect Email Format");
+//        }
     }
 
     public void checkPhone(String phone) {

@@ -227,6 +227,9 @@
         #{deleted,jdbcType=BIT},
       </if>
     </trim>
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER">
+      select LAST_INSERT_ID()
+    </selectKey>
   </insert>
   <select id="countByExample" parameterType="com.animalmanagement.example.TweetExample" resultType="java.lang.Long">
     select count(*) from tweet
