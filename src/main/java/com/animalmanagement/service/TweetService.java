@@ -495,7 +495,7 @@ public class TweetService {
         if(!imageUrlList.isEmpty()) {
             String images = "";
             for(int i = 0;i < listLength - 1;i++) {
-                tweetCreateSaveImage(imageUrlList.get(i), insertTweet, i);
+                tweetCreateSaveImage(imageUrlList.get(i), tweet, i);
                 String newAvatarFront = PICTURE_SAVE_PATH_FRONT + id + "_" + i + ".png";
                 images += newAvatarFront;
                 images += ";";
