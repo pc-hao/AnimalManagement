@@ -116,28 +116,6 @@ public class HelpService {
         return map;
     }
 
-    public void adminHelpPass(AdminHelpPassBo adminHelpPassBo) {
-        Tweet tweet = tweetMapper.selectByPrimaryKey(adminHelpPassBo.getHelpId());
-        if(Objects.isNull(tweet)) {
-            throw new RuntimeException("Help ID Does Not Exist");
-        }
-
-        tweet.setCensored(CensorStatusEnum.PASS.getCode());
-
-        tweetMapper.updateByPrimaryKeySelective(tweet);
-    }
-
-    public void adminHelpDeny(AdminHelpDenyBo adminHelpDenyBo) {
-        Tweet tweet = tweetMapper.selectByPrimaryKey(adminHelpDenyBo.getHelpId());
-        if(Objects.isNull(tweet)) {
-            throw new RuntimeException("Help ID Does Not Exist");
-        }
-
-        tweet.setCensored(CensorStatusEnum.REJECT.getCode());
-        
-        tweetMapper.updateByPrimaryKeySelective(tweet);
-    }
-
     public TweetContentVo getTweetContent(TweetContentBo tweetContentBo) {
         UserInfo userInfo = userService.getUserInfoById(tweetContentBo.getUserId());
         Tweet tweet = getTweetById(tweetContentBo.getTweetId());
@@ -212,25 +190,25 @@ public class HelpService {
         return map;
     }
 
-    public void tweetLike(TweetLikeBo tweetLikeBo) {
-        SysUser sysUser = sysUserMapper.selectByPrimaryKey(tweetLikeBo.getUserId());
+    public void tweetLike(UserAndTweetIdBo userAndTweetIdBo) {
+        SysUser sysUser = sysUserMapper.selectByPrimaryKey(userAndTweetIdBo.getUserId());
         if (Objects.isNull(sysUser)) {
             throw new RuntimeException("UserId Does Not Exist");
         }
-        Tweet tweet = tweetMapper.selectByPrimaryKey(tweetLikeBo.getTweetId());
+        Tweet tweet = tweetMapper.selectByPrimaryKey(userAndTweetIdBo.getTweetId());
         if (Objects.isNull(tweet)) {
             throw new RuntimeException("TweetId Does Not Exist");
         }
 
         TweetLikeExample example = new TweetLikeExample();
         example.createCriteria()
-            .andUserIdEqualTo(tweetLikeBo.getUserId())
-            .andTweetIdEqualTo(tweetLikeBo.getTweetId());
+            .andUserIdEqualTo(userAndTweetIdBo.getUserId())
+            .andTweetIdEqualTo(userAndTweetIdBo.getTweetId());
         TweetLikeKey tweetLike = tweetLikeMapper.selectOneByExample(example);
         if (Objects.isNull(tweetLike)) {
             TweetLikeKey insertTweetLike = TweetLikeKey.builder()
-                    .userId(tweetLikeBo.getUserId())
-                    .tweetId(tweetLikeBo.getTweetId())
+                    .userId(userAndTweetIdBo.getUserId())
+                    .tweetId(userAndTweetIdBo.getTweetId())
                     .build();
             tweetLikeMapper.insertSelective(insertTweetLike);
             tweet.setLikes(tweet.getLikes() + 1);
@@ -238,20 +216,20 @@ public class HelpService {
         }
     }
 
-    public void tweetUnlike(TweetLikeBo tweetLikeBo) {
-        SysUser sysUser = sysUserMapper.selectByPrimaryKey(tweetLikeBo.getUserId());
+    public void tweetUnlike(UserAndTweetIdBo userAndTweetIdBo) {
+        SysUser sysUser = sysUserMapper.selectByPrimaryKey(userAndTweetIdBo.getUserId());
         if (Objects.isNull(sysUser)) {
             throw new RuntimeException("UserId Does Not Exist");
         }
-        Tweet tweet = tweetMapper.selectByPrimaryKey(tweetLikeBo.getTweetId());
+        Tweet tweet = tweetMapper.selectByPrimaryKey(userAndTweetIdBo.getTweetId());
         if (Objects.isNull(tweet)) {
             throw new RuntimeException("TweetId Does Not Exist");
         }
 
         TweetLikeExample example = new TweetLikeExample();
         example.createCriteria()
-            .andUserIdEqualTo(tweetLikeBo.getUserId())
-            .andTweetIdEqualTo(tweetLikeBo.getTweetId());
+            .andUserIdEqualTo(userAndTweetIdBo.getUserId())
+            .andTweetIdEqualTo(userAndTweetIdBo.getTweetId());
         TweetLikeKey tweetLike = tweetLikeMapper.selectOneByExample(example);
         if (!Objects.isNull(tweetLike)) {
             tweetLikeMapper.deleteByPrimaryKey(tweetLike);
@@ -260,25 +238,25 @@ public class HelpService {
         }
     }
 
-    public void tweetStar(TweetLikeBo tweetLikeBo) {
-        SysUser sysUser = sysUserMapper.selectByPrimaryKey(tweetLikeBo.getUserId());
+    public void tweetStar(UserAndTweetIdBo userAndTweetIdBo) {
+        SysUser sysUser = sysUserMapper.selectByPrimaryKey(userAndTweetIdBo.getUserId());
         if (Objects.isNull(sysUser)) {
             throw new RuntimeException("UserId Does Not Exist");
         }
-        Tweet tweet = tweetMapper.selectByPrimaryKey(tweetLikeBo.getTweetId());
+        Tweet tweet = tweetMapper.selectByPrimaryKey(userAndTweetIdBo.getTweetId());
         if (Objects.isNull(tweet)) {
             throw new RuntimeException("TweetId Does Not Exist");
         }
 
         TweetStarExample example = new TweetStarExample();
         example.createCriteria()
-            .andUserIdEqualTo(tweetLikeBo.getUserId())
-            .andTweetIdEqualTo(tweetLikeBo.getTweetId());
+            .andUserIdEqualTo(userAndTweetIdBo.getUserId())
+            .andTweetIdEqualTo(userAndTweetIdBo.getTweetId());
         TweetStarKey tweetStar = tweetStarMapper.selectOneByExample(example);
         if (Objects.isNull(tweetStar)) {
             TweetStarKey insertTweetStar = TweetStarKey.builder()
-                    .userId(tweetLikeBo.getUserId())
-                    .tweetId(tweetLikeBo.getTweetId())
+                    .userId(userAndTweetIdBo.getUserId())
+                    .tweetId(userAndTweetIdBo.getTweetId())
                     .build();
             tweetStarMapper.insertSelective(insertTweetStar);
             tweet.setStars(tweet.getStars() + 1);
@@ -286,25 +264,54 @@ public class HelpService {
         }
     }
 
-    public void tweetUnstar(TweetLikeBo tweetLikeBo) {
-        SysUser sysUser = sysUserMapper.selectByPrimaryKey(tweetLikeBo.getUserId());
+    public void tweetUnstar(UserAndTweetIdBo userAndTweetIdBo) {
+        SysUser sysUser = sysUserMapper.selectByPrimaryKey(userAndTweetIdBo.getUserId());
         if (Objects.isNull(sysUser)) {
             throw new RuntimeException("UserId Does Not Exist");
         }
-        Tweet tweet = tweetMapper.selectByPrimaryKey(tweetLikeBo.getTweetId());
+        Tweet tweet = tweetMapper.selectByPrimaryKey(userAndTweetIdBo.getTweetId());
         if (Objects.isNull(tweet)) {
             throw new RuntimeException("TweetId Does Not Exist");
         }
 
         TweetStarExample example = new TweetStarExample();
         example.createCriteria()
-            .andUserIdEqualTo(tweetLikeBo.getUserId())
-            .andTweetIdEqualTo(tweetLikeBo.getTweetId());
+            .andUserIdEqualTo(userAndTweetIdBo.getUserId())
+            .andTweetIdEqualTo(userAndTweetIdBo.getTweetId());
         TweetStarKey tweetStar = tweetStarMapper.selectOneByExample(example);
         if (!Objects.isNull(tweetStar)) {
             tweetStarMapper.deleteByPrimaryKey(tweetStar);
             tweet.setStars(tweet.getStars() - 1);
             tweetMapper.updateByPrimaryKeySelective(tweet);
         }
+    }
+
+    public boolean changeStatusByUserSelf(Integer userId, Integer tweetId) {
+        SysUser sysUser = sysUserMapper.selectByPrimaryKey(userId);
+        if (Objects.isNull(sysUser)) {
+            throw new RuntimeException("UserId Does Not Exist");
+        }
+        Tweet tweet = tweetMapper.selectByPrimaryKey(tweetId);
+        if (Objects.isNull(tweet)) {
+            throw new RuntimeException("TweetId Does Not Exist");
+        }
+
+        if(!Objects.equals(userId, tweet.getUserId())) {
+            throw new RuntimeException("不能修改他人的求助帖状态");
+        }
+
+        tweet.setSolved(!tweet.getSolved());
+        tweetMapper.updateByPrimaryKeySelective(tweet);
+        return tweet.getSolved();
+    }
+
+    public boolean changeStatusByAdmin(Integer tweetId) {
+        Tweet tweet = tweetMapper.selectByPrimaryKey(tweetId);
+        if (Objects.isNull(tweet)) {
+            throw new RuntimeException("TweetId Does Not Exist");
+        }
+        tweet.setSolved(!tweet.getSolved());
+        tweetMapper.updateByPrimaryKeySelective(tweet);
+        return tweet.getSolved();
     }
 }

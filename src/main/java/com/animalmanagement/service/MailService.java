@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 @Component
 public class MailService {
-    public static final String SENDER_MAIL = "BH_ANI_2@outlook.com";
+    public static final String SENDER_MAIL = "bh_animal@qq.com";
     public static final String SUBJECT = "验证码";
     // JavaMailSender 在Mail 自动配置类 MailSenderAutoConfiguration 中已经导入，这里直接注入使用即可
     @Autowired
