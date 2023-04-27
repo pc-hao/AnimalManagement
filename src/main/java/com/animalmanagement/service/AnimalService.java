@@ -188,8 +188,9 @@ public class AnimalService {
         // 调用python进行预测
         String serverPath = "/root/AnimalRecognitionAI/predictLabel.py";
         String localPath = "D:/Software_data/Pycharm_prj/AnimalRecognitionAI/predictLabel.py";
-        String pyPath = runMode.equals(LOCAL) ? localPath : serverPath;
-        String[] cmd = {"C:\\Users\\Tantor\\.conda\\envs\\pytorch38\\python.exe", pyPath, "--img_path", imgPath, "--mode", runMode};
+        String predictPyPath = runMode.equals(LOCAL) ? localPath : serverPath;
+        String pythonPath = runMode.equals(LOCAL) ? "C:\\Users\\Tantor\\.conda\\envs\\pytorch38\\python.exe" : "/root/anaconda3/envs/pytorch38/bin/python";
+        String[] cmd = {pythonPath, predictPyPath, "--img_path", imgPath, "--mode", runMode};
 
         String predictTxtPath = runMode.equals(LOCAL) ? "C:/Users/Tantor/Desktop/predictLabel.txt" : "/root/AnimalManagement/temp/predictLabel.txt";
         for (String str : cmd) {
