@@ -35,4 +35,12 @@ public class AnimalController {
     public BaseResponse animalAiDetect(@RequestBody AnimalAIBo animalAIBo) {
         return animalService.animalAIPredict(animalAIBo.getImage());
     }
+
+    @PostMapping("/content")
+    public BaseResponse animalContent(@RequestBody AdminAnimalContentBo adminAnimalContentBo) {
+        return BaseResponse.builder()
+                .code(StatusEnum.SUCCESS.getCode())
+                .body(animalService.animalContent(adminAnimalContentBo))
+                .build();
+    }
 }
