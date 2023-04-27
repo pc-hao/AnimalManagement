@@ -128,7 +128,7 @@ public class TweetService {
         map.put("published", tweet.getPublished());
         map.put("deleted", tweet.getDeleted());
 
-        if(tweet.getImages().isEmpty()) {
+        if(tweet.getImages() == null) {
             map.put("images", null);
         } else {
             List<String> images = Arrays.asList(tweet.getImages().split(";"));
@@ -165,7 +165,7 @@ public class TweetService {
         TweetContentVo tweetContentVo = new TweetContentVo();
         BeanUtils.copyProperties(tweet, tweetContentVo);
 
-        if(tweet.getImages().isEmpty()) {
+        if(tweet.getImages() == null) {
             tweetContentVo.setImages(null);
         } else {
             List<String> images = Arrays.asList(tweet.getImages().split(";"));
