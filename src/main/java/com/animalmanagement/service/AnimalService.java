@@ -252,4 +252,16 @@ public class AnimalService {
 
     }
 
+    public AdminAnimalContentVo animalContent(AdminAnimalContentBo adminAnimalContentBo) {
+        Animal animal = animalMapper.selectByPrimaryKey(adminAnimalContentBo.getRecordId());
+        if (Objects.isNull(animal)) {
+            throw new RuntimeException("Animal ID Does Not Exist");
+        }
+
+        AdminAnimalContentVo vo = new AdminAnimalContentVo();
+        BeanUtils.copyProperties(animal, vo);
+
+        return vo;
+    }
+
 }
