@@ -4,6 +4,8 @@ import com.animalmanagement.bean.bo.*;
 import com.animalmanagement.bean.vo.*;
 import com.animalmanagement.entity.*;
 import com.animalmanagement.mapper.*;
+
+
 import com.animalmanagement.example.*;
 import com.animalmanagement.enums.*;
 import com.animalmanagement.config.ImageConfig;
@@ -17,6 +19,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -114,7 +117,7 @@ public class TweetService {
         map.put("username", userInfo.getUsername());
         map.put("title", tweet.getTitle());
         map.put("content", tweet.getContent());
-        map.put("images", tweet.getImages());
+        map.put("images", tweet.getImages().split(";"));
         map.put("time", tweet.getTime());
         map.put("views", tweet.getViews());
         map.put("viewsWeekly", tweet.getViewsWeekly());
@@ -155,6 +158,10 @@ public class TweetService {
 
         TweetContentVo tweetContentVo = new TweetContentVo();
         BeanUtils.copyProperties(tweet, tweetContentVo);
+
+        List<String> images = Arrays.asList(tweet.getImages().split(";"));
+        tweetContentVo.setImages(images);
+
         tweetContentVo.setUsername(userInfo.getUsername());
         tweetContentVo.setAvatar(userInfo.getAvatar());
 

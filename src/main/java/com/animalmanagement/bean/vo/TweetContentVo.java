@@ -13,7 +13,7 @@ import java.util.List;
 public class TweetContentVo {
     private String title;
     private String content;
-    private String images;
+    
     private LocalDateTime time;
     private Integer views;
     private Integer viewsWeekly;
@@ -33,4 +33,5 @@ public class TweetContentVo {
     private Boolean solved;
 
     private List<String> tags;
+    private List<String> images;
 }
