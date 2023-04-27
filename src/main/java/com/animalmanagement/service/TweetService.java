@@ -190,13 +190,16 @@ public class TweetService {
         List<TweetTagKey> tweetTagKeyList = tweetTagMapper.selectByExample(tweetTagExample);
         List<Integer> tagIdList = tweetTagKeyList.stream().map(TweetTagKey::getTagId).toList();
 
-        TagExample tagExample = new TagExample();
-        tagExample.createCriteria().andIdIn(tagIdList);
-        List<Tag> tagList = tagMapper.selectByExample(tagExample);
-        List<String> tagNameList = tagList.stream().map(Tag::getContent).toList();
-        
-        tweetContentVo.setTags(tagNameList);
-
+        if(tagIdList.isEmpty()) {
+            tweetContentVo.setTags(new ArrayList<>());
+        } else {
+            TagExample tagExample = new TagExample();
+            tagExample.createCriteria().andIdIn(tagIdList);
+            List<Tag> tagList = tagMapper.selectByExample(tagExample);
+            List<String> tagNameList = tagList.stream().map(Tag::getContent).toList();
+            
+            tweetContentVo.setTags(tagNameList);
+        }
         return tweetContentVo;
     }
 
