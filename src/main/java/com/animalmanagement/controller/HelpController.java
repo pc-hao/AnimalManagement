@@ -1,7 +1,7 @@
 package com.animalmanagement.controller;
 
 import com.animalmanagement.bean.BaseResponse;
-import com.animalmanagement.bean.bo.UserAndTweetIdBo;
+import com.animalmanagement.bean.bo.*;
 import com.animalmanagement.enums.StatusEnum;
 import com.animalmanagement.service.HelpService;
 import org.springframework.beans.factory.annotation.Autowired;
