@@ -489,19 +489,13 @@ public class TweetService {
         List<String> imageUrlList = tweetCreateBo.getImages();
         Integer listLength = tweetCreateBo.getImages().size();
 
-        Tweet insertTweet = Tweet.builder()
+        Tweet tweet = Tweet.builder()
             .userId(tweetCreateBo.getUserId())
             .title(tweetCreateBo.getTitle())
             .content(tweetCreateBo.getContent())
             .published(true)
             .build();
-        tweetMapper.insertSelective(insertTweet);
-
-        TweetExample tweetExample = new TweetExample();
-        tweetExample.createCriteria().andUserIdEqualTo(tweetCreateBo.getUserId());
-        List<Tweet> tweetList = tweetMapper.selectByExample(tweetExample);
-        tweetList.sort(Comparator.comparing(Tweet::getTime));
-        Tweet tweet = tweetList.get(0);
+        tweetMapper.insertSelective(tweet);
 
         Integer id = tweet.getId();
 
