@@ -30,4 +30,12 @@ public class HelpController {
                 .build();
     }
 
+    @PostMapping("/create")
+    public BaseResponse create(@RequestBody HelpCreateBo helpCreateBo) {
+        helpService.tweetCreate(tweetCreateBo);
+        return BaseResponse.builder()
+                .code(StatusEnum.SUCCESS.getCode())
+                .build();
+    }
+
 }
