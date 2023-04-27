@@ -4,8 +4,6 @@ import com.animalmanagement.bean.bo.*;
 import com.animalmanagement.bean.vo.*;
 import com.animalmanagement.entity.*;
 import com.animalmanagement.mapper.*;
-
-
 import com.animalmanagement.example.*;
 import com.animalmanagement.enums.*;
 import com.animalmanagement.config.ImageConfig;
@@ -18,13 +16,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 @Service
 public class TweetService {
@@ -117,6 +109,7 @@ public class TweetService {
         map.put("username", userInfo.getUsername());
         map.put("title", tweet.getTitle());
         map.put("content", tweet.getContent());
+        map.put("images", tweet.getImages());
         map.put("time", tweet.getTime());
         map.put("views", tweet.getViews());
         map.put("viewsWeekly", tweet.getViewsWeekly());
@@ -197,7 +190,7 @@ public class TweetService {
             tagExample.createCriteria().andIdIn(tagIdList);
             List<Tag> tagList = tagMapper.selectByExample(tagExample);
             List<String> tagNameList = tagList.stream().map(Tag::getContent).toList();
-            
+
             tweetContentVo.setTags(tagNameList);
         }
         return tweetContentVo;
@@ -508,7 +501,7 @@ public class TweetService {
         tweetExample.createCriteria().andUserIdEqualTo(tweetCreateBo.getUserId());
         List<Tweet> tweetList = tweetMapper.selectByExample(tweetExample);
         tweetList.sort(Comparator.comparing(Tweet::getTime));
-        Tweet tweet = tweetList.get(tweetList.size() - 1);
+        Tweet tweet = tweetList.get(0);
 
         Integer id = tweet.getId();
 
