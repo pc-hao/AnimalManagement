@@ -32,7 +32,7 @@ public class HelpController {
 
     @PostMapping("/create")
     public BaseResponse create(@RequestBody HelpCreateBo helpCreateBo) {
-        helpService.tweetCreate(tweetCreateBo);
+        helpService.helpCreate(helpCreateBo);
         return BaseResponse.builder()
                 .code(StatusEnum.SUCCESS.getCode())
                 .build();
