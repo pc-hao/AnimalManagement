@@ -31,6 +31,7 @@ public class AnimalService {
     // todo 这个最后实际使用的时候要根据动协那边的图片来
     static {
         RUN_MODE = System.getProperty("os.name").toLowerCase().contains("windows") ? LOCAL : SERVER;
+
         predictId2Name.put(1, "小1");
         predictId2Name.put(2, "小2");
         predictId2Name.put(3, "小3");
