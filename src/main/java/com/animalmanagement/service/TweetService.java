@@ -488,7 +488,7 @@ public class TweetService {
         tweetExample.createCriteria().andUserIdEqualTo(tweetCreateBo.getUserId());
         List<Tweet> tweetList = tweetMapper.selectByExample(tweetExample);
         tweetList.sort(Comparator.comparing(Tweet::getTime));
-        Tweet tweet = tweetList.get(0);
+        Tweet tweet = tweetList.get(tweetList.size() - 1);
 
         Integer id = tweet.getId();
 
@@ -501,7 +501,7 @@ public class TweetService {
                 images += ";";
             }
             tweetCreateSaveImage(imageUrlList.get(listLength - 1), tweet, listLength - 1);
-            images += imageUrlList.get(tweetCreateBo.getImages().size() - 1);
+            images += PICTURE_SAVE_PATH_FRONT + id + "_" + (listLength - 1) + ".png";
             tweet.setImages(images);
             tweetMapper.updateByPrimaryKeySelective(tweet);
         }
