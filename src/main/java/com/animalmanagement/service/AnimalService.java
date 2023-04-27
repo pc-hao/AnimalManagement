@@ -7,7 +7,6 @@ import com.animalmanagement.config.ImageConfig;
 import com.animalmanagement.entity.*;
 import com.animalmanagement.mapper.*;
 import com.animalmanagement.example.*;
-import com.animalmanagement.enums.*;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
@@ -23,14 +22,16 @@ import java.util.*;
 
 @Service
 public class AnimalService {
-    // 在服务器上记得一下这个，还有python文件也是
     public static String LOCAL = "local";
     public static String SERVER = "server";
-    private static String runMode = SERVER;
+    private static final String RUN_MODE; // 此用于标记当前是运行在服务器还是本机
     private static HashMap<Integer, String> predictId2Name = new HashMap<>();
+
     // todo 此处后续最好根据数据库来，不方便的话再说
     // todo 这个最后实际使用的时候要根据动协那边的图片来
     static {
+        RUN_MODE = System.getProperty("os.name").toLowerCase().contains("windows") ? LOCAL : SERVER;
+
         predictId2Name.put(1, "小1");
         predictId2Name.put(2, "小2");
         predictId2Name.put(3, "小3");
@@ -190,11 +191,11 @@ public class AnimalService {
         // 调用python进行预测
         String serverPath = "/root/AnimalRecognitionAI/predictLabel.py";
         String localPath = "D:/Software_data/Pycharm_prj/AnimalRecognitionAI/predictLabel.py";
-        String predictPyPath = runMode.equals(LOCAL) ? localPath : serverPath;
-        String pythonPath = runMode.equals(LOCAL) ? "C:\\Users\\Tantor\\.conda\\envs\\pytorch38\\python.exe" : "/root/anaconda3/envs/pytorch38/bin/python";
-        String[] cmd = {pythonPath, predictPyPath, "--img_path", imgPath, "--mode", runMode};
+        String predictPyPath = RUN_MODE.equals(LOCAL) ? localPath : serverPath;
+        String pythonPath = RUN_MODE.equals(LOCAL) ? "C:\\Users\\Tantor\\.conda\\envs\\pytorch38\\python.exe" : "/root/anaconda3/envs/pytorch38/bin/python";
+        String[] cmd = {pythonPath, predictPyPath, "--img_path", imgPath, "--mode", RUN_MODE};
 
-        String predictTxtPath = runMode.equals(LOCAL) ? "C:/Users/Tantor/Desktop/predictLabel.txt" : "/root/AnimalManagement/temp/predictLabel.txt";
+        String predictTxtPath = RUN_MODE.equals(LOCAL) ? "C:/Users/Tantor/Desktop/predictLabel.txt" : "/root/AnimalManagement/temp/predictLabel.txt";
         for (String str : cmd) {
             System.out.print(str + " ");
         }
