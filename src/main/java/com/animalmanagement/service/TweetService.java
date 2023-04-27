@@ -468,6 +468,11 @@ public class TweetService {
     }
 
     public void tweetCreate(TweetCreateBo tweetCreateBo) {
+        SysUser sysUser = sysUserMapper.selectByPrimaryKey(tweetCreateBo.getUserId());
+        if(sysUser == null) {
+            throw new RuntimeException("User ID Does Not Exist");
+        }
+
         List<String> imageUrlList = tweetCreateBo.getImages();
         Integer listLength = tweetCreateBo.getImages().size();
 
