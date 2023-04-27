@@ -3,6 +3,9 @@ package com.animalmanagement.entity;
 import java.io.Serializable;
 import java.util.Date;
 
+import lombok.Builder;
+
+@Builder
 public class Tweet implements Serializable {
     private Integer id;
 

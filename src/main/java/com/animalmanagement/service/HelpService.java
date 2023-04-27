@@ -6,6 +6,7 @@ import com.animalmanagement.entity.*;
 import com.animalmanagement.mapper.*;
 import com.animalmanagement.example.*;
 import com.animalmanagement.enums.*;
+import com.animalmanagement.config.ImageConfig;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
@@ -17,9 +18,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 
 @Service
 public class HelpService {
+
+    private static final String PICTURE_SAVE_PATH_FRONT = ImageConfig.frontPath + "/tweet/";
+
+    private static final String PICTURE_SAVE_PATH = ImageConfig.savePath + "/tweet/";
 
     @Autowired
     TweetMapper tweetMapper;
@@ -313,5 +322,49 @@ public class HelpService {
         tweet.setSolved(!tweet.getSolved());
         tweetMapper.updateByPrimaryKeySelective(tweet);
         return tweet.getSolved();
+    }
+
+    public void helpCreate(HelpCreateBo helpCreateBo) {
+        SysUser sysUser = sysUserMapper.selectByPrimaryKey(helpCreateBo.getUserId());
+        if(sysUser == null) {
+            throw new RuntimeException("User ID Does Not Exist");
+        }
+
+        List<String> imageUrlList = helpCreateBo.getImages();
+        Integer listLength = helpCreateBo.getImages().size();
+
+        Tweet insertHelp = Tweet.builder()
+            .userId(helpCreateBo.getUserId())
+            .title(helpCreateBo.getTitle())
+            .content(helpCreateBo.getContent())
+            .isHelp(true)
+            .published(true)
+            .build();
+        tweetMapper.insertSelective(insertHelp);
+
+        Integer id = insertHelp.getId();
+
+        if(!imageUrlList.isEmpty()) {
+            String images = "";
+            for(int i = 0;i < listLength - 1;i++) {
+                helpCreateSaveImage(imageUrlList.get(i), insertHelp, i);
+                String newAvatarFront = PICTURE_SAVE_PATH_FRONT + id + "_" + i + ".png";
+                images += newAvatarFront;
+                images += ";";
+            }
+            helpCreateSaveImage(imageUrlList.get(listLength - 1), insertHelp, listLength - 1);
+            images += imageUrlList.get(helpCreateBo.getImages().size() - 1);
+            insertHelp.setImages(images);
+            tweetMapper.updateByPrimaryKeySelective(insertHelp);
+        }
+    }
+
+    private void helpCreateSaveImage(String url,Tweet help,int num) {
+        String imagePath = PICTURE_SAVE_PATH + help.getId() + "_" + num + ".png";
+        try {
+            Files.move(Paths.get(url), Paths.get(imagePath), StandardCopyOption.REPLACE_EXISTING);
+        } catch (IOException e) {
+            throw new RuntimeException(e.getMessage());
+        }
     }
 }
