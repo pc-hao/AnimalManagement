@@ -6,11 +6,16 @@ import com.animalmanagement.entity.*;
 import com.animalmanagement.mapper.*;
 import com.animalmanagement.example.*;
 import com.animalmanagement.enums.*;
+import com.animalmanagement.config.ImageConfig;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -20,6 +25,10 @@ import java.util.Objects;
 
 @Service
 public class TweetService {
+
+    private static final String PICTURE_SAVE_PATH_FRONT = ImageConfig.frontPath + "/tweet/";
+
+    private static final String PICTURE_SAVE_PATH = ImageConfig.savePath + "/tweet/";
 
     @Autowired
     TweetMapper tweetMapper;
@@ -459,6 +468,40 @@ public class TweetService {
     }
 
     public void tweetCreate(TweetCreateBo tweetCreateBo) {
-        
+        List<String> imageUrlList = tweetCreateBo.getImages();
+        Integer listLength = tweetCreateBo.getImages().size();
+
+        Tweet insertTweet = Tweet.builder()
+            .userId(tweetCreateBo.getUserId())
+            .title(tweetCreateBo.getTitle())
+            .content(tweetCreateBo.getContent())
+            .published(true)
+            .build();
+        tweetMapper.insertSelective(insertTweet);
+
+        Integer id = insertTweet.getId();
+
+        if(!imageUrlList.isEmpty()) {
+            String images = "";
+            for(int i = 0;i < listLength - 1;i++) {
+                tweetCreateSaveImage(imageUrlList.get(i), insertTweet, i);
+                String newAvatarFront = PICTURE_SAVE_PATH_FRONT + id + "_" + i + ".png";
+                images += newAvatarFront;
+                images += ";";
+            }
+            tweetCreateSaveImage(imageUrlList.get(listLength - 1), insertTweet, listLength - 1);
+            images += imageUrlList.get(tweetCreateBo.getImages().size() - 1);
+            insertTweet.setImages(images);
+            tweetMapper.updateByPrimaryKeySelective(insertTweet);
+        }
+    }
+
+    private void tweetCreateSaveImage(String url,Tweet tweet,int num) {
+        String imagePath = PICTURE_SAVE_PATH + tweet.getId() + "_" + num + ".png";
+        try {
+            Files.move(Paths.get(url), Paths.get(imagePath), StandardCopyOption.REPLACE_EXISTING);
+        } catch (IOException e) {
+            throw new RuntimeException(e.getMessage());
+        }
     }
 }
