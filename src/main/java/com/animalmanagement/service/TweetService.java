@@ -437,6 +437,7 @@ public class TweetService {
         TweetExample tweetExample = new TweetExample();
         tweetExample.createCriteria()
                 .andIsHelpEqualTo(true)
+                .andCensoredEqualTo(CensorStatusEnum.PASS.getCode())
                 .andTitleLike("%" + userHelpGetBo.getContext() + "%");
 
         List<Tweet> tweetList = tweetMapper.selectByExample(tweetExample);
