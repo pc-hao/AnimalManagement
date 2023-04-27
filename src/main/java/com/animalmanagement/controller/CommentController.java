@@ -22,7 +22,7 @@ public class CommentController {
     CommentService commentService;
 
     @PostMapping("/like")
-    public BaseResponse commenLike(@RequestBody CommentLikeBo commentLikeBo) {
+    public BaseResponse commentLike(@RequestBody CommentLikeBo commentLikeBo) {
         boolean isLike = commentService.commentLike(commentLikeBo);
         Map<Object, Object> map = new HashMap<>();
         map.put("isLike", isLike);
