@@ -205,4 +205,27 @@ public class CommentService {
     private boolean checkCommentValid(Comment comment) {
         return Objects.equals(comment.getCensored(), CensorStatusEnum.PASS.getCode()) && !comment.getDeleted();
     }
+
+    /**
+     * 通过id获取评论，id不存在直接报错
+     */
+    public Comment getCommentById(Integer id) {
+        Comment comment = commentMapper.selectByPrimaryKey(id);
+        if (Objects.isNull(comment)) {
+            throw new RuntimeException("Comment Id Does Not Exist");
+        }
+        return comment;
+    }
+
+    public void deleteComment(Integer userId, Integer commentId) {
+        userService.getUserInfoById(userId);
+        Comment comment = getCommentById(commentId);
+
+        if(!Objects.equals(comment.getUserId(), userId)) {
+            throw new RuntimeException("不能删除他人帖子");
+        }
+
+        comment.setDeleted(true);
+        commentMapper.updateByPrimaryKeySelective(comment);
+    }
 }

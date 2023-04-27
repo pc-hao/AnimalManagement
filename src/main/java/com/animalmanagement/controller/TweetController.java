@@ -62,7 +62,7 @@ public class TweetController {
 
     @PostMapping("/like")
     public BaseResponse like(@RequestBody UserAndTweetIdBo userAndTweetIdBo) {
-        boolean isLike = tweetService.tweetLike(userAndTweetIdBo);
+        boolean isLike = tweetService.tweetLike(userAndTweetIdBo.getUserId(), userAndTweetIdBo.getTweetId());
         Map<Object, Object> map = new HashMap<>();
         map.put("isLike", isLike);
         return BaseResponse.builder()
@@ -73,7 +73,7 @@ public class TweetController {
 
     @PostMapping("/star")
     public BaseResponse star(@RequestBody UserAndTweetIdBo userAndTweetIdBo) {
-        boolean isLike = tweetService.tweetStar(userAndTweetIdBo);
+        boolean isLike = tweetService.tweetStar(userAndTweetIdBo.getUserId(), userAndTweetIdBo.getTweetId());
         Map<Object, Object> map = new HashMap<>();
         map.put("isStar", isLike);
         return BaseResponse.builder()
@@ -87,6 +87,14 @@ public class TweetController {
         tweetService.tweetCreate(tweetCreateBo);
         return BaseResponse.builder()
                 .code(StatusEnum.SUCCESS.getCode())
+                .build();
+    }
+
+    @PostMapping("/delete")
+    public BaseResponse delete(@RequestBody UserAndTweetIdBo userAndTweetIdBo) {
+        tweetService.deleteTweet(userAndTweetIdBo.getUserId(), userAndTweetIdBo.getTweetId());
+        return BaseResponse.builder()
+                .code(StatusEnum.SUCCESS.getCode()).message("删除成功")
                 .build();
     }
 }
