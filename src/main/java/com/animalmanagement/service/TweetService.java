@@ -495,15 +495,15 @@ public class TweetService {
         if(!imageUrlList.isEmpty()) {
             String images = "";
             for(int i = 0;i < listLength - 1;i++) {
-                tweetCreateSaveImage(imageUrlList.get(i), insertTweet, i);
+                tweetCreateSaveImage(imageUrlList.get(i), tweet, i);
                 String newAvatarFront = PICTURE_SAVE_PATH_FRONT + id + "_" + i + ".png";
                 images += newAvatarFront;
                 images += ";";
             }
-            tweetCreateSaveImage(imageUrlList.get(listLength - 1), insertTweet, listLength - 1);
+            tweetCreateSaveImage(imageUrlList.get(listLength - 1), tweet, listLength - 1);
             images += imageUrlList.get(tweetCreateBo.getImages().size() - 1);
-            insertTweet.setImages(images);
-            tweetMapper.updateByPrimaryKeySelective(insertTweet);
+            tweet.setImages(images);
+            tweetMapper.updateByPrimaryKeySelective(tweet);
         }
     }
 
