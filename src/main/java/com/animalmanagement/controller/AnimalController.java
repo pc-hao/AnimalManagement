@@ -32,7 +32,7 @@ public class AnimalController {
 
 
     @PostMapping("/ai")
-    public BaseResponse animalAiDetect(@RequestBody AnimalAIBo animalAIBo) {
+    public BaseResponse animalAIDetect(@RequestBody AnimalAIBo animalAIBo) {
         return animalService.animalAIPredict(animalAIBo.getImage());
     }
 }
