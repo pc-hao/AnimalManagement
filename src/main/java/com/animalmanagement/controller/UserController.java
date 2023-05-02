@@ -103,4 +103,22 @@ public class UserController {
             .message("")
             .build();
     }
+
+    @PostMapping("/message/num")
+    public BaseResponse messageNum(@RequestBody MessageNumBo messageNumBo) {
+        return BaseResponse.builder()
+            .code(StatusEnum.SUCCESS.getCode())
+            .body(userService.messageNum(messageNumBo))
+            .message("")
+            .build();
+    }
+
+    @PostMapping("/message/get")
+    public BaseResponse messageGet(@RequestBody MessageGetBo messageGetBo) {
+        return BaseResponse.builder()
+            .code(StatusEnum.SUCCESS.getCode())
+            .body(userService.messageGet(messageGetBo))
+            .message("")
+            .build();
+    }
 }

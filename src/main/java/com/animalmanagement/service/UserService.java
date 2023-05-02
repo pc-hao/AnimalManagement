@@ -50,6 +50,9 @@ public class UserService {
     VerificationMapper verificationMapper;
 
     @Autowired
+    MessageMapper messageMapper;
+
+    @Autowired
     EncodeUtil encodeUtil;
 
     @Autowired
@@ -410,5 +413,31 @@ public class UserService {
         example.createCriteria().andRoleIdEqualTo(RoleEnum.ADMIN.getCode());
         List<Integer> idList = roleUserMapper.selectByExample(example).stream().map(RoleUser::getUserId).toList();
         return getUserInfoByIdList(idList);
+    }
+
+    public Integer messageNum(MessageNumBo messageNumBo) {
+        SysUser sysUser = sysUserMapper.selectByPrimaryKey(messageNumBo.getUserId());
+        if(sysUser == null) {
+            throw new RuntimeException("User ID Does Not Exist");
+        }
+
+        MessageExample example = new MessageExample();
+        example.createCriteria().andUserIdEqualTo(messageNumBo.getUserId());
+
+        List<Message> messageList = messageMapper.selectByExample(example);
+        return messageList.size();
+    }
+
+    public List<Message> messageGet(MessageGetBo messageGetBo) {
+        SysUser sysUser = sysUserMapper.selectByPrimaryKey(messageGetBo.getUserId());
+        if(sysUser == null) {
+            throw new RuntimeException("User ID Does Not Exist");
+        }
+
+        MessageExample example = new MessageExample();
+        example.createCriteria().andUserIdEqualTo(messageGetBo.getUserId());
+
+        List<Message> messageList = messageMapper.selectByExample(example);
+        return messageList;
     }
 }
