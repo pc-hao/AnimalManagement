@@ -453,6 +453,9 @@ public class TweetService {
                 .map(e -> {
                     UserHelpGetVo vo = new UserHelpGetVo();
                     BeanUtils.copyProperties(e, vo);
+                    UserInfo userInfo = userInfoMapper.selectByPrimaryKey(e.getUserId());
+                    vo.setUsername(userInfo.getUsername());
+                    vo.setAvatar(userInfo.getAvatar());
                     return vo;
                 }).toList();
 
