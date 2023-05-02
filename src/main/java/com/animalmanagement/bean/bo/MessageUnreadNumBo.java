@@ -7,6 +7,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 @NoArgsConstructor
-public class MessageNumBo {
+public class MessageUnreadNumBo {
     private Integer userId;
 }
