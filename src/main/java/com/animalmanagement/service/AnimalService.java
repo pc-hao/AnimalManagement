@@ -26,7 +26,7 @@ public class AnimalService {
     // 在服务器上记得一下这个，还有python文件也是
     public static String LOCAL = "local";
     public static String SERVER = "server";
-    private static String runMode = LOCAL;
+    private static String runMode = SERVER;
     private static HashMap<Integer, String> predictId2Name = new HashMap<>();
     // todo 此处后续最好根据数据库来，不方便的话再说
     // todo 这个最后实际使用的时候要根据动协那边的图片来
