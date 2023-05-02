@@ -121,4 +121,22 @@ public class UserController {
             .message("")
             .build();
     }
+
+    @PostMapping("/message/setRead")
+    public BaseResponse messageSetRead(@RequestBody MessageSetReadBo messageSetReadBo) {
+        userService.messageSetRead(messageSetReadBo);
+        return BaseResponse.builder()
+            .code(StatusEnum.SUCCESS.getCode())
+            .message("")
+            .build();
+    }
+
+    @PostMapping("/message/setReadAll")
+    public BaseResponse messageSetReadAll(@RequestBody MessageSetReadAllBo messageSetReadAllBo) {
+        userService.messageSetReadAll(messageSetReadAllBo);
+        return BaseResponse.builder()
+            .code(StatusEnum.SUCCESS.getCode())
+            .message("")
+            .build();
+    }
 }
