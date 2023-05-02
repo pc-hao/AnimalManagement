@@ -104,11 +104,11 @@ public class UserController {
             .build();
     }
 
-    @PostMapping("/message/num")
-    public BaseResponse messageNum(@RequestBody MessageNumBo messageNumBo) {
+    @PostMapping("/message/unreadNum")
+    public BaseResponse messageNum(@RequestBody MessageUnreadNumBo messageUnreadNumBo) {
         return BaseResponse.builder()
             .code(StatusEnum.SUCCESS.getCode())
-            .body(userService.messageNum(messageNumBo))
+            .body(userService.messageUnreadNum(messageUnreadNumBo))
             .message("")
             .build();
     }

@@ -415,20 +415,22 @@ public class UserService {
         return getUserInfoByIdList(idList);
     }
 
-    public Integer messageNum(MessageNumBo messageNumBo) {
-        SysUser sysUser = sysUserMapper.selectByPrimaryKey(messageNumBo.getUserId());
+    public Integer messageUnreadNum(MessageUnreadNumBo messageUnreadNumBo) {
+        SysUser sysUser = sysUserMapper.selectByPrimaryKey(messageUnreadNumBo.getUserId());
         if(sysUser == null) {
             throw new RuntimeException("User ID Does Not Exist");
         }
 
         MessageExample example = new MessageExample();
-        example.createCriteria().andUserIdEqualTo(messageNumBo.getUserId());
+        example.createCriteria()
+            .andUserIdEqualTo(messageUnreadNumBo.getUserId())
+            .andReadEqualTo(false);
 
         List<Message> messageList = messageMapper.selectByExample(example);
         return messageList.size();
     }
 
-    public List<Message> messageGet(MessageGetBo messageGetBo) {
+    public List<MessageGetVo> messageGet(MessageGetBo messageGetBo) {
         SysUser sysUser = sysUserMapper.selectByPrimaryKey(messageGetBo.getUserId());
         if(sysUser == null) {
             throw new RuntimeException("User ID Does Not Exist");
@@ -438,6 +440,15 @@ public class UserService {
         example.createCriteria().andUserIdEqualTo(messageGetBo.getUserId());
 
         List<Message> messageList = messageMapper.selectByExample(example);
-        return messageList;
+        messageList.sort(Comparator.comparing(Message::getTime));
+
+        List<MessageGetVo> voList = messageList
+                .stream()
+                .map(e -> {
+                    MessageGetVo vo = new MessageGetVo();
+                    BeanUtils.copyProperties(e, vo);
+                    return vo;
+                }).toList();
+        return voList;
     }
 }

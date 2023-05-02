@@ -211,6 +211,8 @@ CREATE TABLE `message`
     `id`      int(32) NOT NULL AUTO_INCREMENT,
     `user_id` int(32) NOT NULL,
     `content` varchar(1024)    NOT NULL,
+    `read`    boolean NOT NULL DEFAULT FALSE,
+    `time`    DATETIME NOT NULL DEFAULT now(),
     PRIMARY KEY (`id`),
     FOREIGN KEY (`user_id`) REFERENCES `sys_user` (`id`)
 );

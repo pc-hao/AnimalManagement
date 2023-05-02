@@ -4,9 +4,9 @@
   <resultMap id="BaseResultMap" type="com.animalmanagement.entity.Message">
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="user_id" jdbcType="INTEGER" property="userId" />
-  </resultMap>
-  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.animalmanagement.entity.Message">
-    <result column="content" jdbcType="LONGVARCHAR" property="content" />
+    <result column="content" jdbcType="VARCHAR" property="content" />
+    <result column="read" jdbcType="BIT" property="read" />
+    <result column="time" jdbcType="TIMESTAMP" property="time" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -67,27 +67,8 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, user_id
+    id, user_id, content, `read`, `time`
   </sql>
-  <sql id="Blob_Column_List">
-    content
-  </sql>
-  <select id="selectByExampleWithBLOBs" parameterType="com.animalmanagement.example.MessageExample" resultMap="ResultMapWithBLOBs">
-    select
-    <if test="distinct">
-      distinct
-    </if>
-    <include refid="Base_Column_List" />
-    ,
-    <include refid="Blob_Column_List" />
-    from message
-    <if test="_parameter != null">
-      <include refid="Example_Where_Clause" />
-    </if>
-    <if test="orderByClause != null">
-      order by ${orderByClause}
-    </if>
-  </select>
   <select id="selectByExample" parameterType="com.animalmanagement.example.MessageExample" resultMap="BaseResultMap">
     select
     <if test="distinct">
@@ -102,11 +83,9 @@
       order by ${orderByClause}
     </if>
   </select>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="ResultMapWithBLOBs">
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
-    ,
-    <include refid="Blob_Column_List" />
     from message
     where id = #{id,jdbcType=INTEGER}
   </select>
@@ -121,10 +100,10 @@
     </if>
   </delete>
   <insert id="insert" parameterType="com.animalmanagement.entity.Message">
-    insert into message (id, user_id, content
-      )
-    values (#{id,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{content,jdbcType=LONGVARCHAR}
-      )
+    insert into message (id, user_id, content, 
+      `read`, `time`)
+    values (#{id,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{content,jdbcType=VARCHAR}, 
+      #{read,jdbcType=BIT}, #{time,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.animalmanagement.entity.Message">
     insert into message
@@ -138,6 +117,12 @@
       <if test="content != null">
         content,
       </if>
+      <if test="read != null">
+        `read`,
+      </if>
+      <if test="time != null">
+        `time`,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -147,7 +132,13 @@
         #{userId,jdbcType=INTEGER},
       </if>
       <if test="content != null">
-        #{content,jdbcType=LONGVARCHAR},
+        #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="read != null">
+        #{read,jdbcType=BIT},
+      </if>
+      <if test="time != null">
+        #{time,jdbcType=TIMESTAMP},
       </if>
     </trim>
   </insert>
@@ -167,18 +158,15 @@
         user_id = #{record.userId,jdbcType=INTEGER},
       </if>
       <if test="record.content != null">
-        content = #{record.content,jdbcType=LONGVARCHAR},
+        content = #{record.content,jdbcType=VARCHAR},
+      </if>
+      <if test="record.read != null">
+        `read` = #{record.read,jdbcType=BIT},
+      </if>
+      <if test="record.time != null">
+        `time` = #{record.time,jdbcType=TIMESTAMP},
       </if>
     </set>
-    <if test="_parameter != null">
-      <include refid="Update_By_Example_Where_Clause" />
-    </if>
-  </update>
-  <update id="updateByExampleWithBLOBs" parameterType="map">
-    update message
-    set id = #{record.id,jdbcType=INTEGER},
-      user_id = #{record.userId,jdbcType=INTEGER},
-      content = #{record.content,jdbcType=LONGVARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -186,7 +174,10 @@
   <update id="updateByExample" parameterType="map">
     update message
     set id = #{record.id,jdbcType=INTEGER},
-      user_id = #{record.userId,jdbcType=INTEGER}
+      user_id = #{record.userId,jdbcType=INTEGER},
+      content = #{record.content,jdbcType=VARCHAR},
+      `read` = #{record.read,jdbcType=BIT},
+      `time` = #{record.time,jdbcType=TIMESTAMP}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -198,20 +189,23 @@
         user_id = #{userId,jdbcType=INTEGER},
       </if>
       <if test="content != null">
-        content = #{content,jdbcType=LONGVARCHAR},
+        content = #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="read != null">
+        `read` = #{read,jdbcType=BIT},
+      </if>
+      <if test="time != null">
+        `time` = #{time,jdbcType=TIMESTAMP},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.animalmanagement.entity.Message">
-    update message
-    set user_id = #{userId,jdbcType=INTEGER},
-      content = #{content,jdbcType=LONGVARCHAR}
-    where id = #{id,jdbcType=INTEGER}
-  </update>
   <update id="updateByPrimaryKey" parameterType="com.animalmanagement.entity.Message">
     update message
-    set user_id = #{userId,jdbcType=INTEGER}
+    set user_id = #{userId,jdbcType=INTEGER},
+      content = #{content,jdbcType=VARCHAR},
+      `read` = #{read,jdbcType=BIT},
+      `time` = #{time,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
   <select id="selectOneByExample" parameterType="com.animalmanagement.example.MessageExample" resultMap="BaseResultMap">
@@ -230,41 +224,6 @@
       order by ${orderByClause}
     </if>
     limit 1
-  </select>
-  <select id="selectOneByExampleWithBLOBs" parameterType="com.animalmanagement.example.MessageExample" resultMap="ResultMapWithBLOBs">
-    <!--
-      WARNING - @mbg.generated
-      This element is automatically generated by MyBatis Generator, do not modify.
-      @project https://github.com/itfsw/mybatis-generator-plugin
-    -->
-    select
-    <include refid="Base_Column_List" />
-    ,
-    <include refid="Blob_Column_List" />
-    from message
-    <if test="_parameter != null">
-      <include refid="Example_Where_Clause" />
-    </if>
-    <if test="orderByClause != null">
-      order by ${orderByClause}
-    </if>
-    limit 1
-  </select>
-  <select id="selectByExampleWithBLOBsWithRowbounds" parameterType="com.animalmanagement.example.MessageExample" resultMap="ResultMapWithBLOBs">
-    select
-    <if test="distinct">
-      distinct
-    </if>
-    <include refid="Base_Column_List" />
-    ,
-    <include refid="Blob_Column_List" />
-    from message
-    <if test="_parameter != null">
-      <include refid="Example_Where_Clause" />
-    </if>
-    <if test="orderByClause != null">
-      order by ${orderByClause}
-    </if>
   </select>
   <select id="selectByExampleWithRowbounds" parameterType="com.animalmanagement.example.MessageExample" resultMap="BaseResultMap">
     select

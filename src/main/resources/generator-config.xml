@@ -61,8 +61,11 @@
         <!-- <table tableName="comment" domainObjectName="Comment">
            <columnOverride column="time" javaType="java.time.LocalDateTime" jdbcType="TIMESTAMP"/>
         </table> -->
-       <table tableName="adoption" domainObjectName="Adoption">
+       <!-- <table tableName="adoption" domainObjectName="Adoption"> -->
             <!-- <columnOverride column="time" javaType="java.time.LocalDateTime" jdbcType="TIMESTAMP"/> -->
+       <!-- </table> -->
+       <table tableName="message" domainObjectName="Message">
+            <columnOverride column="time" javaType="java.time.LocalDateTime" jdbcType="TIMESTAMP"/>
        </table>
         
     </context>
