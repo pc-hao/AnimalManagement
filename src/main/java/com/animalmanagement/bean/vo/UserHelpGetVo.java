@@ -17,4 +17,6 @@ public class UserHelpGetVo {
 	private Integer comments;
 	private Boolean solved;
 	private String images;
+	private String username;
+	private String avatar;
 }
