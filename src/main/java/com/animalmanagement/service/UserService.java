@@ -451,4 +451,31 @@ public class UserService {
                 }).toList();
         return voList;
     }
+
+    public void messageSetRead(MessageSetReadBo messageSetReadBo) {
+        SysUser sysUser = sysUserMapper.selectByPrimaryKey(messageSetReadBo.getMessageId());
+        if(sysUser == null) {
+            throw new RuntimeException("Message ID Does Not Exist");
+        }
+
+        Message message = messageMapper.selectByPrimaryKey(messageSetReadBo.getMessageId());
+        message.setRead(true);
+        messageMapper.updateByPrimaryKey(message);
+    }
+
+    public void messageSetReadAll(MessageSetReadAllBo messageSetReadAllBo) {
+        SysUser sysUser = sysUserMapper.selectByPrimaryKey(messageSetReadAllBo.getUserId());
+        if(sysUser == null) {
+            throw new RuntimeException("User ID Does Not Exist");
+        }
+
+        MessageExample example = new MessageExample();
+        example.createCriteria().andUserIdEqualTo(messageSetReadAllBo.getUserId());
+
+        List<Message> messageList = messageMapper.selectByExample(example);
+        for(Message message:messageList) {
+            message.setRead(true);
+            messageMapper.updateByPrimaryKey(message);
+        }
+    }
 }
