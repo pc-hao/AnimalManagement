@@ -172,9 +172,9 @@ public class TweetService {
         likeExample.createCriteria().andUserIdEqualTo(userInfo.getId()).andTweetIdEqualTo(tweet.getId());
         tweetContentVo.setHasLiked(Objects.nonNull(tweetLikeMapper.selectOneByExample(likeExample)));
 
-        StarExample starExample = new StarExample();
+        TweetStarExample starExample = new TweetStarExample();
         starExample.createCriteria().andUserIdEqualTo(userInfo.getId()).andTweetIdEqualTo(tweet.getId());
-        tweetContentVo.setHasStarred(Objects.nonNull(starMapper.selectOneByExample(starExample)));
+        tweetContentVo.setHasStarred(Objects.nonNull(tweetStarMapper.selectOneByExample(starExample)));
 
         tweetContentVo.setComments(commentService.getCommentVoListByTweetId(tweetContentBo.getTweetId()).size());
 
