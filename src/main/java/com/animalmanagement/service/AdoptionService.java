@@ -60,6 +60,9 @@ public class AdoptionService {
     @Autowired
     AnimalMapper animalMapper;
 
+    @Autowired
+    MessageMapper messageMapper;
+
     public Map<String, Object> adminAdoptionGet(AdminAdoptionGetBo adminAdoptionGetBo) {
         AdoptionExample example = new AdoptionExample();
         example.createCriteria()
@@ -100,11 +103,23 @@ public class AdoptionService {
             throw new RuntimeException("Adoption ID Does Not Exist");
         }
 
+        Message message;
+
         if(adminAdoptionCensorBo.getOperate() == 0) {
             adoption.setCensored(CensorStatusEnum.PASS.getCode());
+            message = Message.builder()
+            .userId(adoption.getUserId())
+            .content("您的领养申请已通过")
+            .build();
         } else {
             adoption.setCensored(CensorStatusEnum.REJECT.getCode());
+            message = Message.builder()
+            .userId(adoption.getUserId())
+            .content("您的领养申请未能通过，理由如下：\n" + adminAdoptionCensorBo.getReason())
+            .build();
         }
+
+        messageMapper.insertSelective(message);
 
         adoptionMapper.updateByPrimaryKeySelective(adoption);
     }

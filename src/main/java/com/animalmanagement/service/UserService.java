@@ -415,7 +415,7 @@ public class UserService {
         return getUserInfoByIdList(idList);
     }
 
-    public Integer messageUnreadNum(MessageUnreadNumBo messageUnreadNumBo) {
+    public MessageUnreadNumVo messageUnreadNum(MessageUnreadNumBo messageUnreadNumBo) {
         SysUser sysUser = sysUserMapper.selectByPrimaryKey(messageUnreadNumBo.getUserId());
         if(sysUser == null) {
             throw new RuntimeException("User ID Does Not Exist");
@@ -427,7 +427,7 @@ public class UserService {
             .andReadEqualTo(false);
 
         List<Message> messageList = messageMapper.selectByExample(example);
-        return messageList.size();
+        return new MessageUnreadNumVo(messageList.size());
     }
 
     public List<MessageGetVo> messageGet(MessageGetBo messageGetBo) {
