@@ -36,6 +36,7 @@ public class TrackController {
         animalService.getAnimalById(userUpdateTrackBo.getAnimalId());
         Track track = new Track();
         BeanUtils.copyProperties(userUpdateTrackBo, track);
+        track.setTime(Date.valueOf(userUpdateTrackBo.getTime())); //TODO 不确定前端传过来的时间的格式是否可以这样操作
         trackService.update(track);
         return BaseResponse.builder().code(StatusEnum.SUCCESS.getCode()).message("Success").build();
     }
