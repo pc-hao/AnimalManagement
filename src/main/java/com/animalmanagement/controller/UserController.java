@@ -139,4 +139,13 @@ public class UserController {
             .message("")
             .build();
     }
+
+    @PostMapping("/message/delete")
+    public BaseResponse messageDelete(@RequestBody MessageDeleteBo messageDeleteBo) {
+        userService.messageDelete(messageDeleteBo);
+        return BaseResponse.builder()
+            .code(StatusEnum.SUCCESS.getCode())
+            .message("")
+            .build();
+    }
 }
