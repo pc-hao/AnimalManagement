@@ -153,7 +153,7 @@ public class TweetService {
     public TweetContentVo getTweetContent(TweetContentBo tweetContentBo) {
         Tweet tweet = getTweetById(tweetContentBo.getTweetId());
         UserInfo userInfo = userService.getUserInfoById(tweet.getUserId());
-        checkTweetValid(tweet);
+        checkTweetValid(tweetContentBo.getUserId(), tweet);
 
         TweetContentVo tweetContentVo = new TweetContentVo();
         BeanUtils.copyProperties(tweet, tweetContentVo);
@@ -210,8 +210,9 @@ public class TweetService {
     /**
      * 校验帖子是否过审、被删除、发布
      */
-    private void checkTweetValid(Tweet tweet) {
-        if (!Objects.equals(tweet.getCensored(), CensorStatusEnum.PASS.getCode())) {
+    private void checkTweetValid(Integer userId, Tweet tweet) {
+        if (!Objects.equals(tweet.getCensored(), CensorStatusEnum.PASS.getCode())
+                && !Objects.equals(tweet.getUserId(), userId)) {
             throw new RuntimeException("Tweet Is Not Censored");
         }
         if (tweet.getDeleted()) {
