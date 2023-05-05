@@ -8,6 +8,7 @@ import com.animalmanagement.mapper.*;
 import com.animalmanagement.example.*;
 import com.animalmanagement.enums.*;
 
+import org.apache.ibatis.annotations.One;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -159,5 +160,30 @@ public class AdoptionService {
         userSelfAdoptionVo.setAnimalName(animal.getName());
         userSelfAdoptionVo.setAvatar(animal.getAvatar());
         return userSelfAdoptionVo;
+    }
+
+    public void apply(Integer userId, Integer animalId, String reason) {
+        userService.getUserInfoById(userId);
+        Animal animal = getAnimalById(animalId);
+        if(animal.getAdopted()) {
+            throw new RuntimeException("Animal Is Adopted");
+        }
+
+        AdoptionExample example = new AdoptionExample();
+        example.createCriteria().andUserIdEqualTo(userId).andAnimalIdEqualTo(animalId);
+        List<Adoption> adoptions = adoptionMapper.selectByExample(example);
+        if (Objects.nonNull(adoptions) && !adoptions.isEmpty()) {
+            adoptions.sort(Comparator.comparing(Adoption::getTime));
+            Adoption latestAdoption = adoptions.get(0);
+            if(Objects.equals(latestAdoption.getCensored(), CensorStatusEnum.UNREVIEWED.getCode())) {
+                throw new RuntimeException("You Have Already Sent an Adoption Request");
+            }
+        }
+
+        Adoption adoption = new Adoption();
+        adoption.setUserId(userId);
+        adoption.setAnimalId(animalId);
+        adoption.setReason(reason);
+        adoptionMapper.insertSelective(adoption);
     }
 }
