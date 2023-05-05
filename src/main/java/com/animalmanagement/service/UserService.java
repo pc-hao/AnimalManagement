@@ -478,4 +478,13 @@ public class UserService {
             messageMapper.updateByPrimaryKey(message);
         }
     }
+
+    public void messageDelete(MessageDeleteBo messageDeleteBo) {
+        SysUser sysUser = sysUserMapper.selectByPrimaryKey(messageDeleteBo.getMessageId());
+        if(sysUser == null) {
+            throw new RuntimeException("Message ID Does Not Exist");
+        }
+
+        messageMapper.deleteByPrimaryKey(messageDeleteBo.getMessageId());
+    }
 }
