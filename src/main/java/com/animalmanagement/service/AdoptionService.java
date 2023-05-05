@@ -123,4 +123,41 @@ public class AdoptionService {
 
         adoptionMapper.updateByPrimaryKeySelective(adoption);
     }
+
+    private List<Adoption> getAdoptionsByUserId(Integer userId) {
+        AdoptionExample example = new AdoptionExample();
+        example.createCriteria().andUserIdEqualTo(userId);
+        return adoptionMapper.selectByExample(example);
+    }
+
+    public Animal getAnimalById(Integer id) {
+        Animal animal = animalMapper.selectByPrimaryKey(id);
+        if (Objects.isNull(animal)) {
+            throw new RuntimeException("Animal ID Does Not Exist");
+        }
+        return animal;
+    }
+
+    public Map<String, Object> getUserSelfAdoptions(Integer userId) {
+        userService.getUserInfoById(userId);
+        List<UserSelfAdoptionVo> userSelfAdoptionVos =
+                getAdoptionsByUserId(userId)
+                        .stream()
+                        .map(e -> transAdoptionToVo(e))
+                        .toList();
+        userSelfAdoptionVos.sort(Comparator.comparing(UserSelfAdoptionVo::getTime));
+        Map<String, Object> result = new HashMap<>();
+        result.put("adoptions", userSelfAdoptionVos);
+        result.put("sumNum", userSelfAdoptionVos.size());
+        return result;
+    }
+
+    private UserSelfAdoptionVo transAdoptionToVo(Adoption adoption) {
+        UserSelfAdoptionVo userSelfAdoptionVo = new UserSelfAdoptionVo();
+        BeanUtils.copyProperties(adoption, userSelfAdoptionVo);
+        Animal animal = animalMapper.selectByPrimaryKey(adoption.getAnimalId());
+        userSelfAdoptionVo.setAnimalName(animal.getName());
+        userSelfAdoptionVo.setAvatar(animal.getAvatar());
+        return userSelfAdoptionVo;
+    }
 }
