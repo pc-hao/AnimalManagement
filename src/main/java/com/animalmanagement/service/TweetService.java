@@ -55,6 +55,9 @@ public class TweetService {
     @Autowired
     CommentService commentService;
 
+    @Autowired
+    MessageMapper messageMapper;
+
     public Map<String, Object> adminTweetGet(AdminTweetGetBo adminTweetGetBo) {
         TweetExample example = new TweetExample();
         example.createCriteria()
@@ -135,12 +138,22 @@ public class TweetService {
         Integer tweetId = tweetCensorBo.getTweetId();
         checkIdExists(tweetId);
         Tweet tweet = tweetMapper.selectByPrimaryKey(tweetId);
+        Message message;
         if (tweetCensorBo.getOperate() == 0) {
             tweet.setCensored(CensorStatusEnum.PASS.getCode());
+            message = Message.builder()
+            .userId(tweet.getUserId())
+            .content("您的贴子：“" + tweet.getTitle() +"”已通过")
+            .build();
         } else {
             tweet.setCensored(CensorStatusEnum.REJECT.getCode());
+            message = Message.builder()
+            .userId(tweet.getUserId())
+            .content("您的贴子：“" + tweet.getTitle() +"”未能通过，理由如下：\n" + tweetCensorBo.getReason())
+            .build();
         }
         tweetMapper.updateByPrimaryKeySelective(tweet);
+        messageMapper.insertSelective(message);
     }
 
     public void checkIdExists(Integer tweetId) {

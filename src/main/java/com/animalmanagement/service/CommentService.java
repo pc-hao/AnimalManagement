@@ -38,6 +38,9 @@ public class CommentService {
     @Autowired
     CommentLikeMapper commentLikeMapper;
 
+    @Autowired
+    MessageMapper messageMapper;
+
     public Map<String, Object> adminGetComments(AdminGetCommentsBo adminGetCommentsBo) {
         CommentExample example = new CommentExample();
         example.createCriteria().andCensoredEqualTo(CensorStatusEnum.UNREVIEWED.getCode());
@@ -72,16 +75,26 @@ public class CommentService {
 
     public void adminCommentCensor(CommentCensorBo commentCensorBo) {
         Comment comment = commentMapper.selectByPrimaryKey(commentCensorBo.getCommentId());
+        Message message;
         if (comment == null) {
             throw new RuntimeException("Comment ID Does Not Exist");
         }
 
         if (commentCensorBo.getOperate() == 0) {
             comment.setCensored(CensorStatusEnum.PASS.getCode());
+            message = Message.builder()
+            .userId(comment.getUserId())
+            .content("您的评论：“" + comment.getContent().substring(0, 10) +"”已通过")
+            .build();
         } else {
             comment.setCensored(CensorStatusEnum.REJECT.getCode());
+            message = Message.builder()
+            .userId(comment.getUserId())
+            .content("您的评论：“" + comment.getContent().substring(0, 10) +"”未能通过，理由如下：\n" + commentCensorBo.getReason())
+            .build();
         }
         commentMapper.updateByPrimaryKeySelective(comment);
+        messageMapper.insertSelective(message);
     }
 
     public void addComment(AddCommentBo addCommentBo) {
