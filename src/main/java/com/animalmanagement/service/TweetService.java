@@ -151,8 +151,8 @@ public class TweetService {
     }
 
     public TweetContentVo getTweetContent(TweetContentBo tweetContentBo) {
-        UserInfo userInfo = userService.getUserInfoById(tweetContentBo.getUserId());
         Tweet tweet = getTweetById(tweetContentBo.getTweetId());
+        UserInfo userInfo = userService.getUserInfoById(tweet.getUserId());
         checkTweetValid(tweet);
 
         TweetContentVo tweetContentVo = new TweetContentVo();

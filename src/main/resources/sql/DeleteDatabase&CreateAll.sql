@@ -151,16 +151,6 @@ insert into `comment` (user_id, tweet_id, content, time, censored) values (2, 4,
 insert into `comment` (user_id, tweet_id, content, time, censored) values (2, 4, "我是管理员2", now(), 1);
 insert into `comment` (user_id, tweet_id, content, time, censored) values (2, 4, "我是管理员3", now(), 1);
 
-CREATE TABLE `application`
-(
-    `id`       int(32)      NOT NULL AUTO_INCREMENT,
-    `user_id`  int(32)      NOT NULL,
-    `content`  varchar(256) NOT NULL,
-    `censored` boolean      NOT NULL,
-    PRIMARY KEY (`id`),
-    FOREIGN KEY (`user_id`) REFERENCES `sys_user` (`id`)
-);
-
 CREATE TABLE `track`
 (
     `id`         int(32)  NOT NULL AUTO_INCREMENT,
@@ -223,14 +213,6 @@ CREATE TABLE `message`
     FOREIGN KEY (`user_id`) REFERENCES `sys_user` (`id`)
 );
 
-CREATE TABLE `star`
-(
-    `user_id`  int(32) NOT NULL,
-    `tweet_id` int(32) NOT NULL,
-    PRIMARY KEY (`user_id`, `tweet_id`),
-    FOREIGN KEY (`user_id`) REFERENCES `sys_user` (`id`),
-    FOREIGN KEY (`tweet_id`) REFERENCES `tweet` (`id`)
-);
 
 CREATE TABLE `tweetlike`
 (
@@ -258,8 +240,6 @@ CREATE TABLE `tweetstar`
     FOREIGN KEY (`user_id`) REFERENCES `sys_user`(`id`),
     FOREIGN KEY (`tweet_id`) REFERENCES `tweet`(`id`)
 );
-
-DROP TABLE IF EXISTS `verification`;
 
 CREATE TABLE `verification`
 (
