@@ -265,4 +265,11 @@ public class AnimalService {
         return vo;
     }
 
+    public Animal getAnimalById(Integer id) {
+        Animal animal = animalMapper.selectByPrimaryKey(id);
+        if (Objects.isNull(animal)) {
+            throw new RuntimeException("Animal ID Does Not Exist");
+        }
+        return animal;
+    }
 }

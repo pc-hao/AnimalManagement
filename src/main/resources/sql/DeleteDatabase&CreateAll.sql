@@ -154,12 +154,13 @@ insert into `comment` (user_id, tweet_id, content, time, censored) values (2, 4,
 CREATE TABLE `track`
 (
     `id`         int(32)  NOT NULL AUTO_INCREMENT,
+    `user_id`    int(32)  NOT NULL,
     `animal_id`  int(32)  NOT NULL,
     `time`       datetime NOT NULL DEFAULT now(),
-    `location_x` int(32)  NOT NULL,
-    `location_y` int(32)  NOT NULL,
+    `location` int(32)  NOT NULL,
     PRIMARY KEY (`id`),
-    FOREIGN KEY (`animal_id`) REFERENCES `animal` (`id`)
+    FOREIGN KEY (`animal_id`) REFERENCES `animal` (`id`),
+    FOREIGN KEY (`user_id`) REFERENCES `sys_user` (`id`)
 );
 
 CREATE TABLE `tag`
