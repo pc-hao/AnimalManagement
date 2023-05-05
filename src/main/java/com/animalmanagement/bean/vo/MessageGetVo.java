@@ -13,5 +13,5 @@ public class MessageGetVo {
     private Integer id;
     private String content;
     private Boolean read;
-    private LocalDateTime time;
+    private String time;
 }

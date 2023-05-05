@@ -447,6 +447,7 @@ public class UserService {
                 .map(e -> {
                     MessageGetVo vo = new MessageGetVo();
                     BeanUtils.copyProperties(e, vo);
+                    vo.setTime(e.getTime().toLocalDate().toString());
                     return vo;
                 }).toList();
         return voList;
