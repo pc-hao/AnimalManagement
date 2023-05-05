@@ -453,12 +453,11 @@ public class UserService {
     }
 
     public void messageSetRead(MessageSetReadBo messageSetReadBo) {
-        SysUser sysUser = sysUserMapper.selectByPrimaryKey(messageSetReadBo.getMessageId());
-        if(sysUser == null) {
+        Message message = messageMapper.selectByPrimaryKey(messageSetReadBo.getMessageId());
+        if(message == null) {
             throw new RuntimeException("Message ID Does Not Exist");
         }
 
-        Message message = messageMapper.selectByPrimaryKey(messageSetReadBo.getMessageId());
         message.setRead(true);
         messageMapper.updateByPrimaryKey(message);
     }

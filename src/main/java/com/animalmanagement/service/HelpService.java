@@ -66,7 +66,7 @@ public class HelpService {
 
         List<Tweet> helpList = tweetMapper.selectByExample(example);
 
-        List<AdminHelpGetVo> voList = new ArrayList<>();
+        List<AdminHelpGetVo> voList;
 
         if(helpList.isEmpty()) {
             voList = new ArrayList<>();
@@ -76,15 +76,15 @@ public class HelpService {
             Map<Integer, UserInfo> userInfoMap = userService.getUserInfoByIdList(
                     helpList.stream().map(Tweet::getUserId).distinct().toList());
     
-                    voList = helpList
-                    .stream()
-                    .map(e -> {
-                        AdminHelpGetVo vo = new AdminHelpGetVo();
-                        BeanUtils.copyProperties(e, vo);
-                        UserInfo userInfo = userInfoMap.get(e.getUserId());
-                        vo.setUsername(userInfo.getUsername());
-                        return vo;
-                    }).toList();
+            voList = helpList
+            .stream()
+            .map(e -> {
+                AdminHelpGetVo vo = new AdminHelpGetVo();
+                BeanUtils.copyProperties(e, vo);
+                UserInfo userInfo = userInfoMap.get(e.getUserId());
+                vo.setUsername(userInfo.getUsername());
+                return vo;
+            }).toList();
         }
 
         Map<String, Object> map = new HashMap<>();
