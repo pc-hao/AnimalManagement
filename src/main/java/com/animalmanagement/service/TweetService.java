@@ -165,7 +165,7 @@ public class TweetService {
 
     public TweetContentVo getTweetContent(TweetContentBo tweetContentBo) {
         Tweet tweet = getTweetById(tweetContentBo.getTweetId());
-        UserInfo userInfo = userService.getUserInfoById(tweet.getUserId());
+        UserInfo tweetAuthorInfo = userService.getUserInfoById(tweet.getUserId());
         checkTweetValid(tweetContentBo.getUserId(), tweet);
 
         TweetContentVo tweetContentVo = new TweetContentVo();
@@ -180,15 +180,15 @@ public class TweetService {
             tweetContentVo.setImages(images);
         }
 
-        tweetContentVo.setUsername(userInfo.getUsername());
-        tweetContentVo.setAvatar(userInfo.getAvatar());
+        tweetContentVo.setUsername(tweetAuthorInfo.getUsername());
+        tweetContentVo.setAvatar(tweetAuthorInfo.getAvatar());
 
         TweetLikeExample likeExample = new TweetLikeExample();
-        likeExample.createCriteria().andUserIdEqualTo(userInfo.getId()).andTweetIdEqualTo(tweet.getId());
+        likeExample.createCriteria().andUserIdEqualTo(tweetContentBo.getUserId()).andTweetIdEqualTo(tweet.getId());
         tweetContentVo.setHasLiked(Objects.nonNull(tweetLikeMapper.selectOneByExample(likeExample)));
 
         TweetStarExample starExample = new TweetStarExample();
-        starExample.createCriteria().andUserIdEqualTo(userInfo.getId()).andTweetIdEqualTo(tweet.getId());
+        starExample.createCriteria().andUserIdEqualTo(tweetContentBo.getUserId()).andTweetIdEqualTo(tweet.getId());
         tweetContentVo.setHasStarred(Objects.nonNull(tweetStarMapper.selectOneByExample(starExample)));
 
         tweetContentVo.setComments(commentService.getCommentVoListByTweetId(tweetContentBo.getTweetId()).size());
