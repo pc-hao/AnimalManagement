@@ -171,7 +171,7 @@ public class TweetService {
         TweetContentVo tweetContentVo = new TweetContentVo();
         BeanUtils.copyProperties(tweet, tweetContentVo);
 
-        tweetContentVo.setTime(tweet.getTime().getYear() + "年" + tweet.getTime().getMonth() + "月" + tweet.getTime().getDayOfMonth() + "日 " + tweet.getTime().getHour() + ":" + tweet.getTime().getMinute());
+        tweetContentVo.setTime(tweet.getTime().getYear() + "年" + tweet.getTime().getMonthValue() + "月" + tweet.getTime().getDayOfMonth() + "日 " + tweet.getTime().getHour() + ":" + tweet.getTime().getMinute());
 
         if (tweet.getImages() == null) {
             tweetContentVo.setImages(null);
