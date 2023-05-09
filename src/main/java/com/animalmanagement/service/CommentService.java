@@ -33,6 +33,9 @@ public class CommentService {
     SysUserMapper sysUserMapper;
 
     @Autowired
+    SysRoleMapper sysRoleMapper;
+
+    @Autowired
     UserInfoMapper userInfoMapper;
 
     @Autowired
@@ -110,12 +113,25 @@ public class CommentService {
             throw new RuntimeException("The Content Is Empty");
         }
 
-        Comment insertComment = Comment.builder()
-                .userId(addCommentBo.getUserId())
-                .tweetId(addCommentBo.getTweetId())
-                .time(LocalDateTime.now())
-                .content(addCommentBo.getComment())
-                .build();
+        Comment insertComment;
+        SysRole sysRole = sysRoleMapper.selectByPrimaryKey(addCommentBo.getUserId());
+        if(sysRole.getRoleName().equals("ADMIN")) {
+            insertComment = Comment.builder()
+            .userId(addCommentBo.getUserId())
+            .tweetId(addCommentBo.getTweetId())
+            .time(LocalDateTime.now())
+            .content(addCommentBo.getComment())
+            .censored(1)
+            .build();
+        } else {
+            insertComment = Comment.builder()
+            .userId(addCommentBo.getUserId())
+            .tweetId(addCommentBo.getTweetId())
+            .time(LocalDateTime.now())
+            .content(addCommentBo.getComment())
+            .build();
+        }
+        
         commentMapper.insertSelective(insertComment);
 
         tweet.setComments(tweet.getComments() + 1); //todo 感觉这个帖子的评论数可以删了，我看了一下整个项目只有这里用了，因为添加地评论需要过审，没过审的评论拿不到
