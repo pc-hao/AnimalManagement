@@ -33,7 +33,7 @@ public class CommentService {
     SysUserMapper sysUserMapper;
 
     @Autowired
-    SysRoleMapper sysRoleMapper;
+    SysRoleUserMapper sysRoleUserMapper;
 
     @Autowired
     UserInfoMapper userInfoMapper;
@@ -114,8 +114,11 @@ public class CommentService {
         }
 
         Comment insertComment;
-        SysRole sysRole = sysRoleMapper.selectByPrimaryKey(addCommentBo.getUserId());
-        if(sysRole.getId() == 1) {
+        SysRoleUserExample sysRoleUserExample = new SysRoleUserExample();
+        sysRoleUserExample.createCriteria().andUserIdEqualTo(addCommentBo.getUserId());
+        List<SysRoleUser> sysRoleUserList = sysRoleUserMapper.selectByExample(sysRoleUserExample);
+        SysRoleUser sysRoleUser = sysRoleUserList.get(0);
+        if(sysRoleUser.getRoleId() == 1) {
             insertComment = Comment.builder()
             .userId(addCommentBo.getUserId())
             .tweetId(addCommentBo.getTweetId())
