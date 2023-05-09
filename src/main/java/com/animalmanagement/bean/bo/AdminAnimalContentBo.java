@@ -10,5 +10,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AdminAnimalContentBo {
-    private Integer recordId;
+    private Integer animalId;
 }
