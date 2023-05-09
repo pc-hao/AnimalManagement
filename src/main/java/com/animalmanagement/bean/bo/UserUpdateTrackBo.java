@@ -1,14 +1,15 @@
 package com.animalmanagement.bean.bo;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Builder
-@Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class AdminAnimalDeleteBo {
-    private Integer recordId;
+@Data
+public class UserUpdateTrackBo {
+    private Integer userId;
+    private Integer animalId;
+    private Integer location;
+    private String time;
 }

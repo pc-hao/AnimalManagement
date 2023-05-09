@@ -73,8 +73,10 @@ public class JWTAuthenticationTokenFilter extends BasicAuthenticationFilter {
                 }
             } catch (ExpiredJwtException e) {
                 log.info("Token过期");
+                throw new RuntimeException("Token过期");
             } catch (Exception e) {
                 log.info("Token无效");
+                throw new RuntimeException("Token无效");
             }
         }
         filterChain.doFilter(request, response);

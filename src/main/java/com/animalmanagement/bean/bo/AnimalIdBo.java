@@ -7,8 +7,8 @@ import lombok.NoArgsConstructor;
 
 @Builder
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
-public class AdminAnimalDeleteBo {
-    private Integer recordId;
+@AllArgsConstructor
+public class AnimalIdBo {
+    private Integer animalId;
 }

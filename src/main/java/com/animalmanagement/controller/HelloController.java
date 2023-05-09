@@ -2,6 +2,7 @@ package com.animalmanagement.controller;
 
 
 import com.animalmanagement.bean.BaseResponse;
+import com.animalmanagement.enums.StatusEnum;
 import com.animalmanagement.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -13,8 +14,8 @@ public class HelloController {
     @Autowired
     UserService userService;
 
-    @GetMapping("")
+    @PostMapping("")
     public BaseResponse get(){
-        throw new RuntimeException("aaa");
+        return BaseResponse.builder().code(StatusEnum.SUCCESS.getCode()).build();
     }
 }

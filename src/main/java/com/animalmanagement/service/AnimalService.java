@@ -96,7 +96,7 @@ public class AnimalService {
     }
 
     public AdminAnimalContentVo adminAnimalContent(AdminAnimalContentBo adminAnimalContentBo) {
-        Animal animal = animalMapper.selectByPrimaryKey(adminAnimalContentBo.getRecordId());
+        Animal animal = animalMapper.selectByPrimaryKey(adminAnimalContentBo.getAnimalId());
         if (Objects.isNull(animal)) {
             throw new RuntimeException("Animal ID Does Not Exist");
         }
@@ -254,7 +254,7 @@ public class AnimalService {
     }
 
     public AdminAnimalContentVo animalContent(AdminAnimalContentBo adminAnimalContentBo) {
-        Animal animal = animalMapper.selectByPrimaryKey(adminAnimalContentBo.getRecordId());
+        Animal animal = animalMapper.selectByPrimaryKey(adminAnimalContentBo.getAnimalId());
         if (Objects.isNull(animal)) {
             throw new RuntimeException("Animal ID Does Not Exist");
         }
@@ -265,4 +265,11 @@ public class AnimalService {
         return vo;
     }
 
+    public Animal getAnimalById(Integer id) {
+        Animal animal = animalMapper.selectByPrimaryKey(id);
+        if (Objects.isNull(animal)) {
+            throw new RuntimeException("Animal ID Does Not Exist");
+        }
+        return animal;
+    }
 }

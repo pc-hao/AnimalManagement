@@ -6,9 +6,11 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Builder
-@Data
-@AllArgsConstructor
 @NoArgsConstructor
-public class AdminAnimalDeleteBo {
-    private Integer recordId;
+@AllArgsConstructor
+@Data
+public class UserAdoptionApplyBo {
+    private Integer userId;
+    private Integer animalId;
+    private String reason;
 }
