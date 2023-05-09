@@ -480,8 +480,8 @@ public class UserService {
     }
 
     public void messageDelete(MessageDeleteBo messageDeleteBo) {
-        SysUser sysUser = sysUserMapper.selectByPrimaryKey(messageDeleteBo.getMessageId());
-        if(sysUser == null) {
+        Message message = messageMapper.selectByPrimaryKey(messageDeleteBo.getMessageId());
+        if(message == null) {
             throw new RuntimeException("Message ID Does Not Exist");
         }
 
