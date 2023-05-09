@@ -84,13 +84,13 @@ public class CommentService {
             comment.setCensored(CensorStatusEnum.PASS.getCode());
             message = Message.builder()
             .userId(comment.getUserId())
-            .content("您的评论：“" + comment.getContent().substring(0, 10) +"”已通过")
+            .content("您的评论：“" + comment.getContent() +"”已通过")
             .build();
         } else {
             comment.setCensored(CensorStatusEnum.REJECT.getCode());
             message = Message.builder()
             .userId(comment.getUserId())
-            .content("您的评论：“" + comment.getContent().substring(0, 10) +"”未能通过，理由如下：\n" + commentCensorBo.getReason())
+            .content("您的评论：“" + comment.getContent() +"”未能通过，理由如下：\n" + commentCensorBo.getReason())
             .build();
         }
         commentMapper.updateByPrimaryKeySelective(comment);
