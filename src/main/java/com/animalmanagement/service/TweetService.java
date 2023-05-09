@@ -330,7 +330,7 @@ public class TweetService {
         TweetStarExample tweetStarExample = new TweetStarExample();
         tweetStarExample.createCriteria().andUserIdEqualTo(userStarTweetBo.getUserId());
         List<TweetStarKey> tweetStarList = tweetStarMapper.selectByExample(tweetStarExample);
-        List<Integer> idList = tweetStarList.stream().map(TweetStarKey::getUserId).distinct().toList();
+        List<Integer> idList = tweetStarList.stream().map(TweetStarKey::getTweetId).distinct().toList();
 
         List<Tweet> tweetList;
         if (idList.isEmpty()) {
