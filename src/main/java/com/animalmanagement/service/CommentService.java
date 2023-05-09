@@ -115,7 +115,7 @@ public class CommentService {
 
         Comment insertComment;
         SysRole sysRole = sysRoleMapper.selectByPrimaryKey(addCommentBo.getUserId());
-        if(sysRole.getRoleName().equals("admin")) {
+        if(sysRole.getId() == 1) {
             insertComment = Comment.builder()
             .userId(addCommentBo.getUserId())
             .tweetId(addCommentBo.getTweetId())
