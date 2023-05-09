@@ -12,6 +12,7 @@ import com.animalmanagement.service.UserService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -31,7 +32,7 @@ public class TrackController {
     AnimalService animalService;
 
     @PostMapping("/update")
-    public BaseResponse userUpdateTrack(UserUpdateTrackBo userUpdateTrackBo) {
+    public BaseResponse userUpdateTrack(@RequestBody UserUpdateTrackBo userUpdateTrackBo) {
         userService.getUserInfoById(userUpdateTrackBo.getUserId());
         animalService.getAnimalById(userUpdateTrackBo.getAnimalId());
         Track track = new Track();
@@ -42,7 +43,7 @@ public class TrackController {
     }
 
     @PostMapping("/get")
-    public BaseResponse getTrack(AnimalIdBo animalIdBo) {
+    public BaseResponse getTrack(@RequestBody AnimalIdBo animalIdBo) {
         return BaseResponse.builder()
                 .code(StatusEnum.SUCCESS.getCode())
                 .body(trackService.getTracksByAnimalId(animalIdBo.getAnimalId())).build();
