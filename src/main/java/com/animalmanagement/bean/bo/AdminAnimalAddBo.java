@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
+import java.util.List;
+
 import javax.validation.constraints.NotNull;
 
 @Builder
@@ -16,5 +18,5 @@ public class AdminAnimalAddBo {
     private String intro;
     @NotNull(message = "领养与否不能为空")
     private Boolean adopted;
-    private String avatar;
+    private List<String> avatar;
 }
