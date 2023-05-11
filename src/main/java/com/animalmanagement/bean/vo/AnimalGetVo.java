@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -12,5 +13,5 @@ import java.time.LocalDateTime;
 public class AnimalGetVo {
     private Integer id;
     private String name;
-    private String avatar;
+    private List<String> avatar;
 }
