@@ -165,7 +165,7 @@ public class AnimalService {
                 .map(e -> {
                     AnimalGetVo vo = new AnimalGetVo();
                     BeanUtils.copyProperties(e, vo);
-                    vo.setAvatar(Arrays.asList(e.getAvatar().split(";")));
+                    vo.setAvatar(e.getAvatar().split(";")[0]);
                     return vo;
                 }).toList();
 

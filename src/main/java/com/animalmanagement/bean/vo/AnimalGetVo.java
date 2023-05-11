@@ -13,5 +13,5 @@ import java.util.List;
 public class AnimalGetVo {
     private Integer id;
     private String name;
-    private List<String> avatar;
+    private String avatar;
 }
