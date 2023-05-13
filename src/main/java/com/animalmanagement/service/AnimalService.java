@@ -122,15 +122,22 @@ public class AnimalService {
         if (!Objects.isNull(adminAnimalModifyBo.getAdopted())) {
             animal.setAdopted(adminAnimalModifyBo.getAdopted());
         }
-        if (!Objects.isNull(adminAnimalModifyBo.getAvatar())) {
-            String newAvatar = PICTURE_SAVE_PATH + adminAnimalModifyBo.getRecordId() + ".png";
-            String newAvatarFront = PICTURE_SAVE_PATH_FRONT + adminAnimalModifyBo.getRecordId() + ".png";
-            try {
-                Files.move(Paths.get(adminAnimalModifyBo.getAvatar()), Paths.get(newAvatar), StandardCopyOption.REPLACE_EXISTING);
-            } catch (IOException e) {
-                throw new RuntimeException(e.getMessage());
+        List<String> avatarList = adminAnimalModifyBo.getAvatar();
+        if (!Objects.isNull(avatarList) && !avatarList.isEmpty()) {
+            String newAvatarFrontWhole = "";
+            for(int i = 0;i < avatarList.size();i++) {
+                String newAvatar = PICTURE_SAVE_PATH + adminAnimalModifyBo.getRecordId() + ".png";
+                String newAvatarFront = PICTURE_SAVE_PATH_FRONT + adminAnimalModifyBo.getRecordId() + ".png";
+                newAvatarFrontWhole += newAvatarFront;
+                newAvatarFrontWhole += ";";
+                try {
+                    Files.move(Paths.get(avatarList.get(i)), Paths.get(newAvatar), StandardCopyOption.REPLACE_EXISTING);
+                } catch (IOException e) {
+                    throw new RuntimeException(e.getMessage());
+                }
             }
-            animal.setAvatar(newAvatarFront);
+            newAvatarFrontWhole = newAvatarFrontWhole.substring(0, newAvatarFrontWhole.length() - 1);
+            animal.setAvatar(newAvatarFrontWhole);
         }
         animalMapper.updateByPrimaryKeySelective(animal);
     }
@@ -158,6 +165,7 @@ public class AnimalService {
                 .map(e -> {
                     AnimalGetVo vo = new AnimalGetVo();
                     BeanUtils.copyProperties(e, vo);
+                    vo.setAvatar(e.getAvatar().split(";")[0]);
                     return vo;
                 }).toList();
 
@@ -179,10 +187,24 @@ public class AnimalService {
         animal.setAdopted(adminAnimalAddBo.getAdopted());
         animal.setIntro(adminAnimalAddBo.getIntro());
         animal.setName(adminAnimalAddBo.getName());
-        if (Objects.isNull(adminAnimalAddBo.getAvatar())) {
+        List<String> avatarList = adminAnimalAddBo.getAvatar();
+        if (Objects.isNull(avatarList) || avatarList.isEmpty()) {
             animal.setAvatar(DEFAULT_IMAGE_PATH);
         } else {
-            animal.setAvatar(adminAnimalAddBo.getAvatar());
+            String newAvatarFrontWhole = "";
+            for(int i = 0;i < avatarList.size();i++) {
+                String newAvatar = PICTURE_SAVE_PATH + animal.getId() + ".png";
+                String newAvatarFront = PICTURE_SAVE_PATH_FRONT + animal.getId() + ".png";
+                newAvatarFrontWhole += newAvatarFront;
+                newAvatarFrontWhole += ";";
+                try {
+                    Files.move(Paths.get(avatarList.get(i)), Paths.get(newAvatar), StandardCopyOption.REPLACE_EXISTING);
+                } catch (IOException e) {
+                    throw new RuntimeException(e.getMessage());
+                }
+            }
+            newAvatarFrontWhole = newAvatarFrontWhole.substring(0, newAvatarFrontWhole.length() - 1);
+            animal.setAvatar(newAvatarFrontWhole);
         }
         animalMapper.insertSelective(animal);
     }
@@ -261,6 +283,8 @@ public class AnimalService {
 
         AdminAnimalContentVo vo = new AdminAnimalContentVo();
         BeanUtils.copyProperties(animal, vo);
+        List<String> avatarList = Arrays.asList(animal.getAvatar().split(";"));
+        vo.setAvatar(avatarList);
 
         return vo;
     }

@@ -1,5 +1,7 @@
 package com.animalmanagement.bean.bo;
 
+import java.util.List;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,5 +14,5 @@ public class AdminAnimalModifyBo {
     private String name;
     private String intro;
     private Boolean adopted;
-    private String avatar;
+    private List<String> avatar;
 }
