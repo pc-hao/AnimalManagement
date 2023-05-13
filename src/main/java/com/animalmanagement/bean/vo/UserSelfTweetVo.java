@@ -16,4 +16,5 @@ public class UserSelfTweetVo {
     private Integer views;
     private Integer likes;
     private Integer comments;
+    private Integer censored;
 }
