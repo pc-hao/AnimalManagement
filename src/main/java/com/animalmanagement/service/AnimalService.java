@@ -87,11 +87,11 @@ public class AnimalService {
         map.put("sumNum", voList.size());
 
         int start = adminAnimalGetBo.getPage() * adminAnimalGetBo.getPageNum();
-        if (start >= animalList.size()) {
+        if (start >= voList.size()) {
             map.put("records", null);
         } else {
-            int end = Math.min(start + adminAnimalGetBo.getPageNum(), animalList.size());
-            map.put("records", animalList.subList(start, end));
+            int end = Math.min(start + adminAnimalGetBo.getPageNum(), voList.size());
+            map.put("records", voList.subList(start, end));
         }
         return map;
     }
