@@ -19,4 +19,5 @@ public class UserHelpGetVo {
 	private String images;
 	private String username;
 	private String avatar;
+	private Integer censored;
 }
