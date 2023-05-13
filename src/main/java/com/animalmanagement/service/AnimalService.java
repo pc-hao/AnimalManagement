@@ -79,6 +79,7 @@ public class AnimalService {
                 .map(e -> {
                     AdminAnimalGetVo vo = new AdminAnimalGetVo();
                     BeanUtils.copyProperties(e, vo);
+                    vo.setAvatar(e.getAvatar().split(";")[0]);
                     return vo;
                 }).toList();
 
