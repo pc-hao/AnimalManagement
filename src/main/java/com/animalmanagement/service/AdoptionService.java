@@ -108,9 +108,11 @@ public class AdoptionService {
 
         if(adminAdoptionCensorBo.getOperate() == 0) {
             adoption.setCensored(CensorStatusEnum.PASS.getCode());
+            Animal animal = animalMapper.selectByPrimaryKey(adoption.getAnimalId());
+            animal.setAdopted(true);
             message = Message.builder()
             .userId(adoption.getUserId())
-            .content("您的领养申请已通过")
+            .content("您的领养申请已通过，请等待工作人员进一步联系")
             .build();
         } else {
             adoption.setCensored(CensorStatusEnum.REJECT.getCode());

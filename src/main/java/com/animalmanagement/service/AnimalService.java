@@ -103,6 +103,7 @@ public class AnimalService {
 
         AdminAnimalContentVo vo = new AdminAnimalContentVo();
         BeanUtils.copyProperties(animal, vo);
+        vo.setAvatar(Arrays.asList(animal.getAvatar().split(";")));
 
         return vo;
     }
