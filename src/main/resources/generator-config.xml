@@ -55,22 +55,25 @@
             <property name="enableSubPackages" value="true"/>
         </javaClientGenerator>
 
-       <table tableName="tweet" domainObjectName="Tweet">
-          <columnOverride column="time" javaType="java.time.LocalDateTime" jdbcType="TIMESTAMP"/>
-       </table>
+       <!-- <table tableName="tweet" domainObjectName="Tweet"> -->
+          <!-- <columnOverride column="time" javaType="java.time.LocalDateTime" jdbcType="TIMESTAMP"/> -->
+       <!-- </table> -->
         <!-- <table tableName="comment" domainObjectName="Comment">
            <columnOverride column="time" javaType="java.time.LocalDateTime" jdbcType="TIMESTAMP"/>
         </table> -->
 <!--       <table tableName="adoption" domainObjectName="Adoption">-->
 <!--            &lt;!&ndash; <columnOverride column="time" javaType="java.time.LocalDateTime" jdbcType="TIMESTAMP"/> &ndash;&gt;-->
 <!--       </table>-->
-        <table tableName="track" domainObjectName="Track">
-        </table>
+        <!-- <table tableName="track" domainObjectName="Track"> -->
+        <!-- </table> -->
        <!-- <table tableName="message" domainObjectName="Message"> -->
             <!-- <columnOverride column="time" javaType="java.time.LocalDateTime" jdbcType="TIMESTAMP"/> -->
        <!-- </table> -->
-       <table tableName="sys_role_user" domainObjectName="SysRoleUser">
+       <!-- <table tableName="sys_role_user" domainObjectName="SysRoleUser"> -->
             <!-- <columnOverride column="time" javaType="java.time.LocalDateTime" jdbcType="TIMESTAMP"/> -->
+       <!-- </table> -->
+       <table tableName="adoption" domainObjectName="Adoption">
+          <columnOverride column="time" javaType="java.time.LocalDateTime" jdbcType="TIMESTAMP"/>
        </table>
 
     </context>
