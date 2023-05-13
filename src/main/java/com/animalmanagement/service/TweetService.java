@@ -505,6 +505,27 @@ public class TweetService {
                 .build();
         tweetMapper.insertSelective(tweet);
 
+        List<String> tagList = tweetCreateBo.getTags();
+        for(String tagString:tagList) {
+            TagExample tagExample = new TagExample();
+            tagExample.createCriteria().andContentEqualTo(tagString);
+            Tag tag = tagMapper.selectOneByExample(tagExample);
+            if(tag != null) {
+                Tag tag2Insert = Tag.builder()
+                    .content(tagString)
+                    .build();
+                tagMapper.insertSelective(tag2Insert);
+                tagExample = new TagExample();
+                tagExample.createCriteria().andContentEqualTo(tagString);
+                tag = tagMapper.selectOneByExample(tagExample);
+            }
+            TweetTagKey tweetTagKey2Insert = TweetTagKey.builder()
+                .tweetId(tweet.getId())
+                .tagId(tag.getId())
+                .build();
+            tweetTagMapper.insert(tweetTagKey2Insert);
+        }
+
         Integer id = tweet.getId();
 
         if (!imageUrlList.isEmpty()) {

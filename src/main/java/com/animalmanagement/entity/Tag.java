@@ -2,6 +2,9 @@ package com.animalmanagement.entity;
 
 import java.io.Serializable;
 
+import lombok.Builder;
+
+@Builder
 public class Tag implements Serializable {
     private Integer id;
 
