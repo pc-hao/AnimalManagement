@@ -160,7 +160,7 @@ public class AdoptionService {
         BeanUtils.copyProperties(adoption, userSelfAdoptionVo);
         Animal animal = animalMapper.selectByPrimaryKey(adoption.getAnimalId());
         userSelfAdoptionVo.setAnimalName(animal.getName());
-        userSelfAdoptionVo.setAvatar(animal.getAvatar());
+        userSelfAdoptionVo.setAvatar(animal.getAvatar().split(";")[0]);
         return userSelfAdoptionVo;
     }
 
