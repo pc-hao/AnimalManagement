@@ -20,7 +20,7 @@ import java.sql.Date;
 import java.sql.Statement;
 
 @RestController
-@RequestMapping("/ainmal/track")
+@RequestMapping("/animal/track")
 public class TrackController {
     @Autowired
     TrackService trackService;
