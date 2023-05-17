@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -15,5 +15,5 @@ public class UserSelfAdoptionVo {
     private String avatar;
     private Integer censored;
     private String reason;
-    private Date time;
+    private LocalDateTime time;
 }
