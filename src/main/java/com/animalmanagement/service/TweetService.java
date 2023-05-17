@@ -250,13 +250,10 @@ public class TweetService {
                 .andTitleLike("%" + getTweetsBo.getMatch() + "%");
         List<Tweet> tweetList = tweetMapper.selectByExample(example);
 
+        sortTweetList(tweetList, getTweetsBo.getType());
+
         Map<String, Object> map = new HashMap<>();
 
-        if (getTweetsBo.getType().equals("时间")) {
-            tweetList.sort(Comparator.comparing(Tweet::getTime));
-        } else {
-            tweetList.sort(Comparator.comparing(Tweet::getViewsWeekly));
-        }
         int start = getTweetsBo.getCommentpage() * pageSize;
         if (start >= tweetList.size()) {
             map.put("tweets", null);
@@ -458,11 +455,7 @@ public class TweetService {
 
         List<Tweet> tweetList = tweetMapper.selectByExample(tweetExample);
 
-        if (userHelpGetBo.getType().equals("时间")) {
-            tweetList.sort(Comparator.comparing(Tweet::getTime));
-        } else {
-            tweetList.sort(Comparator.comparing(Tweet::getViewsWeekly));
-        }
+        sortTweetList(tweetList, userHelpGetBo.getType());
 
         List<UserHelpGetVo> voList = tweetList
                 .stream()
@@ -486,6 +479,16 @@ public class TweetService {
             map.put("tweets", voList.subList(start, end));
         }
         return map;
+    }
+
+    private void sortTweetList(List<Tweet> tweetList, String sortedBy) {
+        if (sortedBy.equals("时间")) {
+            tweetList.sort(Comparator.comparing(Tweet::getTime));
+        } else if (sortedBy.equals("热度")) {
+            tweetList.sort(Comparator.comparing(
+                    e-> e.getLikes() + e.getStars() + commentService.getCommentVoListByTweetId(e.getId()).size()
+            ));
+        }
     }
 
     public void tweetCreate(TweetCreateBo tweetCreateBo) {
