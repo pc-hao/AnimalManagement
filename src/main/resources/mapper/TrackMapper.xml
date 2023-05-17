@@ -3,10 +3,10 @@
 <mapper namespace="com.animalmanagement.mapper.TrackMapper">
   <resultMap id="BaseResultMap" type="com.animalmanagement.entity.Track">
     <id column="id" jdbcType="INTEGER" property="id" />
-    <result column="user_id" jdbcType="INTEGER" property="userId" />
     <result column="animal_id" jdbcType="INTEGER" property="animalId" />
     <result column="time" jdbcType="TIMESTAMP" property="time" />
-    <result column="location" jdbcType="INTEGER" property="location" />
+    <result column="location_x" jdbcType="INTEGER" property="locationX" />
+    <result column="location_y" jdbcType="INTEGER" property="locationY" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -67,7 +67,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, user_id, animal_id, `time`, `location`
+    id, animal_id, `time`, location_x, location_y
   </sql>
   <select id="selectByExample" parameterType="com.animalmanagement.example.TrackExample" resultMap="BaseResultMap">
     select
@@ -100,10 +100,10 @@
     </if>
   </delete>
   <insert id="insert" parameterType="com.animalmanagement.entity.Track">
-    insert into track (id, user_id, animal_id, 
-      `time`, `location`)
-    values (#{id,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{animalId,jdbcType=INTEGER}, 
-      #{time,jdbcType=TIMESTAMP}, #{location,jdbcType=INTEGER})
+    insert into track (id, animal_id, `time`, 
+      location_x, location_y)
+    values (#{id,jdbcType=INTEGER}, #{animalId,jdbcType=INTEGER}, #{time,jdbcType=TIMESTAMP}, 
+      #{locationX,jdbcType=INTEGER}, #{locationY,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="com.animalmanagement.entity.Track">
     insert into track
@@ -111,25 +111,22 @@
       <if test="id != null">
         id,
       </if>
-      <if test="userId != null">
-        user_id,
-      </if>
       <if test="animalId != null">
         animal_id,
       </if>
       <if test="time != null">
         `time`,
       </if>
-      <if test="location != null">
-        `location`,
+      <if test="locationX != null">
+        location_x,
+      </if>
+      <if test="locationY != null">
+        location_y,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
         #{id,jdbcType=INTEGER},
-      </if>
-      <if test="userId != null">
-        #{userId,jdbcType=INTEGER},
       </if>
       <if test="animalId != null">
         #{animalId,jdbcType=INTEGER},
@@ -137,8 +134,11 @@
       <if test="time != null">
         #{time,jdbcType=TIMESTAMP},
       </if>
-      <if test="location != null">
-        #{location,jdbcType=INTEGER},
+      <if test="locationX != null">
+        #{locationX,jdbcType=INTEGER},
+      </if>
+      <if test="locationY != null">
+        #{locationY,jdbcType=INTEGER},
       </if>
     </trim>
   </insert>
@@ -154,17 +154,17 @@
       <if test="record.id != null">
         id = #{record.id,jdbcType=INTEGER},
       </if>
-      <if test="record.userId != null">
-        user_id = #{record.userId,jdbcType=INTEGER},
-      </if>
       <if test="record.animalId != null">
         animal_id = #{record.animalId,jdbcType=INTEGER},
       </if>
       <if test="record.time != null">
         `time` = #{record.time,jdbcType=TIMESTAMP},
       </if>
-      <if test="record.location != null">
-        `location` = #{record.location,jdbcType=INTEGER},
+      <if test="record.locationX != null">
+        location_x = #{record.locationX,jdbcType=INTEGER},
+      </if>
+      <if test="record.locationY != null">
+        location_y = #{record.locationY,jdbcType=INTEGER},
       </if>
     </set>
     <if test="_parameter != null">
@@ -174,10 +174,10 @@
   <update id="updateByExample" parameterType="map">
     update track
     set id = #{record.id,jdbcType=INTEGER},
-      user_id = #{record.userId,jdbcType=INTEGER},
       animal_id = #{record.animalId,jdbcType=INTEGER},
       `time` = #{record.time,jdbcType=TIMESTAMP},
-      `location` = #{record.location,jdbcType=INTEGER}
+      location_x = #{record.locationX,jdbcType=INTEGER},
+      location_y = #{record.locationY,jdbcType=INTEGER}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -185,27 +185,27 @@
   <update id="updateByPrimaryKeySelective" parameterType="com.animalmanagement.entity.Track">
     update track
     <set>
-      <if test="userId != null">
-        user_id = #{userId,jdbcType=INTEGER},
-      </if>
       <if test="animalId != null">
         animal_id = #{animalId,jdbcType=INTEGER},
       </if>
       <if test="time != null">
         `time` = #{time,jdbcType=TIMESTAMP},
       </if>
-      <if test="location != null">
-        `location` = #{location,jdbcType=INTEGER},
+      <if test="locationX != null">
+        location_x = #{locationX,jdbcType=INTEGER},
+      </if>
+      <if test="locationY != null">
+        location_y = #{locationY,jdbcType=INTEGER},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.animalmanagement.entity.Track">
     update track
-    set user_id = #{userId,jdbcType=INTEGER},
-      animal_id = #{animalId,jdbcType=INTEGER},
+    set animal_id = #{animalId,jdbcType=INTEGER},
       `time` = #{time,jdbcType=TIMESTAMP},
-      `location` = #{location,jdbcType=INTEGER}
+      location_x = #{locationX,jdbcType=INTEGER},
+      location_y = #{locationY,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}
   </update>
   <select id="selectOneByExample" parameterType="com.animalmanagement.example.TrackExample" resultMap="BaseResultMap">
