@@ -510,7 +510,7 @@ public class TweetService {
             TagExample tagExample = new TagExample();
             tagExample.createCriteria().andContentEqualTo(tagString);
             Tag tag = tagMapper.selectOneByExample(tagExample);
-            if(tag != null) {
+            if(tag == null) {
                 Tag tag2Insert = Tag.builder()
                     .content(tagString)
                     .build();
