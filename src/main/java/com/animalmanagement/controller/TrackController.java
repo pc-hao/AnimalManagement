@@ -16,8 +16,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.sql.Date;
-import java.sql.Statement;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 @RestController
 @RequestMapping("/animal/track")
@@ -32,12 +34,13 @@ public class TrackController {
     AnimalService animalService;
 
     @PostMapping("/update")
-    public BaseResponse userUpdateTrack(@RequestBody UserUpdateTrackBo userUpdateTrackBo) {
+    public BaseResponse userUpdateTrack(@RequestBody UserUpdateTrackBo userUpdateTrackBo) throws ParseException {
         userService.getUserInfoById(userUpdateTrackBo.getUserId());
         animalService.getAnimalById(userUpdateTrackBo.getAnimalId());
         Track track = new Track();
         BeanUtils.copyProperties(userUpdateTrackBo, track);
-        track.setTime(Date.valueOf(userUpdateTrackBo.getTime())); //TODO 不确定前端传过来的时间的格式是否可以这样操作
+        DateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        track.setTime(dateformat.parse(userUpdateTrackBo.getTime()));
         trackService.update(track);
         return BaseResponse.builder().code(StatusEnum.SUCCESS.getCode()).message("Success").build();
     }
