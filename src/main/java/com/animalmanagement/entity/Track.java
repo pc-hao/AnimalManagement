@@ -1,7 +1,6 @@
 package com.animalmanagement.entity;
 
 import java.io.Serializable;
-import java.util.Date;
 
 public class Track implements Serializable {
     private Integer id;
@@ -10,7 +9,7 @@ public class Track implements Serializable {
 
     private Integer animalId;
 
-    private Date time;
+    private String time;
 
     private Integer location;
 
@@ -40,12 +39,12 @@ public class Track implements Serializable {
         this.animalId = animalId;
     }
 
-    public Date getTime() {
+    public String getTime() {
         return time;
     }
 
-    public void setTime(Date time) {
-        this.time = time;
+    public void setTime(String time) {
+        this.time = time == null ? null : time.trim();
     }
 
     public Integer getLocation() {

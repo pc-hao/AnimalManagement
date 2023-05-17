@@ -39,8 +39,7 @@ public class TrackController {
         animalService.getAnimalById(userUpdateTrackBo.getAnimalId());
         Track track = new Track();
         BeanUtils.copyProperties(userUpdateTrackBo, track);
-        DateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-        track.setTime(dateformat.parse(userUpdateTrackBo.getTime()));
+        track.setTime(userUpdateTrackBo.getTime());
         trackService.update(track);
         return BaseResponse.builder().code(StatusEnum.SUCCESS.getCode()).message("Success").build();
     }

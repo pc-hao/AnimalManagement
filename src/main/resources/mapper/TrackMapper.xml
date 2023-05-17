@@ -5,7 +5,7 @@
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="user_id" jdbcType="INTEGER" property="userId" />
     <result column="animal_id" jdbcType="INTEGER" property="animalId" />
-    <result column="time" jdbcType="TIMESTAMP" property="time" />
+    <result column="time" jdbcType="VARCHAR" property="time" />
     <result column="location" jdbcType="INTEGER" property="location" />
   </resultMap>
   <sql id="Example_Where_Clause">
@@ -103,7 +103,7 @@
     insert into track (id, user_id, animal_id, 
       `time`, `location`)
     values (#{id,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{animalId,jdbcType=INTEGER}, 
-      #{time,jdbcType=TIMESTAMP}, #{location,jdbcType=INTEGER})
+      #{time,jdbcType=VARCHAR}, #{location,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="com.animalmanagement.entity.Track">
     insert into track
@@ -135,7 +135,7 @@
         #{animalId,jdbcType=INTEGER},
       </if>
       <if test="time != null">
-        #{time,jdbcType=TIMESTAMP},
+        #{time,jdbcType=VARCHAR},
       </if>
       <if test="location != null">
         #{location,jdbcType=INTEGER},
@@ -161,7 +161,7 @@
         animal_id = #{record.animalId,jdbcType=INTEGER},
       </if>
       <if test="record.time != null">
-        `time` = #{record.time,jdbcType=TIMESTAMP},
+        `time` = #{record.time,jdbcType=VARCHAR},
       </if>
       <if test="record.location != null">
         `location` = #{record.location,jdbcType=INTEGER},
@@ -176,7 +176,7 @@
     set id = #{record.id,jdbcType=INTEGER},
       user_id = #{record.userId,jdbcType=INTEGER},
       animal_id = #{record.animalId,jdbcType=INTEGER},
-      `time` = #{record.time,jdbcType=TIMESTAMP},
+      `time` = #{record.time,jdbcType=VARCHAR},
       `location` = #{record.location,jdbcType=INTEGER}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -192,7 +192,7 @@
         animal_id = #{animalId,jdbcType=INTEGER},
       </if>
       <if test="time != null">
-        `time` = #{time,jdbcType=TIMESTAMP},
+        `time` = #{time,jdbcType=VARCHAR},
       </if>
       <if test="location != null">
         `location` = #{location,jdbcType=INTEGER},
@@ -204,7 +204,7 @@
     update track
     set user_id = #{userId,jdbcType=INTEGER},
       animal_id = #{animalId,jdbcType=INTEGER},
-      `time` = #{time,jdbcType=TIMESTAMP},
+      `time` = #{time,jdbcType=VARCHAR},
       `location` = #{location,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}
   </update>
