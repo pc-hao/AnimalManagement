@@ -147,8 +147,8 @@ public class AdoptionService {
                 getAdoptionsByUserId(userId)
                         .stream()
                         .map(e -> transAdoptionToVo(e))
+                        .sorted(Comparator.comparing(UserSelfAdoptionVo::getTime))
                         .toList();
-        userSelfAdoptionVos.sort(Comparator.comparing(UserSelfAdoptionVo::getTime));
         Map<String, Object> result = new HashMap<>();
         result.put("adoptions", userSelfAdoptionVos);
         result.put("sumNum", userSelfAdoptionVos.size());
