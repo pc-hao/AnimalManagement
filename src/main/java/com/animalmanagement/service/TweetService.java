@@ -510,7 +510,7 @@ public class TweetService {
         List<Tweet> tweetList = tweetMapper.selectByExample(tweetExample);
         tweetList.sort(Comparator.comparing(Tweet::getTime));
 
-        tweet = tweetList.get(0);
+        tweet = tweetList.get(tweetList.size() - 1);
 
         List<String> tagList = tweetCreateBo.getTags();
         for(String tagString:tagList) {
