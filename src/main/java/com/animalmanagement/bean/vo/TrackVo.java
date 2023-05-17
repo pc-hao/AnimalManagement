@@ -12,5 +12,5 @@ import java.util.Date;
 public class TrackVo {
     private Integer id;
     private Integer location;
-    private Date time;
+    private String time;
 }
