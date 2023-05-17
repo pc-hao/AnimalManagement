@@ -508,6 +508,13 @@ public class TweetService {
                 .build();
         tweetMapper.insertSelective(tweet);
 
+        TweetExample tweetExample = new TweetExample();
+        tweetExample.createCriteria().andUserIdEqualTo(tweetCreateBo.getUserId());
+        List<Tweet> tweetList = tweetMapper.selectByExample(tweetExample);
+        tweetList.sort(Comparator.comparing(Tweet::getTime));
+
+        tweet = tweetList.get(0);
+
         List<String> tagList = tweetCreateBo.getTags();
         for(String tagString:tagList) {
             TagExample tagExample = new TagExample();
