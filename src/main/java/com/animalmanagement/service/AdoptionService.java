@@ -110,6 +110,7 @@ public class AdoptionService {
             adoption.setCensored(CensorStatusEnum.PASS.getCode());
             Animal animal = animalMapper.selectByPrimaryKey(adoption.getAnimalId());
             animal.setAdopted(true);
+            animalMapper.updateByPrimaryKey(animal);
             message = Message.builder()
             .userId(adoption.getUserId())
             .content("您的领养申请已通过，请等待工作人员进一步联系")
