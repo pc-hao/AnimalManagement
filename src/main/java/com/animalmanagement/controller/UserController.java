@@ -26,8 +26,8 @@ public class UserController {
 
     @PostMapping("/resetPasswordVerify")
     public BaseResponse resetPassword(@RequestBody ResetPasswordBo resetPasswordBo) {
-        accountService.verifyCode(resetPasswordBo.getEmail(), DEFAULT_PASSWORD);
-        userService.changePasswordByEmail(resetPasswordBo.getEmail(), resetPasswordBo.getVerification());
+        accountService.verifyCode(resetPasswordBo.getEmail(), resetPasswordBo.getVerification());
+        userService.changePasswordByEmail(resetPasswordBo.getEmail(), DEFAULT_PASSWORD);
         return BaseResponse.builder().code(StatusEnum.SUCCESS.getCode()).message("请求成功，密码已改为123456").build();
     }
 
