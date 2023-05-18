@@ -483,12 +483,15 @@ public class TweetService {
 
     private void sortTweetList(List<Tweet> tweetList, String sortedBy) {
         if (sortedBy.equals("时间")) {
-            tweetList.sort(Comparator.comparing(Tweet::getTime));
+            tweetList.sort((o1,o2)-> o2.getTime().compareTo(o1.getTime()));
         } else if (sortedBy.equals("热度")) {
-            tweetList.sort(Comparator.comparing(
-                    e-> e.getLikes() + e.getStars() + commentService.getCommentVoListByTweetId(e.getId()).size()
-            ));
+            tweetList.sort((o1,o2)->(getTweetHot(o2)-getTweetHot(o1)));
         }
+    }
+
+    public int getTweetHot(Tweet e) {
+        int a = commentService.getCommentVoListByTweetId(e.getId()).size();
+        return e.getLikes() + e.getStars() + commentService.getCommentVoListByTweetId(e.getId()).size();
     }
 
     public void tweetCreate(TweetCreateBo tweetCreateBo) {
