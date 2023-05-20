@@ -14,7 +14,7 @@ public class TweetContentVo {
     private String title;
     private String content;
     
-    private String time;
+    private LocalDateTime time;
     private Integer views;
     private Integer viewsWeekly;
 
