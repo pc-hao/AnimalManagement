@@ -32,7 +32,7 @@ public class TrackService {
         List<TrackVo> trackVos = trackMapper.selectByExample(example)
                 .stream()
                 .map(this::transTrackToVo)
-                .sorted(Comparator.comparing(TrackVo::getTime))
+                .sorted((o1,o2)->o2.getTime().compareTo(o1.getTime()))
                 .limit(20)
                 .toList();
         Map<String, Object> result = new HashMap<>();
