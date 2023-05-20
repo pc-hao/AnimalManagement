@@ -90,6 +90,7 @@
     from tweet
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
+      and deleted = false;
     </if>
     <if test="orderByClause != null">
       order by ${orderByClause}
