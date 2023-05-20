@@ -17,6 +17,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class TweetService {
@@ -251,6 +252,8 @@ public class TweetService {
         List<Tweet> tweetList = tweetMapper.selectByExample(example);
 
         sortTweetList(tweetList, getTweetsBo.getType());
+
+        tweetList.forEach(e-> e.setComments(commentService.getCommentVoListByTweetId(e.getId()).size()));
 
         Map<String, Object> map = new HashMap<>();
 
