@@ -225,9 +225,11 @@ public class CommentService {
                 commentVoListSorted.add(commentVo);
             }
         }
+        int count = 0;
         for(CommentVo commentVo:commentVoList) {
             if(!commentVo.getIsAdmin()) {
                 commentVoListSorted.add(commentVo);
+                count++;
             }
         }
 

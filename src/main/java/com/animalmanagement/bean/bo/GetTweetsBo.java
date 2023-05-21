@@ -12,4 +12,5 @@ public class GetTweetsBo {
     private Integer commentpage;
     private String type;
     private String match;
+    private String tag;
 }

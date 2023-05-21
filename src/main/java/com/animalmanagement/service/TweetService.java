@@ -242,12 +242,35 @@ public class TweetService {
 
         TweetExample example = new TweetExample();
         example.createCriteria()
-                .andPublishedEqualTo(true)
-                .andCensoredEqualTo(CensorStatusEnum.PASS.getCode())
-                .andDeletedEqualTo(false)
-                .andIsHelpEqualTo(false)
-                .andTitleLike("%" + getTweetsBo.getMatch() + "%");
+            .andPublishedEqualTo(true)
+            .andCensoredEqualTo(CensorStatusEnum.PASS.getCode())
+            .andDeletedEqualTo(false)
+            .andIsHelpEqualTo(false)
+            .andTitleLike("%" + getTweetsBo.getMatch() + "%");
         List<Tweet> tweetList = tweetMapper.selectByExample(example);
+        if(getTweetsBo.getTag() != null && !getTweetsBo.getTag().equals("")) {
+            TagExample tagExample = new TagExample();
+            tagExample.createCriteria().andContentEqualTo(getTweetsBo.getTag());
+            Tag tag = tagMapper.selectOneByExample(tagExample);
+            if(tag == null) {
+                tweetList = new ArrayList<>();
+            } else {
+                List<Integer> tweetIdList = new ArrayList<>();
+                List<Tweet> tweetList2 = new ArrayList<>();
+                TweetTagExample tweetTagExample = new TweetTagExample();
+                tweetTagExample.createCriteria().andTagIdEqualTo(tag.getId());
+                List<TweetTagKey> tweetTagKeyList = tweetTagMapper.selectByExample(tweetTagExample);
+                for(TweetTagKey tweetTagKey:tweetTagKeyList) {
+                    tweetIdList.add(tweetTagKey.getTweetId());
+                }
+                for(Tweet tweet:tweetList) {
+                    if(tweetIdList.contains(tweet.getId())) {
+                        tweetList2.add(tweet);
+                    }
+                }
+                tweetList = tweetList2;
+            }
+        }
 
         sortTweetList(tweetList, getTweetsBo.getType());
 
