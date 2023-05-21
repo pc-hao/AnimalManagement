@@ -233,11 +233,11 @@ public class CommentService {
 
         Map<String, Object> resultMap = new HashMap<>();
         int start = getCommentsBo.getCommentPage() * PAGE_SIZE;
-        if (start >= commentVoList.size()) {
+        if (start >= commentVoListSorted.size()) {
             resultMap.put("comments", null);
         } else {
-            int end = Math.min(start + PAGE_SIZE, commentVoList.size());
-            resultMap.put("comments", commentVoList.subList(start, end));
+            int end = Math.min(start + PAGE_SIZE, commentVoListSorted.size());
+            resultMap.put("comments", commentVoListSorted.subList(start, end));
         }
         return resultMap;
     }
