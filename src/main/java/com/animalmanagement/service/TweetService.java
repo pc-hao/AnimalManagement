@@ -364,9 +364,33 @@ public class TweetService {
                     .andIsHelpEqualTo(userStarTweetBo.getType() != 0);
 
             tweetList = tweetMapper.selectByExample(tweetExample);
-
-            tweetList.sort(Comparator.comparing(Tweet::getTime));
         }
+
+        if(userStarTweetBo.getTag() != null && !userStarTweetBo.getTag().equals("")) {
+            TagExample tagExample = new TagExample();
+            tagExample.createCriteria().andContentEqualTo(userStarTweetBo.getTag());
+            Tag tag = tagMapper.selectOneByExample(tagExample);
+            if(tag == null) {
+                tweetList = new ArrayList<>();
+            } else {
+                List<Integer> tweetIdList = new ArrayList<>();
+                List<Tweet> tweetList2 = new ArrayList<>();
+                TweetTagExample tweetTagExample = new TweetTagExample();
+                tweetTagExample.createCriteria().andTagIdEqualTo(tag.getId());
+                List<TweetTagKey> tweetTagKeyList = tweetTagMapper.selectByExample(tweetTagExample);
+                for(TweetTagKey tweetTagKey:tweetTagKeyList) {
+                    tweetIdList.add(tweetTagKey.getTweetId());
+                }
+                for(Tweet tweet:tweetList) {
+                    if(tweetIdList.contains(tweet.getId())) {
+                        tweetList2.add(tweet);
+                    }
+                }
+                tweetList = tweetList2;
+            }
+        }
+
+        tweetList.sort(Comparator.comparing(Tweet::getTime));
 
         Map<String, Object> map = new HashMap<>();
 
@@ -405,6 +429,30 @@ public class TweetService {
                 .andTitleLike("%" + userSelfTweetBo.getContext() + "%");
 
         List<Tweet> tweetList = tweetMapper.selectByExample(tweetExample);
+
+        if(userSelfTweetBo.getTag() != null && !userSelfTweetBo.getTag().equals("")) {
+            TagExample tagExample = new TagExample();
+            tagExample.createCriteria().andContentEqualTo(userSelfTweetBo.getTag());
+            Tag tag = tagMapper.selectOneByExample(tagExample);
+            if(tag == null) {
+                tweetList = new ArrayList<>();
+            } else {
+                List<Integer> tweetIdList = new ArrayList<>();
+                List<Tweet> tweetList2 = new ArrayList<>();
+                TweetTagExample tweetTagExample = new TweetTagExample();
+                tweetTagExample.createCriteria().andTagIdEqualTo(tag.getId());
+                List<TweetTagKey> tweetTagKeyList = tweetTagMapper.selectByExample(tweetTagExample);
+                for(TweetTagKey tweetTagKey:tweetTagKeyList) {
+                    tweetIdList.add(tweetTagKey.getTweetId());
+                }
+                for(Tweet tweet:tweetList) {
+                    if(tweetIdList.contains(tweet.getId())) {
+                        tweetList2.add(tweet);
+                    }
+                }
+                tweetList = tweetList2;
+            }
+        }
 
         tweetList.sort(Comparator.comparing(Tweet::getTime));
 
@@ -445,6 +493,30 @@ public class TweetService {
 
         List<Tweet> tweetList = tweetMapper.selectByExample(tweetExample);
 
+        if(userSelfHelpBo.getTag() != null && !userSelfHelpBo.getTag().equals("")) {
+            TagExample tagExample = new TagExample();
+            tagExample.createCriteria().andContentEqualTo(userSelfHelpBo.getTag());
+            Tag tag = tagMapper.selectOneByExample(tagExample);
+            if(tag == null) {
+                tweetList = new ArrayList<>();
+            } else {
+                List<Integer> tweetIdList = new ArrayList<>();
+                List<Tweet> tweetList2 = new ArrayList<>();
+                TweetTagExample tweetTagExample = new TweetTagExample();
+                tweetTagExample.createCriteria().andTagIdEqualTo(tag.getId());
+                List<TweetTagKey> tweetTagKeyList = tweetTagMapper.selectByExample(tweetTagExample);
+                for(TweetTagKey tweetTagKey:tweetTagKeyList) {
+                    tweetIdList.add(tweetTagKey.getTweetId());
+                }
+                for(Tweet tweet:tweetList) {
+                    if(tweetIdList.contains(tweet.getId())) {
+                        tweetList2.add(tweet);
+                    }
+                }
+                tweetList = tweetList2;
+            }
+        }
+
         tweetList.sort(Comparator.comparing(Tweet::getTime));
 
         List<UserSelfHelpVo> voList = tweetList
@@ -476,9 +548,30 @@ public class TweetService {
                 .andIsHelpEqualTo(true)
                 .andCensoredEqualTo(CensorStatusEnum.PASS.getCode())
                 .andTitleLike("%" + userHelpGetBo.getContext() + "%");
-
         List<Tweet> tweetList = tweetMapper.selectByExample(tweetExample);
-
+        if(userHelpGetBo.getTag() != null && !userHelpGetBo.getTag().equals("")) {
+            TagExample tagExample = new TagExample();
+            tagExample.createCriteria().andContentEqualTo(userHelpGetBo.getTag());
+            Tag tag = tagMapper.selectOneByExample(tagExample);
+            if(tag == null) {
+                tweetList = new ArrayList<>();
+            } else {
+                List<Integer> tweetIdList = new ArrayList<>();
+                List<Tweet> tweetList2 = new ArrayList<>();
+                TweetTagExample tweetTagExample = new TweetTagExample();
+                tweetTagExample.createCriteria().andTagIdEqualTo(tag.getId());
+                List<TweetTagKey> tweetTagKeyList = tweetTagMapper.selectByExample(tweetTagExample);
+                for(TweetTagKey tweetTagKey:tweetTagKeyList) {
+                    tweetIdList.add(tweetTagKey.getTweetId());
+                }
+                for(Tweet tweet:tweetList) {
+                    if(tweetIdList.contains(tweet.getId())) {
+                        tweetList2.add(tweet);
+                    }
+                }
+                tweetList = tweetList2;
+            }
+        }
         sortTweetList(tweetList, userHelpGetBo.getType());
 
         List<UserHelpGetVo> voList = tweetList
