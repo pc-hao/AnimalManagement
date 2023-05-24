@@ -347,6 +347,7 @@ public class TweetService {
         if (sysUser == null) {
             throw new RuntimeException("User ID Does Not Exist");
         }
+        UserInfo userInfo = userInfoMapper.selectByPrimaryKey(userStarTweetBo.getUserId());
 
         TweetStarExample tweetStarExample = new TweetStarExample();
         tweetStarExample.createCriteria().andUserIdEqualTo(userStarTweetBo.getUserId());
@@ -399,6 +400,7 @@ public class TweetService {
                 .map(e -> {
                     UserStarTweetVo vo = new UserStarTweetVo();
                     BeanUtils.copyProperties(e, vo);
+                    vo.setAvatar(userInfo.getAvatar());
                     return vo;
                 }).toList();
 
