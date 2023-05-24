@@ -401,6 +401,7 @@ public class TweetService {
                     UserStarTweetVo vo = new UserStarTweetVo();
                     BeanUtils.copyProperties(e, vo);
                     vo.setAvatar(userInfo.getAvatar());
+                    vo.setUsername(userInfo.getUsername());
                     return vo;
                 }).toList();
 

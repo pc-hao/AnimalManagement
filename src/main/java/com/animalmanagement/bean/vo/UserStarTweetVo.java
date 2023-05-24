@@ -17,4 +17,5 @@ public class UserStarTweetVo {
     private Integer likes;
     private Integer comments;
     private String avatar;
+    private String username;
 }
