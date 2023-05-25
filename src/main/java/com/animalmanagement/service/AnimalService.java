@@ -133,8 +133,8 @@ public class AnimalService {
                     newAvatarFrontWhole += ";";
                     continue;
                 }
-                String newAvatar = PICTURE_SAVE_PATH + adminAnimalModifyBo.getRecordId() + ".png";
-                String newAvatarFront = PICTURE_SAVE_PATH_FRONT + adminAnimalModifyBo.getRecordId() + ".png";
+                String newAvatar = PICTURE_SAVE_PATH + adminAnimalModifyBo.getRecordId() + "_" + i + ".png";
+                String newAvatarFront = PICTURE_SAVE_PATH_FRONT + adminAnimalModifyBo.getRecordId() + "_" + i + ".png";
                 newAvatarFrontWhole += newAvatarFront;
                 newAvatarFrontWhole += ";";
                 try {
