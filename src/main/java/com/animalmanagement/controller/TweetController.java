@@ -107,4 +107,11 @@ public class TweetController {
                 .code(StatusEnum.SUCCESS.getCode())
                 .body(searchLogService.getHot(10, false)).build();
     }
+
+    @PostMapping("/selfSearch")
+    public BaseResponse getSelfSearch() {
+        return BaseResponse.builder()
+                .code(StatusEnum.SUCCESS.getCode())
+                .body(searchLogService.getSelf(false)).build();
+    }
 }

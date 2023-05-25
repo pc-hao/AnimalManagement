@@ -43,4 +43,14 @@ public class SearchLogService {
                     .map(Map.Entry::getKey)
                     .collect(Collectors.toList());
     }
+
+    public List<String> getSelf(boolean isHelp) {
+        SearchLogExample example = new SearchLogExample();
+        example.createCriteria().andIsHelpEqualTo(isHelp).andUserIdEqualTo(UserService.getNowUserId());
+        return searchLogMapper.selectByExample(example).stream()
+                .sorted((o1, o2) -> o2.getTime().compareTo(o1.getTime()))
+                .map(SearchLog::getContext)
+                .distinct()
+                .collect(Collectors.toList());
+    }
 }
