@@ -108,24 +108,41 @@ public class AdoptionService {
 
         if(adminAdoptionCensorBo.getOperate() == 0) {
             adoption.setCensored(CensorStatusEnum.PASS.getCode());
+            adoptionMapper.updateByPrimaryKeySelective(adoption);
+
             Animal animal = animalMapper.selectByPrimaryKey(adoption.getAnimalId());
             animal.setAdopted(true);
             animalMapper.updateByPrimaryKey(animal);
+
+            AdoptionExample adoptionExample = new AdoptionExample();
+            adoptionExample.createCriteria().andAnimalIdEqualTo(animal.getId());
+            List<Adoption> adoptionList = adoptionMapper.selectByExample(adoptionExample);
+            for(Adoption otherAdoption:adoptionList) {
+                otherAdoption.setCensored(CensorStatusEnum.REJECT.getCode());
+                adoptionMapper.updateByPrimaryKeySelective(otherAdoption);
+
+                message = Message.builder()
+                    .userId(otherAdoption.getUserId())
+                    .content("您的领养申请未能通过，此动物已被抢先领养")
+                    .build();
+                messageMapper.insertSelective(message);
+            }
+            
             message = Message.builder()
             .userId(adoption.getUserId())
             .content("您的领养申请已通过，请等待工作人员进一步联系")
             .build();
+            messageMapper.insertSelective(message);
         } else {
             adoption.setCensored(CensorStatusEnum.REJECT.getCode());
+            adoptionMapper.updateByPrimaryKeySelective(adoption);
+
             message = Message.builder()
             .userId(adoption.getUserId())
             .content("您的领养申请未能通过，理由如下：\n" + adminAdoptionCensorBo.getReason())
             .build();
+            messageMapper.insertSelective(message);
         }
-
-        messageMapper.insertSelective(message);
-
-        adoptionMapper.updateByPrimaryKeySelective(adoption);
     }
 
     private List<Adoption> getAdoptionsByUserId(Integer userId) {
