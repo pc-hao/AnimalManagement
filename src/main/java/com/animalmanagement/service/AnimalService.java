@@ -128,6 +128,9 @@ public class AnimalService {
         if (!Objects.isNull(avatarList) && !avatarList.isEmpty()) {
             String newAvatarFrontWhole = "";
             for(int i = 0;i < avatarList.size();i++) {
+                if(avatarList.get(i).substring(0, 2).equals("/s")) {
+                    continue;
+                }
                 String newAvatar = PICTURE_SAVE_PATH + adminAnimalModifyBo.getRecordId() + ".png";
                 String newAvatarFront = PICTURE_SAVE_PATH_FRONT + adminAnimalModifyBo.getRecordId() + ".png";
                 newAvatarFrontWhole += newAvatarFront;
