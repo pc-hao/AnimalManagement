@@ -129,6 +129,8 @@ public class AnimalService {
             String newAvatarFrontWhole = "";
             for(int i = 0;i < avatarList.size();i++) {
                 if(avatarList.get(i).substring(0, 2).equals("/s")) {
+                    newAvatarFrontWhole += avatarList.get(i);
+                    newAvatarFrontWhole += ";";
                     continue;
                 }
                 String newAvatar = PICTURE_SAVE_PATH + adminAnimalModifyBo.getRecordId() + ".png";
