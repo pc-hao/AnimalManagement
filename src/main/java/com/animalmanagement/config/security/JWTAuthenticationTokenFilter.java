@@ -16,6 +16,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import javax.servlet.FilterChain;
@@ -33,9 +34,6 @@ import java.util.Map;
  */
 @Slf4j
 public class JWTAuthenticationTokenFilter extends BasicAuthenticationFilter {
-    @Autowired
-    UserService userService;
-
     public JWTAuthenticationTokenFilter(AuthenticationManager authenticationManager) {
         super(authenticationManager);
     }
@@ -56,7 +54,6 @@ public class JWTAuthenticationTokenFilter extends BasicAuthenticationFilter {
                 // 获取用户名
                 String username = claims.getSubject();
                 String userId = claims.getId();
-                checkUserIsBlack(Integer.parseInt(userId));
                 if (!StringUtils.isEmpty(username) && !StringUtils.isEmpty(userId)) {
                     // 获取角色
                     List<GrantedAuthority> authorities = new ArrayList<>();
@@ -86,12 +83,5 @@ public class JWTAuthenticationTokenFilter extends BasicAuthenticationFilter {
             }
         }
         filterChain.doFilter(request, response);
-    }
-
-    private void checkUserIsBlack(Integer userId) {
-        UserInfo userInfo = userService.getUserInfoById(userId);
-        if(userInfo.getBlacked()) {
-            throw new RuntimeException("你已被拉黑");
-        }
     }
 }
