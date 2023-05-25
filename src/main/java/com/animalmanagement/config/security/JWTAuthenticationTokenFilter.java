@@ -3,10 +3,13 @@ package com.animalmanagement.config.security;
 import com.alibaba.fastjson.JSONObject;
 import com.animalmanagement.config.JWTConfig;
 import com.animalmanagement.config.security.entity.SelfUserEntity;
+import com.animalmanagement.entity.UserInfo;
+import com.animalmanagement.service.UserService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
@@ -30,6 +33,8 @@ import java.util.Map;
  */
 @Slf4j
 public class JWTAuthenticationTokenFilter extends BasicAuthenticationFilter {
+    @Autowired
+    UserService userService;
 
     public JWTAuthenticationTokenFilter(AuthenticationManager authenticationManager) {
         super(authenticationManager);
@@ -51,6 +56,7 @@ public class JWTAuthenticationTokenFilter extends BasicAuthenticationFilter {
                 // 获取用户名
                 String username = claims.getSubject();
                 String userId = claims.getId();
+                checkUserIsBlack(Integer.parseInt(userId));
                 if (!StringUtils.isEmpty(username) && !StringUtils.isEmpty(userId)) {
                     // 获取角色
                     List<GrantedAuthority> authorities = new ArrayList<>();
@@ -80,5 +86,12 @@ public class JWTAuthenticationTokenFilter extends BasicAuthenticationFilter {
             }
         }
         filterChain.doFilter(request, response);
+    }
+
+    private void checkUserIsBlack(Integer userId) {
+        UserInfo userInfo = userService.getUserInfoById(userId);
+        if(userInfo.getBlacked()) {
+            throw new RuntimeException("你已被拉黑");
+        }
     }
 }
