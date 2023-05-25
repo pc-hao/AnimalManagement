@@ -291,7 +291,7 @@ public class TweetService {
     public Boolean tweetLike(Integer userId, Integer tweetId) {
         userService.getUserInfoById(userId);
         Tweet tweet = getTweetById(tweetId);
-        checkTweetValid(userId, tweet);
+        checkTweetValid(0, tweet);
 
         TweetLikeExample example = new TweetLikeExample();
         example.createCriteria()
@@ -318,7 +318,7 @@ public class TweetService {
     public Boolean tweetStar(Integer userId, Integer tweetId) {
         userService.getUserInfoById(userId);
         Tweet tweet = getTweetById(tweetId);
-        checkTweetValid(userId, tweet);
+        checkTweetValid(0, tweet);
 
         TweetStarExample example = new TweetStarExample();
         example.createCriteria()
