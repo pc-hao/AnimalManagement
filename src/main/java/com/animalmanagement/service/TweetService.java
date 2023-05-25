@@ -230,10 +230,10 @@ public class TweetService {
             throw new RuntimeException("Tweet Is Not Censored");
         }
         if (tweet.getDeleted()) {
-            throw new RuntimeException("Tweet Has Deleted");
+            throw new RuntimeException("Tweet Has Been Deleted");
         }
         if (!tweet.getPublished()) {
-            throw new RuntimeException("Tweet Id Does Not Exist");
+            throw new RuntimeException("Tweet Has Not Been Published");
         }
     }
 
@@ -291,6 +291,7 @@ public class TweetService {
     public Boolean tweetLike(Integer userId, Integer tweetId) {
         userService.getUserInfoById(userId);
         Tweet tweet = getTweetById(tweetId);
+        checkTweetValid(userId, tweet);
 
         TweetLikeExample example = new TweetLikeExample();
         example.createCriteria()
@@ -317,6 +318,7 @@ public class TweetService {
     public Boolean tweetStar(Integer userId, Integer tweetId) {
         userService.getUserInfoById(userId);
         Tweet tweet = getTweetById(tweetId);
+        checkTweetValid(userId, tweet);
 
         TweetStarExample example = new TweetStarExample();
         example.createCriteria()

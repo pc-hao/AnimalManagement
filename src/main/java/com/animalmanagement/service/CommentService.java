@@ -100,6 +100,19 @@ public class CommentService {
         messageMapper.insertSelective(message);
     }
 
+    private void checkTweetValid(Integer userId, Tweet tweet) {
+        if (!Objects.equals(tweet.getCensored(), CensorStatusEnum.PASS.getCode())
+                && !Objects.equals(tweet.getUserId(), userId)) {
+            throw new RuntimeException("Tweet Is Not Censored");
+        }
+        if (tweet.getDeleted()) {
+            throw new RuntimeException("Tweet Has Been Deleted");
+        }
+        if (!tweet.getPublished()) {
+            throw new RuntimeException("Tweet Has Not Been Published");
+        }
+    }
+
     public void addComment(AddCommentBo addCommentBo) {
         SysUser sysUser = sysUserMapper.selectByPrimaryKey(addCommentBo.getUserId());
         if (Objects.isNull(sysUser)) {
@@ -112,6 +125,7 @@ public class CommentService {
         if (addCommentBo.getComment().isEmpty()) {
             throw new RuntimeException("The Content Is Empty");
         }
+        checkTweetValid(0, tweet);
 
         Comment insertComment;
         SysRoleUserExample sysRoleUserExample = new SysRoleUserExample();
