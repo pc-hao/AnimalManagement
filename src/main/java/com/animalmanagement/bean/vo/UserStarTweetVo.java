@@ -18,4 +18,5 @@ public class UserStarTweetVo {
     private Integer comments;
     private String avatar;
     private String username;
+    private Integer censored;
 }

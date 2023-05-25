@@ -342,79 +342,74 @@ public class TweetService {
         }
     }
 
-    public Map<String, Object> starTweet(UserStarTweetBo userStarTweetBo) {
-        int pageSize = 8;
-
-        SysUser sysUser = sysUserMapper.selectByPrimaryKey(userStarTweetBo.getUserId());
-        if (sysUser == null) {
-            throw new RuntimeException("User ID Does Not Exist");
+    private List<Integer> getTweetIdListWithTag(String tagStr) {
+        TagExample tagExample = new TagExample();
+        tagExample.createCriteria().andContentEqualTo(tagStr);
+        Tag tag = tagMapper.selectOneByExample(tagExample);
+        if(Objects.isNull(tag)) {
+            return new ArrayList<>();
         }
-        UserInfo userInfo = userInfoMapper.selectByPrimaryKey(userStarTweetBo.getUserId());
 
+        TweetTagExample tweetTagExample = new TweetTagExample();
+        tweetTagExample.createCriteria().andTagIdEqualTo(tag.getId());
+        return tweetTagMapper.selectByExample(tweetTagExample).stream().map(e->e.getTweetId()).distinct().collect(Collectors.toList());
+    }
+
+    private List<Integer> getStarTweetIdList(Integer userId) {
         TweetStarExample tweetStarExample = new TweetStarExample();
-        tweetStarExample.createCriteria().andUserIdEqualTo(userStarTweetBo.getUserId());
+        tweetStarExample.createCriteria().andUserIdEqualTo(userId);
         List<TweetStarKey> tweetStarList = tweetStarMapper.selectByExample(tweetStarExample);
-        List<Integer> idList = tweetStarList.stream().map(TweetStarKey::getTweetId).distinct().toList();
+        return tweetStarList.stream().map(TweetStarKey::getTweetId).distinct().collect(Collectors.toList());
+    }
 
-        List<Tweet> tweetList;
-        if (idList.isEmpty()) {
-            tweetList = new ArrayList<>();
-        } else {
-            TweetExample tweetExample = new TweetExample();
-            tweetExample.createCriteria()
-                    .andIdIn(idList)
-                    .andTitleLike("%" + userStarTweetBo.getContext() + "%")
-                    .andIsHelpEqualTo(userStarTweetBo.getType() != 0);
+    private List<Tweet> getTweetListById(List<Integer> tweetIdList, String context, Integer type) {
+        if(tweetIdList.isEmpty()) {
+            return new ArrayList<>();
+        }
+        TweetExample tweetExample = new TweetExample();
+        tweetExample.createCriteria()
+                .andIdIn(tweetIdList)
+                .andTitleLike("%" + context + "%")
+                .andIsHelpEqualTo(type != 0);
 
-            tweetList = tweetMapper.selectByExample(tweetExample);
+        return tweetMapper.selectByExample(tweetExample);
+    }
+
+    private UserStarTweetVo transTweetToStarTweetVo(Tweet e) {
+        UserStarTweetVo vo = new UserStarTweetVo();
+        BeanUtils.copyProperties(e, vo);
+        UserInfo tweetOwner = userService.getUserInfoById(e.getUserId());
+        vo.setAvatar(tweetOwner.getAvatar());
+        vo.setUsername(tweetOwner.getUsername());
+        return vo;
+    }
+
+    public Map<String, Object> starTweet(UserStarTweetBo userStarTweetBo) {
+        userService.getUserInfoById(userStarTweetBo.getUserId());
+
+        List<Integer> starTweetIdList = getStarTweetIdList(userStarTweetBo.getUserId());
+        if(!(Objects.isNull(userStarTweetBo.getTag()) || userStarTweetBo.getTag().isEmpty())) {
+            List<Integer> tweetIdListWithTag = getTweetIdListWithTag(userStarTweetBo.getTag());
+            starTweetIdList.retainAll(tweetIdListWithTag);
         }
 
-        if(userStarTweetBo.getTag() != null && !userStarTweetBo.getTag().equals("")) {
-            TagExample tagExample = new TagExample();
-            tagExample.createCriteria().andContentEqualTo(userStarTweetBo.getTag());
-            Tag tag = tagMapper.selectOneByExample(tagExample);
-            if(tag == null) {
-                tweetList = new ArrayList<>();
-            } else {
-                List<Integer> tweetIdList = new ArrayList<>();
-                List<Tweet> tweetList2 = new ArrayList<>();
-                TweetTagExample tweetTagExample = new TweetTagExample();
-                tweetTagExample.createCriteria().andTagIdEqualTo(tag.getId());
-                List<TweetTagKey> tweetTagKeyList = tweetTagMapper.selectByExample(tweetTagExample);
-                for(TweetTagKey tweetTagKey:tweetTagKeyList) {
-                    tweetIdList.add(tweetTagKey.getTweetId());
-                }
-                for(Tweet tweet:tweetList) {
-                    if(tweetIdList.contains(tweet.getId())) {
-                        tweetList2.add(tweet);
-                    }
-                }
-                tweetList = tweetList2;
-            }
-        }
+        List<Tweet> tweetList = getTweetListById(starTweetIdList, userStarTweetBo.getContext(), userStarTweetBo.getType());
+        sortTweetList(tweetList, "时间");
 
-        tweetList.sort(Comparator.comparing(Tweet::getTime));
+        List<UserStarTweetVo> voList = tweetList.stream().map(this::transTweetToStarTweetVo).collect(Collectors.toList());
 
+        return buildReturnMap(voList,userStarTweetBo.getPage(), 8, "tweets");
+    }
+
+    private Map<String, Object> buildReturnMap(List<?> list, Integer pageNum, Integer pageSize, String objectName) {
         Map<String, Object> map = new HashMap<>();
-
-        List<UserStarTweetVo> voList = tweetList
-                .stream()
-                .map(e -> {
-                    UserStarTweetVo vo = new UserStarTweetVo();
-                    BeanUtils.copyProperties(e, vo);
-                    vo.setAvatar(userInfo.getAvatar());
-                    vo.setUsername(userInfo.getUsername());
-                    return vo;
-                }).toList();
-
-        map.put("sumNum", voList.size());
-
-        int start = userStarTweetBo.getPage() * pageSize;
-        if (start >= voList.size()) {
-            map.put("tweets", null);
+        map.put("sumNum", list.size());
+        int start = pageNum * pageSize;
+        if (start >= list.size()) {
+            map.put(objectName, null);
         } else {
-            int end = Math.min(start + pageSize, voList.size());
-            map.put("tweets", voList.subList(start, end));
+            int end = Math.min(start + pageSize, list.size());
+            map.put(objectName, list.subList(start, end));
         }
         return map;
     }
