@@ -273,3 +273,15 @@ CREATE EVENT clean_verification_event
     DO delete
        from verification
        where TIMESTAMPDIFF(MINUTE, start_time, NOW()) > 10;
+
+drop table if exists searchLog;
+CREATE TABLE `searchLog`
+(
+    `id`         int(32)  NOT NULL AUTO_INCREMENT,
+    `user_id`      int(32)  NOT NULL,
+    `is_help`  boolean  NOT NULL,
+    `context`   varchar(512) NOT NULL,
+    `time`       DATETIME NOT NULL DEFAULT now(),
+    PRIMARY KEY (`id`),
+    FOREIGN KEY (`user_id`) REFERENCES `sys_user` (`id`)
+);

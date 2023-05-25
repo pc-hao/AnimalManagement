@@ -9,10 +9,10 @@ import com.animalmanagement.example.*;
 import com.animalmanagement.enums.*;
 
 import org.springframework.beans.BeanUtils;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -59,6 +59,10 @@ public class UserService {
     MailService mailService;
 
     private static final Random VeriNumGenerator = new Random();
+
+    public static Integer getNowUserId() {
+        return Integer.parseInt((String) SecurityContextHolder.getContext().getAuthentication().getCredentials());
+    }
 
     /**
      * 根据用户名查询实体

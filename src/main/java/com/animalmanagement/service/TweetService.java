@@ -59,6 +59,9 @@ public class TweetService {
     @Autowired
     MessageMapper messageMapper;
 
+    @Autowired
+    SearchLogService searchLogService;
+
     public Map<String, Object> adminTweetGet(AdminTweetGetBo adminTweetGetBo) {
         TweetExample example = new TweetExample();
         example.createCriteria()
@@ -247,6 +250,9 @@ public class TweetService {
             .andDeletedEqualTo(false)
             .andIsHelpEqualTo(false)
             .andTitleLike("%" + getTweetsBo.getMatch() + "%");
+
+        searchLogService.insertSearchLog(getTweetsBo.getMatch(), false);
+
         List<Tweet> tweetList = tweetMapper.selectByExample(example);
         if(getTweetsBo.getTag() != null && !getTweetsBo.getTag().equals("")) {
             TagExample tagExample = new TagExample();
@@ -548,6 +554,9 @@ public class TweetService {
                 .andIsHelpEqualTo(true)
                 .andCensoredEqualTo(CensorStatusEnum.PASS.getCode())
                 .andTitleLike("%" + userHelpGetBo.getContext() + "%");
+
+        searchLogService.insertSearchLog(userHelpGetBo.getContext(), true);
+
         List<Tweet> tweetList = tweetMapper.selectByExample(tweetExample);
         if(userHelpGetBo.getTag() != null && !userHelpGetBo.getTag().equals("")) {
             TagExample tagExample = new TagExample();

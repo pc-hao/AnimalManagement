@@ -27,6 +27,9 @@ public class TweetController {
     @Autowired
     CommentService commentService;
 
+    @Autowired
+    SearchLogService searchLogService;
+
     @PostMapping("/content")
     public BaseResponse getTweetContent(@RequestBody TweetContentBo tweetContentBo) {
         return BaseResponse.builder()
@@ -96,5 +99,12 @@ public class TweetController {
         return BaseResponse.builder()
                 .code(StatusEnum.SUCCESS.getCode()).message("删除成功")
                 .build();
+    }
+
+    @PostMapping("/hotSearch")
+    public BaseResponse getHotSearch() {
+        return BaseResponse.builder()
+                .code(StatusEnum.SUCCESS.getCode())
+                .body(searchLogService.getHot(10, false)).build();
     }
 }
