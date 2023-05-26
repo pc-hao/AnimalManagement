@@ -47,6 +47,6 @@ public class BlackFilter implements Filter {
     }
 
     public boolean isExclusion(String requestURI) {
-        return Arrays.stream("/login,/user/registerVerify,/user/resetPasswordVerify,/user/resetPasswordRequest,/user/registerRequest,static/.*".split(",")).anyMatch(requestURI::matches);
+        return Arrays.stream("/login,/user/registerVerify,/user/resetPasswordVerify,/user/resetPasswordRequest,/user/registerRequest,/static/.*".split(",")).anyMatch(requestURI::matches);
     }
 }
