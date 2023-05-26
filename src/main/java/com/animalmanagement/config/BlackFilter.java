@@ -35,7 +35,7 @@ public class BlackFilter implements Filter {
         String requestURI = httpRequest.getRequestURI();
         if (! isExclusion(requestURI)) {
             if(userService.getUserInfoById(UserService.getNowUserId()).getBlacked()) {
-                ResultUtil.response(servletResponse, BaseResponse.builder().code(StatusEnum.FAILURE.getCode()).message("你已被拉黑").build());
+                ResultUtil.response(servletResponse, BaseResponse.builder().code(StatusEnum.BLACK.getCode()).message("你已被拉黑").build());
             }
         }
         filterChain.doFilter(servletRequest, servletResponse);
