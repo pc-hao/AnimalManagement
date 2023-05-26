@@ -274,8 +274,8 @@ CREATE EVENT clean_verification_event
        from verification
        where TIMESTAMPDIFF(MINUTE, start_time, NOW()) > 10;
 
-drop table if exists searchLog;
-CREATE TABLE `searchLog`
+drop table if exists searchlog;
+CREATE TABLE `searchlog`
 (
     `id`         int(32)  NOT NULL AUTO_INCREMENT,
     `user_id`      int(32)  NOT NULL,
