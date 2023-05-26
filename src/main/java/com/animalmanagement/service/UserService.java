@@ -140,10 +140,6 @@ public class UserService {
             checkPassword(modifyUserInfoBo.getPassword(), modifyUserInfoBo.getPasswordConfirm());
             sysUser.setPassword(encodeUtil.encodePassword(modifyUserInfoBo.getPassword()));
         }
-        if (!modifyUserInfoBo.getPhone().isEmpty()) {
-            checkPhone(modifyUserInfoBo.getPhone());
-            userInfo.setPhone(modifyUserInfoBo.getPhone());
-        }
         if (!modifyUserInfoBo.getBio().isEmpty()) {
             userInfo.setBio(modifyUserInfoBo.getBio());
         }
@@ -409,7 +405,7 @@ public class UserService {
 
     public UserMainPageVo mainPage(UserMainPageBo userMainPageBo) {
         UserInfo userInfo = userInfoMapper.selectByPrimaryKey(userMainPageBo.getUserId());
-        return new UserMainPageVo(userInfo.getUsername(), userInfo.getAvatar(), userInfo.getBio(), userInfo.getPhone());
+        return new UserMainPageVo(userInfo.getUsername(), userInfo.getAvatar(), userInfo.getBio(), userInfo.getEmail());
     }
 
     public Map<Integer, UserInfo> getAllAdminMap() {

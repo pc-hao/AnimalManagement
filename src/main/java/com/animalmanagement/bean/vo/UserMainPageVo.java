@@ -11,5 +11,5 @@ public class UserMainPageVo {
     private String username;
     private String avatarUrl;
     private String bio;
-    private String phone;
+    private String email;
 }
