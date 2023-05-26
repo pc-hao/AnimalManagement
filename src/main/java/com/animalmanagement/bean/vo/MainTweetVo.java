@@ -10,12 +10,13 @@ import lombok.NoArgsConstructor;
 @Data
 @Builder
 public class MainTweetVo {
-    private String image;
+    private Integer id;
+    private String images;
     private String title;
-    private Integer tweetId;
     private Integer likes;
     private Integer views;
     private String username;
     private String avatar;
     private Boolean isLike;
+    private Integer censored;
 }
