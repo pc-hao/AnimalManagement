@@ -436,7 +436,7 @@ public class UserService {
         example.createCriteria().andUserIdEqualTo(messageGetBo.getUserId());
 
         List<Message> messageList = messageMapper.selectByExample(example);
-        messageList.sort(Comparator.comparing(Message::getTime));
+        messageList.sort(Comparator.comparing(Message::getTime).reversed());
 
         List<MessageGetVo> voList = messageList
                 .stream()
