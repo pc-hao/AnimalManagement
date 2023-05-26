@@ -19,4 +19,5 @@ public class UserStarTweetVo {
     private String avatar;
     private String username;
     private Integer censored;
+    private Boolean isLike;
 }

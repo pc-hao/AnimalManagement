@@ -5,18 +5,16 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Builder
-@Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserSelfTweetVo {
-    private Integer id;
-    private String images;
+@Data
+@Builder
+public class MainTweetVo {
+    private String image;
     private String title;
-    private Integer views;
+    private Integer tweetId;
     private Integer likes;
-    private Integer comments;
-    private Integer censored;
+    private Integer views;
     private String username;
     private String avatar;
     private Boolean isLike;

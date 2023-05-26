@@ -282,16 +282,35 @@ public class TweetService {
 
         tweetList.forEach(e-> e.setComments(commentService.getCommentVoListByTweetId(e.getId()).size()));
 
+        List<MainTweetVo> mainTweetVos = tweetList.stream()
+                .map(e -> transTweetToMainVo(e, getTweetsBo.getUserId()))
+                .collect(Collectors.toList());
         Map<String, Object> map = new HashMap<>();
 
         int start = getTweetsBo.getCommentpage() * pageSize;
-        if (start >= tweetList.size()) {
+        if (start >= mainTweetVos.size()) {
             map.put("tweets", null);
         } else {
-            int end = Math.min(start + pageSize, tweetList.size());
-            map.put("tweets", tweetList.subList(start, end));
+            int end = Math.min(start + pageSize, mainTweetVos.size());
+            map.put("tweets", mainTweetVos.subList(start, end));
         }
         return map;
+    }
+
+    private MainTweetVo transTweetToMainVo(Tweet e, Integer searchUserId) {
+        MainTweetVo mainTweetVo = new MainTweetVo();
+        BeanUtils.copyProperties(e,mainTweetVo);
+        UserInfo userInfo = userService.getUserInfoById(e.getUserId());
+        mainTweetVo.setUsername(userInfo.getUsername());
+        mainTweetVo.setAvatar(userInfo.getAvatar());
+        mainTweetVo.setIsLike(isUserLikeTweet(searchUserId, e.getId()));
+        return mainTweetVo;
+    }
+
+    public boolean isUserLikeTweet(Integer userId, Integer tweetId) {
+        TweetLikeExample example = new TweetLikeExample();
+        example.createCriteria().andTweetIdEqualTo(tweetId).andUserIdEqualTo(userId);
+        return Objects.nonNull(tweetLikeMapper.selectOneByExample(example));
     }
 
     public Boolean tweetLike(Integer userId, Integer tweetId) {
@@ -381,12 +400,13 @@ public class TweetService {
         return tweetMapper.selectByExample(tweetExample);
     }
 
-    private UserStarTweetVo transTweetToStarTweetVo(Tweet e) {
+    private UserStarTweetVo transTweetToStarTweetVo(Tweet e, Integer searchUserId) {
         UserStarTweetVo vo = new UserStarTweetVo();
         BeanUtils.copyProperties(e, vo);
         UserInfo tweetOwner = userService.getUserInfoById(e.getUserId());
         vo.setAvatar(tweetOwner.getAvatar());
         vo.setUsername(tweetOwner.getUsername());
+        vo.setIsLike(isUserLikeTweet(searchUserId, e.getId()));
         return vo;
     }
 
@@ -402,7 +422,8 @@ public class TweetService {
         List<Tweet> tweetList = getTweetListById(starTweetIdList, userStarTweetBo.getContext(), userStarTweetBo.getType());
         sortTweetList(tweetList, "时间");
 
-        List<UserStarTweetVo> voList = tweetList.stream().map(this::transTweetToStarTweetVo).collect(Collectors.toList());
+        List<UserStarTweetVo> voList = tweetList.stream()
+                .map(e->transTweetToStarTweetVo(e, userStarTweetBo.getUserId())).collect(Collectors.toList());
 
         return buildReturnMap(voList,userStarTweetBo.getPage(), 8, "tweets");
     }
@@ -423,10 +444,7 @@ public class TweetService {
     public Map<String, Object> selfTweet(UserSelfTweetBo userSelfTweetBo) {
         int pageSize = 8;
 
-        SysUser sysUser = sysUserMapper.selectByPrimaryKey(userSelfTweetBo.getUserId());
-        if (sysUser == null) {
-            throw new RuntimeException("User ID Does Not Exist");
-        }
+        UserInfo userInfo = userService.getUserInfoById(userSelfTweetBo.getUserId());
 
         TweetExample tweetExample = new TweetExample();
         tweetExample.createCriteria()
@@ -467,6 +485,9 @@ public class TweetService {
                 .map(e -> {
                     UserSelfTweetVo vo = new UserSelfTweetVo();
                     BeanUtils.copyProperties(e, vo);
+                    vo.setIsLike(isUserLikeTweet(userInfo.getId(), e.getId()));
+                    vo.setAvatar(userInfo.getAvatar());
+                    vo.setUsername(userInfo.getUsername());
                     return vo;
                 }).toList();
 
