@@ -25,6 +25,7 @@ import java.util.stream.Collectors;
 import java.util.Objects;
 import java.util.Random;
 import java.util.function.Function;
+import java.time.LocalDateTime;
 
 import com.animalmanagement.utils.EncodeUtil;
 
@@ -401,7 +402,8 @@ public class UserService {
 
     public UserMainPageVo mainPage(UserMainPageBo userMainPageBo) {
         UserInfo userInfo = userInfoMapper.selectByPrimaryKey(userMainPageBo.getUserId());
-        return new UserMainPageVo(userInfo.getUsername(), userInfo.getAvatar(), userInfo.getBio(), userInfo.getEmail());
+        String avatar = userInfo.getAvatar() + "?" + LocalDateTime.now();
+        return new UserMainPageVo(userInfo.getUsername(), avatar, userInfo.getBio(), userInfo.getEmail());
     }
 
     public Map<Integer, UserInfo> getAllAdminMap() {
