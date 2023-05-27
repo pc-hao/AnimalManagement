@@ -142,7 +142,7 @@ public class UserService {
         }
         if (modifyUserInfoBo.getAvatar() != null && !modifyUserInfoBo.getAvatar().isEmpty()) {
             String newAvatar = ImageConfig.USER_PICTURE_SAVE_PATH + userInfo.getId() + ".png";
-            String newAvatarFront = ImageConfig.USER_PICTURE_SAVE_PATH_FRONT + userInfo.getId() + ".png";
+            String newAvatarFront = ImageConfig.USER_PICTURE_SAVE_PATH_FRONT + userInfo.getId() + "?" + LocalDateTime.now() + ".png";
             try {
                 Files.move(Paths.get(modifyUserInfoBo.getAvatar()), Paths.get(newAvatar), StandardCopyOption.REPLACE_EXISTING);
             } catch (IOException e) {
@@ -402,8 +402,7 @@ public class UserService {
 
     public UserMainPageVo mainPage(UserMainPageBo userMainPageBo) {
         UserInfo userInfo = userInfoMapper.selectByPrimaryKey(userMainPageBo.getUserId());
-        String avatar = userInfo.getAvatar() + "?" + LocalDateTime.now();
-        return new UserMainPageVo(userInfo.getUsername(), avatar, userInfo.getBio(), userInfo.getEmail());
+        return new UserMainPageVo(userInfo.getUsername(), userInfo.getAvatar(), userInfo.getBio(), userInfo.getEmail());
     }
 
     public Map<Integer, UserInfo> getAllAdminMap() {
