@@ -55,6 +55,7 @@ public class SearchLogService {
                 .sorted((o1, o2) -> o2.getTime().compareTo(o1.getTime()))
                 .map(SearchLog::getContext)
                 .distinct()
+                .limit(10)
                 .collect(Collectors.toList());
     }
 }
