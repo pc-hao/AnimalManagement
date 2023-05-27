@@ -142,7 +142,7 @@ public class UserService {
         }
         if (modifyUserInfoBo.getAvatar() != null && !modifyUserInfoBo.getAvatar().isEmpty()) {
             String newAvatar = ImageConfig.USER_PICTURE_SAVE_PATH + userInfo.getId() + ".png";
-            String newAvatarFront = ImageConfig.USER_PICTURE_SAVE_PATH_FRONT + userInfo.getId() + "?" + LocalDateTime.now() + ".png";
+            String newAvatarFront = ImageConfig.USER_PICTURE_SAVE_PATH_FRONT + userInfo.getId() + ".png" + "?" + LocalDateTime.now();
             try {
                 Files.move(Paths.get(modifyUserInfoBo.getAvatar()), Paths.get(newAvatar), StandardCopyOption.REPLACE_EXISTING);
             } catch (IOException e) {
