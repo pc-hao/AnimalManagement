@@ -407,6 +407,7 @@ public class TweetService {
         vo.setAvatar(tweetOwner.getAvatar());
         vo.setUsername(tweetOwner.getUsername());
         vo.setIsLike(isUserLikeTweet(searchUserId, e.getId()));
+        vo.setSolved(e.getSolved());
         return vo;
     }
 

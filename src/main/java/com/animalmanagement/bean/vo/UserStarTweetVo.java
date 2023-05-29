@@ -1,5 +1,7 @@
 package com.animalmanagement.bean.vo;
 
+import javax.swing.text.StyledEditorKit.BoldAction;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -20,4 +22,5 @@ public class UserStarTweetVo {
     private String username;
     private Integer censored;
     private Boolean isLike;
+    private Boolean solved;
 }
