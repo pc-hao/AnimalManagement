@@ -12,4 +12,5 @@ public class UserSelfHelpBo {
     private Integer page;
     private Integer pageNum;
     private String context;
+    private String tag;
 }

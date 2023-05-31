@@ -12,4 +12,5 @@ public class UserHelpGetBo {
     private Integer page;
     private String context;
     private String type;
+    private String tag;
 }

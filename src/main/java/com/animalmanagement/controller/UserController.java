@@ -26,8 +26,8 @@ public class UserController {
 
     @PostMapping("/resetPasswordVerify")
     public BaseResponse resetPassword(@RequestBody ResetPasswordBo resetPasswordBo) {
-        accountService.verifyCode(resetPasswordBo.getEmail(), DEFAULT_PASSWORD);
-        userService.changePasswordByEmail(resetPasswordBo.getEmail(), resetPasswordBo.getVerification());
+        accountService.verifyCode(resetPasswordBo.getEmail(), resetPasswordBo.getVerification());
+        userService.changePasswordByEmail(resetPasswordBo.getEmail(), DEFAULT_PASSWORD);
         return BaseResponse.builder().code(StatusEnum.SUCCESS.getCode()).message("请求成功，密码已改为123456").build();
     }
 
@@ -100,6 +100,51 @@ public class UserController {
         return BaseResponse.builder()
             .code(StatusEnum.SUCCESS.getCode())
             .body(tweetService.helpGet(userHelpGetBo))
+            .message("")
+            .build();
+    }
+
+    @PostMapping("/message/unreadNum")
+    public BaseResponse messageNum(@RequestBody MessageUnreadNumBo messageUnreadNumBo) {
+        return BaseResponse.builder()
+            .code(StatusEnum.SUCCESS.getCode())
+            .body(userService.messageUnreadNum(messageUnreadNumBo))
+            .message("")
+            .build();
+    }
+
+    @PostMapping("/message/get")
+    public BaseResponse messageGet(@RequestBody MessageGetBo messageGetBo) {
+        return BaseResponse.builder()
+            .code(StatusEnum.SUCCESS.getCode())
+            .body(userService.messageGet(messageGetBo))
+            .message("")
+            .build();
+    }
+
+    @PostMapping("/message/setRead")
+    public BaseResponse messageSetRead(@RequestBody MessageSetReadBo messageSetReadBo) {
+        userService.messageSetRead(messageSetReadBo);
+        return BaseResponse.builder()
+            .code(StatusEnum.SUCCESS.getCode())
+            .message("")
+            .build();
+    }
+
+    @PostMapping("/message/setReadAll")
+    public BaseResponse messageSetReadAll(@RequestBody MessageSetReadAllBo messageSetReadAllBo) {
+        userService.messageSetReadAll(messageSetReadAllBo);
+        return BaseResponse.builder()
+            .code(StatusEnum.SUCCESS.getCode())
+            .message("")
+            .build();
+    }
+
+    @PostMapping("/message/delete")
+    public BaseResponse messageDelete(@RequestBody MessageDeleteBo messageDeleteBo) {
+        userService.messageDelete(messageDeleteBo);
+        return BaseResponse.builder()
+            .code(StatusEnum.SUCCESS.getCode())
             .message("")
             .build();
     }

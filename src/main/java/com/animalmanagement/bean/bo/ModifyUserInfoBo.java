@@ -12,7 +12,6 @@ public class ModifyUserInfoBo {
     private String username;
     private String password;
     private String passwordConfirm;
-    private String phone;
     private String bio;
     private String avatar;
 }

@@ -78,7 +78,7 @@ CREATE TABLE `animal`
     `name`      varchar(32)     NOT NULL UNIQUE,
     `intro`     varchar(256)    NOT NULL DEFAULT "管理员是个OP，还没设置动物介绍",
     `adopted`   boolean         NOT NULL DEFAULT false,
-    `avatar`    varchar(128)     DEFAULT "/static/images/user/default.png",
+    `avatar`    varchar(640)     DEFAULT "/static/images/user/default.png",
     PRIMARY KEY (`id`)
 );
 
@@ -144,26 +144,23 @@ insert into comment (user_id,tweet_id,content,is_help) values (3,3,"现在，我
 insert into `comment` (user_id, tweet_id, content, time, censored) values (3, 1, "这个帖子不错", now(), 1);
 insert into `comment` (user_id, tweet_id, content, time, censored) values (2, 1, "我是管理员", now(), 1);
 insert into `comment` (user_id, tweet_id, content, time, censored) values (3, 1, "你再看？", now(), 1);
-
-CREATE TABLE `application`
-(
-    `id`       int(32)      NOT NULL AUTO_INCREMENT,
-    `user_id`  int(32)      NOT NULL,
-    `content`  varchar(256) NOT NULL,
-    `censored` boolean      NOT NULL,
-    PRIMARY KEY (`id`),
-    FOREIGN KEY (`user_id`) REFERENCES `sys_user` (`id`)
-);
+insert into `comment` (user_id, tweet_id, content, time, censored) values (2, 2, "我是管理员", now(), 1);
+insert into `comment` (user_id, tweet_id, content, time, censored) values (2, 3, "我是管理员", now(), 1);
+insert into `comment` (user_id, tweet_id, content, time, censored) values (2, 3, "我是管理员2", now(), 1);
+insert into `comment` (user_id, tweet_id, content, time, censored) values (2, 4, "我是管理员", now(), 1);
+insert into `comment` (user_id, tweet_id, content, time, censored) values (2, 4, "我是管理员2", now(), 1);
+insert into `comment` (user_id, tweet_id, content, time, censored) values (2, 4, "我是管理员3", now(), 1);
 
 CREATE TABLE `track`
 (
     `id`         int(32)  NOT NULL AUTO_INCREMENT,
+    `user_id`    int(32)  NOT NULL,
     `animal_id`  int(32)  NOT NULL,
-    `time`       datetime NOT NULL DEFAULT now(),
-    `location_x` int(32)  NOT NULL,
-    `location_y` int(32)  NOT NULL,
+    `time`       varchar(32) NOT NULL,
+    `location` int(32)  NOT NULL,
     PRIMARY KEY (`id`),
-    FOREIGN KEY (`animal_id`) REFERENCES `animal` (`id`)
+    FOREIGN KEY (`animal_id`) REFERENCES `animal` (`id`),
+    FOREIGN KEY (`user_id`) REFERENCES `sys_user` (`id`)
 );
 
 CREATE TABLE `tag`
@@ -211,18 +208,12 @@ CREATE TABLE `message`
     `id`      int(32) NOT NULL AUTO_INCREMENT,
     `user_id` int(32) NOT NULL,
     `content` varchar(1024)    NOT NULL,
+    `read`    boolean NOT NULL DEFAULT FALSE,
+    `time`    DATETIME NOT NULL DEFAULT now(),
     PRIMARY KEY (`id`),
     FOREIGN KEY (`user_id`) REFERENCES `sys_user` (`id`)
 );
 
-CREATE TABLE `star`
-(
-    `user_id`  int(32) NOT NULL,
-    `tweet_id` int(32) NOT NULL,
-    PRIMARY KEY (`user_id`, `tweet_id`),
-    FOREIGN KEY (`user_id`) REFERENCES `sys_user` (`id`),
-    FOREIGN KEY (`tweet_id`) REFERENCES `tweet` (`id`)
-);
 
 CREATE TABLE `tweetlike`
 (
@@ -250,8 +241,6 @@ CREATE TABLE `tweetstar`
     FOREIGN KEY (`user_id`) REFERENCES `sys_user`(`id`),
     FOREIGN KEY (`tweet_id`) REFERENCES `tweet`(`id`)
 );
-
-DROP TABLE IF EXISTS `verification`;
 
 CREATE TABLE `verification`
 (
@@ -284,3 +273,15 @@ CREATE EVENT clean_verification_event
     DO delete
        from verification
        where TIMESTAMPDIFF(MINUTE, start_time, NOW()) > 10;
+
+drop table if exists searchlog;
+CREATE TABLE `searchlog`
+(
+    `id`         int(32)  NOT NULL AUTO_INCREMENT,
+    `user_id`      int(32)  NOT NULL,
+    `is_help`  boolean  NOT NULL,
+    `context`   varchar(512) NOT NULL,
+    `time`       DATETIME NOT NULL DEFAULT now(),
+    PRIMARY KEY (`id`),
+    FOREIGN KEY (`user_id`) REFERENCES `sys_user` (`id`)
+);

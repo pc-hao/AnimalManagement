@@ -33,10 +33,16 @@ public class CommentService {
     SysUserMapper sysUserMapper;
 
     @Autowired
+    SysRoleUserMapper sysRoleUserMapper;
+
+    @Autowired
     UserInfoMapper userInfoMapper;
 
     @Autowired
     CommentLikeMapper commentLikeMapper;
+
+    @Autowired
+    MessageMapper messageMapper;
 
     public Map<String, Object> adminGetComments(AdminGetCommentsBo adminGetCommentsBo) {
         CommentExample example = new CommentExample();
@@ -72,16 +78,39 @@ public class CommentService {
 
     public void adminCommentCensor(CommentCensorBo commentCensorBo) {
         Comment comment = commentMapper.selectByPrimaryKey(commentCensorBo.getCommentId());
+        Message message;
         if (comment == null) {
             throw new RuntimeException("Comment ID Does Not Exist");
         }
 
         if (commentCensorBo.getOperate() == 0) {
             comment.setCensored(CensorStatusEnum.PASS.getCode());
+            message = Message.builder()
+            .userId(comment.getUserId())
+            .content("您的评论：“" + comment.getContent() +"”已通过")
+            .build();
         } else {
             comment.setCensored(CensorStatusEnum.REJECT.getCode());
+            message = Message.builder()
+            .userId(comment.getUserId())
+            .content("您的评论：“" + comment.getContent() +"”未能通过，理由如下：\n" + commentCensorBo.getReason())
+            .build();
         }
         commentMapper.updateByPrimaryKeySelective(comment);
+        messageMapper.insertSelective(message);
+    }
+
+    private void checkTweetValid(Integer userId, Tweet tweet) {
+        if (!Objects.equals(tweet.getCensored(), CensorStatusEnum.PASS.getCode())
+                && !Objects.equals(tweet.getUserId(), userId)) {
+            throw new RuntimeException("Tweet Is Not Censored");
+        }
+        if (tweet.getDeleted()) {
+            throw new RuntimeException("Tweet Has Been Deleted");
+        }
+        if (!tweet.getPublished()) {
+            throw new RuntimeException("Tweet Has Not Been Published");
+        }
     }
 
     public void addComment(AddCommentBo addCommentBo) {
@@ -96,13 +125,30 @@ public class CommentService {
         if (addCommentBo.getComment().isEmpty()) {
             throw new RuntimeException("The Content Is Empty");
         }
+        checkTweetValid(0, tweet);
 
-        Comment insertComment = Comment.builder()
-                .userId(addCommentBo.getUserId())
-                .tweetId(addCommentBo.getTweetId())
-                .time(LocalDateTime.now())
-                .content(addCommentBo.getComment())
-                .build();
+        Comment insertComment;
+        SysRoleUserExample sysRoleUserExample = new SysRoleUserExample();
+        sysRoleUserExample.createCriteria().andUserIdEqualTo(addCommentBo.getUserId());
+        List<SysRoleUser> sysRoleUserList = sysRoleUserMapper.selectByExample(sysRoleUserExample);
+        SysRoleUser sysRoleUser = sysRoleUserList.get(0);
+        if(sysRoleUser.getRoleId() == 1) {
+            insertComment = Comment.builder()
+            .userId(addCommentBo.getUserId())
+            .tweetId(addCommentBo.getTweetId())
+            .time(LocalDateTime.now())
+            .content(addCommentBo.getComment())
+            .censored(1)
+            .build();
+        } else {
+            insertComment = Comment.builder()
+            .userId(addCommentBo.getUserId())
+            .tweetId(addCommentBo.getTweetId())
+            .time(LocalDateTime.now())
+            .content(addCommentBo.getComment())
+            .build();
+        }
+        
         commentMapper.insertSelective(insertComment);
 
         tweet.setComments(tweet.getComments() + 1); //todo 感觉这个帖子的评论数可以删了，我看了一下整个项目只有这里用了，因为添加地评论需要过审，没过审的评论拿不到
@@ -187,14 +233,27 @@ public class CommentService {
     public Map<String, Object> getComments(UserGetCommentsBo getCommentsBo) {
         List<CommentVo> commentVoList = getCommentVoListByTweetId(getCommentsBo.getTweetId());
         fillInIsLike(commentVoList, getCommentsBo.getUserId());
+        List<CommentVo> commentVoListSorted = new ArrayList<>();
+        for(CommentVo commentVo:commentVoList) {
+            if(commentVo.getIsAdmin()) {
+                commentVoListSorted.add(commentVo);
+            }
+        }
+        int count = 0;
+        for(CommentVo commentVo:commentVoList) {
+            if(!commentVo.getIsAdmin()) {
+                commentVoListSorted.add(commentVo);
+                count++;
+            }
+        }
 
         Map<String, Object> resultMap = new HashMap<>();
         int start = getCommentsBo.getCommentPage() * PAGE_SIZE;
-        if (start >= commentVoList.size()) {
+        if (start >= commentVoListSorted.size()) {
             resultMap.put("comments", null);
         } else {
-            int end = Math.min(start + PAGE_SIZE, commentVoList.size());
-            resultMap.put("comments", commentVoList.subList(start, end));
+            int end = Math.min(start + PAGE_SIZE, commentVoListSorted.size());
+            resultMap.put("comments", commentVoListSorted.subList(start, end));
         }
         return resultMap;
     }

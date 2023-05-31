@@ -8,7 +8,9 @@ public enum StatusEnum {
     LOGIN_FAILURE(3, "用户登录失败"),
     UNAUTHORIZED(4, "用户未授权"),
     USER_NOT_EXIT(5, "用户不存在"),
-    SPELLING_ERROR(6, "用户名或密码错误");
+    SPELLING_ERROR(6, "用户名或密码错误"),
+
+    BLACK(7,"用户被拉黑");
 
     private Integer code;
     private String message;

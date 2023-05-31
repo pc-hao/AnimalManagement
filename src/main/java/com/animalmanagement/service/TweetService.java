@@ -17,6 +17,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class TweetService {
@@ -54,6 +55,12 @@ public class TweetService {
 
     @Autowired
     CommentService commentService;
+
+    @Autowired
+    MessageMapper messageMapper;
+
+    @Autowired
+    SearchLogService searchLogService;
 
     public Map<String, Object> adminTweetGet(AdminTweetGetBo adminTweetGetBo) {
         TweetExample example = new TweetExample();
@@ -135,12 +142,22 @@ public class TweetService {
         Integer tweetId = tweetCensorBo.getTweetId();
         checkIdExists(tweetId);
         Tweet tweet = tweetMapper.selectByPrimaryKey(tweetId);
+        Message message;
         if (tweetCensorBo.getOperate() == 0) {
             tweet.setCensored(CensorStatusEnum.PASS.getCode());
+            message = Message.builder()
+            .userId(tweet.getUserId())
+            .content("您的贴子：“" + tweet.getTitle() +"”已通过")
+            .build();
         } else {
             tweet.setCensored(CensorStatusEnum.REJECT.getCode());
+            message = Message.builder()
+            .userId(tweet.getUserId())
+            .content("您的贴子：“" + tweet.getTitle() +"”未能通过，理由如下：\n" + tweetCensorBo.getReason())
+            .build();
         }
         tweetMapper.updateByPrimaryKeySelective(tweet);
+        messageMapper.insertSelective(message);
     }
 
     public void checkIdExists(Integer tweetId) {
@@ -151,9 +168,9 @@ public class TweetService {
     }
 
     public TweetContentVo getTweetContent(TweetContentBo tweetContentBo) {
-        UserInfo userInfo = userService.getUserInfoById(tweetContentBo.getUserId());
         Tweet tweet = getTweetById(tweetContentBo.getTweetId());
-        checkTweetValid(tweet);
+        UserInfo tweetAuthorInfo = userService.getUserInfoById(tweet.getUserId());
+        checkTweetValid(tweetContentBo.getUserId(), tweet);
 
         TweetContentVo tweetContentVo = new TweetContentVo();
         BeanUtils.copyProperties(tweet, tweetContentVo);
@@ -165,16 +182,16 @@ public class TweetService {
             tweetContentVo.setImages(images);
         }
 
-        tweetContentVo.setUsername(userInfo.getUsername());
-        tweetContentVo.setAvatar(userInfo.getAvatar());
+        tweetContentVo.setUsername(tweetAuthorInfo.getUsername());
+        tweetContentVo.setAvatar(tweetAuthorInfo.getAvatar());
 
         TweetLikeExample likeExample = new TweetLikeExample();
-        likeExample.createCriteria().andUserIdEqualTo(userInfo.getId()).andTweetIdEqualTo(tweet.getId());
+        likeExample.createCriteria().andUserIdEqualTo(tweetContentBo.getUserId()).andTweetIdEqualTo(tweet.getId());
         tweetContentVo.setHasLiked(Objects.nonNull(tweetLikeMapper.selectOneByExample(likeExample)));
 
-        StarExample starExample = new StarExample();
-        starExample.createCriteria().andUserIdEqualTo(userInfo.getId()).andTweetIdEqualTo(tweet.getId());
-        tweetContentVo.setHasStarred(Objects.nonNull(starMapper.selectOneByExample(starExample)));
+        TweetStarExample starExample = new TweetStarExample();
+        starExample.createCriteria().andUserIdEqualTo(tweetContentBo.getUserId()).andTweetIdEqualTo(tweet.getId());
+        tweetContentVo.setHasStarred(Objects.nonNull(tweetStarMapper.selectOneByExample(starExample)));
 
         tweetContentVo.setComments(commentService.getCommentVoListByTweetId(tweetContentBo.getTweetId()).size());
 
@@ -210,15 +227,16 @@ public class TweetService {
     /**
      * 校验帖子是否过审、被删除、发布
      */
-    private void checkTweetValid(Tweet tweet) {
-        if (!Objects.equals(tweet.getCensored(), CensorStatusEnum.PASS.getCode())) {
+    private void checkTweetValid(Integer userId, Tweet tweet) {
+        if (!Objects.equals(tweet.getCensored(), CensorStatusEnum.PASS.getCode())
+                && !Objects.equals(tweet.getUserId(), userId)) {
             throw new RuntimeException("Tweet Is Not Censored");
         }
         if (tweet.getDeleted()) {
-            throw new RuntimeException("Tweet Has Deleted");
+            throw new RuntimeException("Tweet Has Been Deleted");
         }
         if (!tweet.getPublished()) {
-            throw new RuntimeException("Tweet Id Does Not Exist");
+            throw new RuntimeException("Tweet Has Not Been Published");
         }
     }
 
@@ -227,33 +245,78 @@ public class TweetService {
 
         TweetExample example = new TweetExample();
         example.createCriteria()
-                .andPublishedEqualTo(true)
-                .andCensoredEqualTo(CensorStatusEnum.PASS.getCode())
-                .andDeletedEqualTo(false)
-                .andIsHelpEqualTo(false)
-                .andTitleLike("%" + getTweetsBo.getMatch() + "%");
-        List<Tweet> tweetList = tweetMapper.selectByExample(example);
+            .andPublishedEqualTo(true)
+            .andCensoredEqualTo(CensorStatusEnum.PASS.getCode())
+            .andDeletedEqualTo(false)
+            .andIsHelpEqualTo(false)
+            .andTitleLike("%" + getTweetsBo.getMatch() + "%");
 
+        searchLogService.insertSearchLog(getTweetsBo.getMatch(), false);
+
+        List<Tweet> tweetList = tweetMapper.selectByExample(example);
+        if(getTweetsBo.getTag() != null && !getTweetsBo.getTag().equals("")) {
+            TagExample tagExample = new TagExample();
+            tagExample.createCriteria().andContentEqualTo(getTweetsBo.getTag());
+            Tag tag = tagMapper.selectOneByExample(tagExample);
+            if(tag == null) {
+                tweetList = new ArrayList<>();
+            } else {
+                List<Integer> tweetIdList = new ArrayList<>();
+                List<Tweet> tweetList2 = new ArrayList<>();
+                TweetTagExample tweetTagExample = new TweetTagExample();
+                tweetTagExample.createCriteria().andTagIdEqualTo(tag.getId());
+                List<TweetTagKey> tweetTagKeyList = tweetTagMapper.selectByExample(tweetTagExample);
+                for(TweetTagKey tweetTagKey:tweetTagKeyList) {
+                    tweetIdList.add(tweetTagKey.getTweetId());
+                }
+                for(Tweet tweet:tweetList) {
+                    if(tweetIdList.contains(tweet.getId())) {
+                        tweetList2.add(tweet);
+                    }
+                }
+                tweetList = tweetList2;
+            }
+        }
+
+        sortTweetList(tweetList, getTweetsBo.getType());
+
+        tweetList.forEach(e-> e.setComments(commentService.getCommentVoListByTweetId(e.getId()).size()));
+
+        List<MainTweetVo> mainTweetVos = tweetList.stream()
+                .map(e -> transTweetToMainVo(e, getTweetsBo.getUserId()))
+                .collect(Collectors.toList());
         Map<String, Object> map = new HashMap<>();
 
-        if (getTweetsBo.getType().equals("时间")) {
-            tweetList.sort(Comparator.comparing(Tweet::getTime));
-        } else {
-            tweetList.sort(Comparator.comparing(Tweet::getViewsWeekly));
-        }
         int start = getTweetsBo.getCommentpage() * pageSize;
-        if (start >= tweetList.size()) {
+        if (start >= mainTweetVos.size()) {
             map.put("tweets", null);
         } else {
-            int end = Math.min(start + pageSize, tweetList.size());
-            map.put("tweets", tweetList.subList(start, end));
+            int end = Math.min(start + pageSize, mainTweetVos.size());
+            map.put("tweets", mainTweetVos.subList(start, end));
         }
         return map;
+    }
+
+    private MainTweetVo transTweetToMainVo(Tweet e, Integer searchUserId) {
+        MainTweetVo mainTweetVo = new MainTweetVo();
+        BeanUtils.copyProperties(e,mainTweetVo);
+        UserInfo userInfo = userService.getUserInfoById(e.getUserId());
+        mainTweetVo.setUsername(userInfo.getUsername());
+        mainTweetVo.setAvatar(userInfo.getAvatar());
+        mainTweetVo.setIsLike(isUserLikeTweet(searchUserId, e.getId()));
+        return mainTweetVo;
+    }
+
+    public boolean isUserLikeTweet(Integer userId, Integer tweetId) {
+        TweetLikeExample example = new TweetLikeExample();
+        example.createCriteria().andTweetIdEqualTo(tweetId).andUserIdEqualTo(userId);
+        return Objects.nonNull(tweetLikeMapper.selectOneByExample(example));
     }
 
     public Boolean tweetLike(Integer userId, Integer tweetId) {
         userService.getUserInfoById(userId);
         Tweet tweet = getTweetById(tweetId);
+        checkTweetValid(0, tweet);
 
         TweetLikeExample example = new TweetLikeExample();
         example.createCriteria()
@@ -280,6 +343,7 @@ public class TweetService {
     public Boolean tweetStar(Integer userId, Integer tweetId) {
         userService.getUserInfoById(userId);
         Tweet tweet = getTweetById(tweetId);
+        checkTweetValid(0, tweet);
 
         TweetStarExample example = new TweetStarExample();
         example.createCriteria()
@@ -303,52 +367,77 @@ public class TweetService {
         }
     }
 
-    public Map<String, Object> starTweet(UserStarTweetBo userStarTweetBo) {
-        int pageSize = 8;
-
-        SysUser sysUser = sysUserMapper.selectByPrimaryKey(userStarTweetBo.getUserId());
-        if (sysUser == null) {
-            throw new RuntimeException("User ID Does Not Exist");
+    private List<Integer> getTweetIdListWithTag(String tagStr) {
+        TagExample tagExample = new TagExample();
+        tagExample.createCriteria().andContentEqualTo(tagStr);
+        Tag tag = tagMapper.selectOneByExample(tagExample);
+        if(Objects.isNull(tag)) {
+            return new ArrayList<>();
         }
 
+        TweetTagExample tweetTagExample = new TweetTagExample();
+        tweetTagExample.createCriteria().andTagIdEqualTo(tag.getId());
+        return tweetTagMapper.selectByExample(tweetTagExample).stream().map(e->e.getTweetId()).distinct().collect(Collectors.toList());
+    }
+
+    private List<Integer> getStarTweetIdList(Integer userId) {
         TweetStarExample tweetStarExample = new TweetStarExample();
-        tweetStarExample.createCriteria().andUserIdEqualTo(userStarTweetBo.getUserId());
+        tweetStarExample.createCriteria().andUserIdEqualTo(userId);
         List<TweetStarKey> tweetStarList = tweetStarMapper.selectByExample(tweetStarExample);
-        List<Integer> idList = tweetStarList.stream().map(TweetStarKey::getUserId).distinct().toList();
+        return tweetStarList.stream().map(TweetStarKey::getTweetId).distinct().collect(Collectors.toList());
+    }
 
-        List<Tweet> tweetList;
-        if (idList.isEmpty()) {
-            tweetList = new ArrayList<>();
-        } else {
-            TweetExample tweetExample = new TweetExample();
-            tweetExample.createCriteria()
-                    .andIdIn(idList)
-                    .andTitleLike("%" + userStarTweetBo.getContext() + "%")
-                    .andIsHelpEqualTo(userStarTweetBo.getType() != 0);
+    private List<Tweet> getTweetListById(List<Integer> tweetIdList, String context, Integer type) {
+        if(tweetIdList.isEmpty()) {
+            return new ArrayList<>();
+        }
+        TweetExample tweetExample = new TweetExample();
+        tweetExample.createCriteria()
+                .andIdIn(tweetIdList)
+                .andTitleLike("%" + context + "%")
+                .andIsHelpEqualTo(type != 0);
 
-            tweetList = tweetMapper.selectByExample(tweetExample);
+        return tweetMapper.selectByExample(tweetExample);
+    }
 
-            tweetList.sort(Comparator.comparing(Tweet::getTime));
+    private UserStarTweetVo transTweetToStarTweetVo(Tweet e, Integer searchUserId) {
+        UserStarTweetVo vo = new UserStarTweetVo();
+        BeanUtils.copyProperties(e, vo);
+        UserInfo tweetOwner = userService.getUserInfoById(e.getUserId());
+        vo.setAvatar(tweetOwner.getAvatar());
+        vo.setUsername(tweetOwner.getUsername());
+        vo.setIsLike(isUserLikeTweet(searchUserId, e.getId()));
+        vo.setSolved(e.getSolved());
+        return vo;
+    }
+
+    public Map<String, Object> starTweet(UserStarTweetBo userStarTweetBo) {
+        userService.getUserInfoById(userStarTweetBo.getUserId());
+
+        List<Integer> starTweetIdList = getStarTweetIdList(userStarTweetBo.getUserId());
+        if(!(Objects.isNull(userStarTweetBo.getTag()) || userStarTweetBo.getTag().isEmpty())) {
+            List<Integer> tweetIdListWithTag = getTweetIdListWithTag(userStarTweetBo.getTag());
+            starTweetIdList.retainAll(tweetIdListWithTag);
         }
 
+        List<Tweet> tweetList = getTweetListById(starTweetIdList, userStarTweetBo.getContext(), userStarTweetBo.getType());
+        sortTweetList(tweetList, "时间");
+
+        List<UserStarTweetVo> voList = tweetList.stream()
+                .map(e->transTweetToStarTweetVo(e, userStarTweetBo.getUserId())).collect(Collectors.toList());
+
+        return buildReturnMap(voList,userStarTweetBo.getPage(), 8, "tweets");
+    }
+
+    private Map<String, Object> buildReturnMap(List<?> list, Integer pageNum, Integer pageSize, String objectName) {
         Map<String, Object> map = new HashMap<>();
-
-        List<UserStarTweetVo> voList = tweetList
-                .stream()
-                .map(e -> {
-                    UserStarTweetVo vo = new UserStarTweetVo();
-                    BeanUtils.copyProperties(e, vo);
-                    return vo;
-                }).toList();
-
-        map.put("sumNum", voList.size());
-
-        int start = userStarTweetBo.getPage() * pageSize;
-        if (start >= voList.size()) {
-            map.put("tweets", null);
+        map.put("sumNum", list.size());
+        int start = pageNum * pageSize;
+        if (start >= list.size()) {
+            map.put(objectName, null);
         } else {
-            int end = Math.min(start + pageSize, voList.size());
-            map.put("tweets", voList.subList(start, end));
+            int end = Math.min(start + pageSize, list.size());
+            map.put(objectName, list.subList(start, end));
         }
         return map;
     }
@@ -356,10 +445,7 @@ public class TweetService {
     public Map<String, Object> selfTweet(UserSelfTweetBo userSelfTweetBo) {
         int pageSize = 8;
 
-        SysUser sysUser = sysUserMapper.selectByPrimaryKey(userSelfTweetBo.getUserId());
-        if (sysUser == null) {
-            throw new RuntimeException("User ID Does Not Exist");
-        }
+        UserInfo userInfo = userService.getUserInfoById(userSelfTweetBo.getUserId());
 
         TweetExample tweetExample = new TweetExample();
         tweetExample.createCriteria()
@@ -369,6 +455,30 @@ public class TweetService {
 
         List<Tweet> tweetList = tweetMapper.selectByExample(tweetExample);
 
+        if(userSelfTweetBo.getTag() != null && !userSelfTweetBo.getTag().equals("")) {
+            TagExample tagExample = new TagExample();
+            tagExample.createCriteria().andContentEqualTo(userSelfTweetBo.getTag());
+            Tag tag = tagMapper.selectOneByExample(tagExample);
+            if(tag == null) {
+                tweetList = new ArrayList<>();
+            } else {
+                List<Integer> tweetIdList = new ArrayList<>();
+                List<Tweet> tweetList2 = new ArrayList<>();
+                TweetTagExample tweetTagExample = new TweetTagExample();
+                tweetTagExample.createCriteria().andTagIdEqualTo(tag.getId());
+                List<TweetTagKey> tweetTagKeyList = tweetTagMapper.selectByExample(tweetTagExample);
+                for(TweetTagKey tweetTagKey:tweetTagKeyList) {
+                    tweetIdList.add(tweetTagKey.getTweetId());
+                }
+                for(Tweet tweet:tweetList) {
+                    if(tweetIdList.contains(tweet.getId())) {
+                        tweetList2.add(tweet);
+                    }
+                }
+                tweetList = tweetList2;
+            }
+        }
+
         tweetList.sort(Comparator.comparing(Tweet::getTime));
 
         List<UserSelfTweetVo> voList = tweetList
@@ -376,6 +486,9 @@ public class TweetService {
                 .map(e -> {
                     UserSelfTweetVo vo = new UserSelfTweetVo();
                     BeanUtils.copyProperties(e, vo);
+                    vo.setIsLike(isUserLikeTweet(userInfo.getId(), e.getId()));
+                    vo.setAvatar(userInfo.getAvatar());
+                    vo.setUsername(userInfo.getUsername());
                     return vo;
                 }).toList();
 
@@ -407,6 +520,30 @@ public class TweetService {
                 .andTitleLike("%" + userSelfHelpBo.getContext() + "%");
 
         List<Tweet> tweetList = tweetMapper.selectByExample(tweetExample);
+
+        if(userSelfHelpBo.getTag() != null && !userSelfHelpBo.getTag().equals("")) {
+            TagExample tagExample = new TagExample();
+            tagExample.createCriteria().andContentEqualTo(userSelfHelpBo.getTag());
+            Tag tag = tagMapper.selectOneByExample(tagExample);
+            if(tag == null) {
+                tweetList = new ArrayList<>();
+            } else {
+                List<Integer> tweetIdList = new ArrayList<>();
+                List<Tweet> tweetList2 = new ArrayList<>();
+                TweetTagExample tweetTagExample = new TweetTagExample();
+                tweetTagExample.createCriteria().andTagIdEqualTo(tag.getId());
+                List<TweetTagKey> tweetTagKeyList = tweetTagMapper.selectByExample(tweetTagExample);
+                for(TweetTagKey tweetTagKey:tweetTagKeyList) {
+                    tweetIdList.add(tweetTagKey.getTweetId());
+                }
+                for(Tweet tweet:tweetList) {
+                    if(tweetIdList.contains(tweet.getId())) {
+                        tweetList2.add(tweet);
+                    }
+                }
+                tweetList = tweetList2;
+            }
+        }
 
         tweetList.sort(Comparator.comparing(Tweet::getTime));
 
@@ -440,19 +577,42 @@ public class TweetService {
                 .andCensoredEqualTo(CensorStatusEnum.PASS.getCode())
                 .andTitleLike("%" + userHelpGetBo.getContext() + "%");
 
-        List<Tweet> tweetList = tweetMapper.selectByExample(tweetExample);
+        searchLogService.insertSearchLog(userHelpGetBo.getContext(), true);
 
-        if (userHelpGetBo.getType().equals("时间")) {
-            tweetList.sort(Comparator.comparing(Tweet::getTime));
-        } else {
-            tweetList.sort(Comparator.comparing(Tweet::getViewsWeekly));
+        List<Tweet> tweetList = tweetMapper.selectByExample(tweetExample);
+        if(userHelpGetBo.getTag() != null && !userHelpGetBo.getTag().equals("")) {
+            TagExample tagExample = new TagExample();
+            tagExample.createCriteria().andContentEqualTo(userHelpGetBo.getTag());
+            Tag tag = tagMapper.selectOneByExample(tagExample);
+            if(tag == null) {
+                tweetList = new ArrayList<>();
+            } else {
+                List<Integer> tweetIdList = new ArrayList<>();
+                List<Tweet> tweetList2 = new ArrayList<>();
+                TweetTagExample tweetTagExample = new TweetTagExample();
+                tweetTagExample.createCriteria().andTagIdEqualTo(tag.getId());
+                List<TweetTagKey> tweetTagKeyList = tweetTagMapper.selectByExample(tweetTagExample);
+                for(TweetTagKey tweetTagKey:tweetTagKeyList) {
+                    tweetIdList.add(tweetTagKey.getTweetId());
+                }
+                for(Tweet tweet:tweetList) {
+                    if(tweetIdList.contains(tweet.getId())) {
+                        tweetList2.add(tweet);
+                    }
+                }
+                tweetList = tweetList2;
+            }
         }
+        sortTweetList(tweetList, userHelpGetBo.getType());
 
         List<UserHelpGetVo> voList = tweetList
                 .stream()
                 .map(e -> {
                     UserHelpGetVo vo = new UserHelpGetVo();
                     BeanUtils.copyProperties(e, vo);
+                    UserInfo userInfo = userInfoMapper.selectByPrimaryKey(e.getUserId());
+                    vo.setUsername(userInfo.getUsername());
+                    vo.setAvatar(userInfo.getAvatar());
                     return vo;
                 }).toList();
 
@@ -467,6 +627,19 @@ public class TweetService {
             map.put("tweets", voList.subList(start, end));
         }
         return map;
+    }
+
+    private void sortTweetList(List<Tweet> tweetList, String sortedBy) {
+        if (sortedBy.equals("时间")) {
+            tweetList.sort((o1,o2)-> o2.getTime().compareTo(o1.getTime()));
+        } else if (sortedBy.equals("热度")) {
+            tweetList.sort((o1,o2)->(getTweetHot(o2)-getTweetHot(o1)));
+        }
+    }
+
+    public int getTweetHot(Tweet e) {
+        int a = commentService.getCommentVoListByTweetId(e.getId()).size();
+        return e.getLikes() + e.getStars() + commentService.getCommentVoListByTweetId(e.getId()).size();
     }
 
     public void tweetCreate(TweetCreateBo tweetCreateBo) {
@@ -485,6 +658,34 @@ public class TweetService {
                 .published(true)
                 .build();
         tweetMapper.insertSelective(tweet);
+
+        TweetExample tweetExample = new TweetExample();
+        tweetExample.createCriteria().andUserIdEqualTo(tweetCreateBo.getUserId());
+        List<Tweet> tweetList = tweetMapper.selectByExample(tweetExample);
+        tweetList.sort(Comparator.comparing(Tweet::getTime));
+
+        tweet = tweetList.get(tweetList.size() - 1);
+
+        List<String> tagList = tweetCreateBo.getTags();
+        for(String tagString:tagList) {
+            TagExample tagExample = new TagExample();
+            tagExample.createCriteria().andContentEqualTo(tagString);
+            Tag tag = tagMapper.selectOneByExample(tagExample);
+            if(tag == null) {
+                Tag tag2Insert = Tag.builder()
+                    .content(tagString)
+                    .build();
+                tagMapper.insertSelective(tag2Insert);
+                tagExample = new TagExample();
+                tagExample.createCriteria().andContentEqualTo(tagString);
+                tag = tagMapper.selectOneByExample(tagExample);
+            }
+            TweetTagKey tweetTagKey2Insert = TweetTagKey.builder()
+                .tweetId(tweet.getId())
+                .tagId(tag.getId())
+                .build();
+            tweetTagMapper.insert(tweetTagKey2Insert);
+        }
 
         Integer id = tweet.getId();
 

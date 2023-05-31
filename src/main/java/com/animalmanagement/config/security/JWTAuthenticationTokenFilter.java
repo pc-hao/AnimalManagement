@@ -3,16 +3,20 @@ package com.animalmanagement.config.security;
 import com.alibaba.fastjson.JSONObject;
 import com.animalmanagement.config.JWTConfig;
 import com.animalmanagement.config.security.entity.SelfUserEntity;
+import com.animalmanagement.entity.UserInfo;
+import com.animalmanagement.service.UserService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import javax.servlet.FilterChain;
@@ -30,7 +34,6 @@ import java.util.Map;
  */
 @Slf4j
 public class JWTAuthenticationTokenFilter extends BasicAuthenticationFilter {
-
     public JWTAuthenticationTokenFilter(AuthenticationManager authenticationManager) {
         super(authenticationManager);
     }
@@ -73,8 +76,10 @@ public class JWTAuthenticationTokenFilter extends BasicAuthenticationFilter {
                 }
             } catch (ExpiredJwtException e) {
                 log.info("Token过期");
+                throw new RuntimeException("Token过期");
             } catch (Exception e) {
                 log.info("Token无效");
+                throw new RuntimeException("Token无效");
             }
         }
         filterChain.doFilter(request, response);

@@ -9,10 +9,10 @@ import com.animalmanagement.example.*;
 import com.animalmanagement.enums.*;
 
 import org.springframework.beans.BeanUtils;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -25,15 +25,12 @@ import java.util.stream.Collectors;
 import java.util.Objects;
 import java.util.Random;
 import java.util.function.Function;
+import java.time.LocalDateTime;
 
 import com.animalmanagement.utils.EncodeUtil;
 
 @Service
 public class UserService {
-    private static final String PICTURE_SAVE_PATH_FRONT = ImageConfig.frontPath + "/user/";
-
-    private static final String PICTURE_SAVE_PATH = ImageConfig.savePath + "/user/";
-
     @Autowired
     SysUserMapper sysUserMapper;
 
@@ -50,12 +47,19 @@ public class UserService {
     VerificationMapper verificationMapper;
 
     @Autowired
+    MessageMapper messageMapper;
+
+    @Autowired
     EncodeUtil encodeUtil;
 
     @Autowired
     MailService mailService;
 
     private static final Random VeriNumGenerator = new Random();
+
+    public static Integer getNowUserId() {
+        return Integer.parseInt((String) SecurityContextHolder.getContext().getAuthentication().getCredentials());
+    }
 
     /**
      * 根据用户名查询实体
@@ -133,16 +137,12 @@ public class UserService {
             checkPassword(modifyUserInfoBo.getPassword(), modifyUserInfoBo.getPasswordConfirm());
             sysUser.setPassword(encodeUtil.encodePassword(modifyUserInfoBo.getPassword()));
         }
-        if (!modifyUserInfoBo.getPhone().isEmpty()) {
-            checkPhone(modifyUserInfoBo.getPhone());
-            userInfo.setPhone(modifyUserInfoBo.getPhone());
-        }
         if (!modifyUserInfoBo.getBio().isEmpty()) {
             userInfo.setBio(modifyUserInfoBo.getBio());
         }
         if (modifyUserInfoBo.getAvatar() != null && !modifyUserInfoBo.getAvatar().isEmpty()) {
-            String newAvatar = PICTURE_SAVE_PATH + userInfo.getId() + ".png";
-            String newAvatarFront = PICTURE_SAVE_PATH_FRONT + userInfo.getId() + ".png";
+            String newAvatar = ImageConfig.USER_PICTURE_SAVE_PATH + userInfo.getId() + ".png";
+            String newAvatarFront = ImageConfig.USER_PICTURE_SAVE_PATH_FRONT + userInfo.getId() + ".png" + "?" + LocalDateTime.now();
             try {
                 Files.move(Paths.get(modifyUserInfoBo.getAvatar()), Paths.get(newAvatar), StandardCopyOption.REPLACE_EXISTING);
             } catch (IOException e) {
@@ -402,7 +402,7 @@ public class UserService {
 
     public UserMainPageVo mainPage(UserMainPageBo userMainPageBo) {
         UserInfo userInfo = userInfoMapper.selectByPrimaryKey(userMainPageBo.getUserId());
-        return new UserMainPageVo(userInfo.getUsername(), userInfo.getAvatar(), userInfo.getBio(), userInfo.getPhone());
+        return new UserMainPageVo(userInfo.getUsername(), userInfo.getAvatar(), userInfo.getBio(), userInfo.getEmail());
     }
 
     public Map<Integer, UserInfo> getAllAdminMap() {
@@ -410,5 +410,78 @@ public class UserService {
         example.createCriteria().andRoleIdEqualTo(RoleEnum.ADMIN.getCode());
         List<Integer> idList = roleUserMapper.selectByExample(example).stream().map(RoleUser::getUserId).toList();
         return getUserInfoByIdList(idList);
+    }
+
+    public MessageUnreadNumVo messageUnreadNum(MessageUnreadNumBo messageUnreadNumBo) {
+        SysUser sysUser = sysUserMapper.selectByPrimaryKey(messageUnreadNumBo.getUserId());
+        if(sysUser == null) {
+            throw new RuntimeException("User ID Does Not Exist");
+        }
+
+        MessageExample example = new MessageExample();
+        example.createCriteria()
+            .andUserIdEqualTo(messageUnreadNumBo.getUserId())
+            .andReadEqualTo(false);
+
+        List<Message> messageList = messageMapper.selectByExample(example);
+        return new MessageUnreadNumVo(messageList.size());
+    }
+
+    public List<MessageGetVo> messageGet(MessageGetBo messageGetBo) {
+        SysUser sysUser = sysUserMapper.selectByPrimaryKey(messageGetBo.getUserId());
+        if(sysUser == null) {
+            throw new RuntimeException("User ID Does Not Exist");
+        }
+
+        MessageExample example = new MessageExample();
+        example.createCriteria().andUserIdEqualTo(messageGetBo.getUserId());
+
+        List<Message> messageList = messageMapper.selectByExample(example);
+        messageList.sort(Comparator.comparing(Message::getTime).reversed());
+
+        List<MessageGetVo> voList = messageList
+                .stream()
+                .map(e -> {
+                    MessageGetVo vo = new MessageGetVo();
+                    BeanUtils.copyProperties(e, vo);
+                    vo.setTime(e.getTime().toLocalDate().toString());
+                    return vo;
+                }).toList();
+        return voList;
+    }
+
+    public void messageSetRead(MessageSetReadBo messageSetReadBo) {
+        Message message = messageMapper.selectByPrimaryKey(messageSetReadBo.getMessageId());
+        if(message == null) {
+            throw new RuntimeException("Message ID Does Not Exist");
+        }
+
+        message.setRead(true);
+        messageMapper.updateByPrimaryKey(message);
+    }
+
+    public void messageSetReadAll(MessageSetReadAllBo messageSetReadAllBo) {
+        SysUser sysUser = sysUserMapper.selectByPrimaryKey(messageSetReadAllBo.getUserId());
+        if(sysUser == null) {
+            throw new RuntimeException("User ID Does Not Exist");
+        }
+
+        MessageExample example = new MessageExample();
+        example.createCriteria().andUserIdEqualTo(messageSetReadAllBo.getUserId());
+
+        List<Message> messageList = messageMapper.selectByExample(example);
+        for(Message message:messageList) {
+            message.setRead(true);
+            messageMapper.updateByPrimaryKey(message);
+        }
+    }
+
+    public void messageDelete(MessageDeleteBo messageDeleteBo) {
+        Message message = messageMapper.selectByPrimaryKey(messageDeleteBo.getMessageId());
+        if(message == null) {
+            throw new RuntimeException("Message ID Does Not Exist");
+        }
+
+        messageMapper.deleteByPrimaryKey(messageDeleteBo.getMessageId());
     }
 }

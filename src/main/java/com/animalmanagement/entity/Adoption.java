@@ -1,7 +1,7 @@
 package com.animalmanagement.entity;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 public class Adoption implements Serializable {
     private Integer id;
@@ -14,7 +14,7 @@ public class Adoption implements Serializable {
 
     private Integer censored;
 
-    private Date time;
+    private LocalDateTime time;
 
     private static final long serialVersionUID = 1L;
 
@@ -58,11 +58,11 @@ public class Adoption implements Serializable {
         this.censored = censored;
     }
 
-    public Date getTime() {
+    public LocalDateTime getTime() {
         return time;
     }
 
-    public void setTime(Date time) {
+    public void setTime(LocalDateTime time) {
         this.time = time;
     }
 

@@ -17,4 +17,5 @@ public class UserSelfHelpVo {
     private Integer likes;
     private Integer comments;
     private Boolean solved;
+    private Integer censored;
 }

@@ -4,6 +4,7 @@ import com.animalmanagement.bean.BaseResponse;
 import com.animalmanagement.bean.bo.*;
 import com.animalmanagement.enums.StatusEnum;
 import com.animalmanagement.service.HelpService;
+import com.animalmanagement.service.SearchLogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,6 +19,9 @@ import java.util.Map;
 public class HelpController {
     @Autowired
     HelpService helpService;
+
+    @Autowired
+    SearchLogService searchLogService;
 
     @PostMapping("/changeStatus")
     public BaseResponse changeStatus(@RequestBody UserAndTweetIdBo userAndTweetIdBo) {
@@ -38,4 +42,17 @@ public class HelpController {
                 .build();
     }
 
+    @PostMapping("/hotSearch")
+    public BaseResponse getHotSearch() {
+        return BaseResponse.builder()
+                .code(StatusEnum.SUCCESS.getCode())
+                .body(searchLogService.getHot(10, true)).build();
+    }
+
+    @PostMapping("/selfSearch")
+    public BaseResponse getSelfSearch() {
+        return BaseResponse.builder()
+                .code(StatusEnum.SUCCESS.getCode())
+                .body(searchLogService.getSelf(true)).build();
+    }
 }

@@ -79,6 +79,7 @@ public class AnimalService {
                 .map(e -> {
                     AdminAnimalGetVo vo = new AdminAnimalGetVo();
                     BeanUtils.copyProperties(e, vo);
+                    vo.setAvatar(Arrays.asList(e.getAvatar().split(";")));
                     return vo;
                 }).toList();
 
@@ -86,23 +87,24 @@ public class AnimalService {
         map.put("sumNum", voList.size());
 
         int start = adminAnimalGetBo.getPage() * adminAnimalGetBo.getPageNum();
-        if (start >= animalList.size()) {
+        if (start >= voList.size()) {
             map.put("records", null);
         } else {
-            int end = Math.min(start + adminAnimalGetBo.getPageNum(), animalList.size());
-            map.put("records", animalList.subList(start, end));
+            int end = Math.min(start + adminAnimalGetBo.getPageNum(), voList.size());
+            map.put("records", voList.subList(start, end));
         }
         return map;
     }
 
     public AdminAnimalContentVo adminAnimalContent(AdminAnimalContentBo adminAnimalContentBo) {
-        Animal animal = animalMapper.selectByPrimaryKey(adminAnimalContentBo.getRecordId());
+        Animal animal = animalMapper.selectByPrimaryKey(adminAnimalContentBo.getAnimalId());
         if (Objects.isNull(animal)) {
             throw new RuntimeException("Animal ID Does Not Exist");
         }
 
         AdminAnimalContentVo vo = new AdminAnimalContentVo();
         BeanUtils.copyProperties(animal, vo);
+        vo.setAvatar(Arrays.asList(animal.getAvatar().split(";")));
 
         return vo;
     }
@@ -122,15 +124,27 @@ public class AnimalService {
         if (!Objects.isNull(adminAnimalModifyBo.getAdopted())) {
             animal.setAdopted(adminAnimalModifyBo.getAdopted());
         }
-        if (!Objects.isNull(adminAnimalModifyBo.getAvatar())) {
-            String newAvatar = PICTURE_SAVE_PATH + adminAnimalModifyBo.getRecordId() + ".png";
-            String newAvatarFront = PICTURE_SAVE_PATH_FRONT + adminAnimalModifyBo.getRecordId() + ".png";
-            try {
-                Files.move(Paths.get(adminAnimalModifyBo.getAvatar()), Paths.get(newAvatar), StandardCopyOption.REPLACE_EXISTING);
-            } catch (IOException e) {
-                throw new RuntimeException(e.getMessage());
+        List<String> avatarList = adminAnimalModifyBo.getAvatar();
+        if (!Objects.isNull(avatarList) && !avatarList.isEmpty()) {
+            String newAvatarFrontWhole = "";
+            for(int i = 0;i < avatarList.size();i++) {
+                if(avatarList.get(i).substring(0, 2).equals("/s")) {
+                    newAvatarFrontWhole += avatarList.get(i);
+                    newAvatarFrontWhole += ";";
+                    continue;
+                }
+                String newAvatar = PICTURE_SAVE_PATH + adminAnimalModifyBo.getRecordId() + "_" + i + ".png";
+                String newAvatarFront = PICTURE_SAVE_PATH_FRONT + adminAnimalModifyBo.getRecordId() + "_" + i + ".png";
+                newAvatarFrontWhole += newAvatarFront;
+                newAvatarFrontWhole += ";";
+                try {
+                    Files.move(Paths.get(avatarList.get(i)), Paths.get(newAvatar), StandardCopyOption.REPLACE_EXISTING);
+                } catch (IOException e) {
+                    throw new RuntimeException(e.getMessage());
+                }
             }
-            animal.setAvatar(newAvatarFront);
+            newAvatarFrontWhole = newAvatarFrontWhole.substring(0, newAvatarFrontWhole.length() - 1);
+            animal.setAvatar(newAvatarFrontWhole);
         }
         animalMapper.updateByPrimaryKeySelective(animal);
     }
@@ -158,6 +172,7 @@ public class AnimalService {
                 .map(e -> {
                     AnimalGetVo vo = new AnimalGetVo();
                     BeanUtils.copyProperties(e, vo);
+                    vo.setAvatar(e.getAvatar().split(";")[0]);
                     return vo;
                 }).toList();
 
@@ -179,10 +194,26 @@ public class AnimalService {
         animal.setAdopted(adminAnimalAddBo.getAdopted());
         animal.setIntro(adminAnimalAddBo.getIntro());
         animal.setName(adminAnimalAddBo.getName());
-        if (Objects.isNull(adminAnimalAddBo.getAvatar())) {
+        List<String> avatarList = adminAnimalAddBo.getAvatar();
+        if (Objects.isNull(avatarList) || avatarList.isEmpty()) {
             animal.setAvatar(DEFAULT_IMAGE_PATH);
         } else {
-            animal.setAvatar(adminAnimalAddBo.getAvatar());
+            String newAvatarFrontWhole = "";
+            for(int i = 0;i < avatarList.size();i++) {
+                AnimalExample example = new AnimalExample();
+                List<Animal> animalList = animalMapper.selectByExample(example);
+                String newAvatar = PICTURE_SAVE_PATH + (animalList.size() + 1) + "_" + i + ".png";
+                String newAvatarFront = PICTURE_SAVE_PATH_FRONT + (animalList.size() + 1) + "_" + i + ".png";
+                newAvatarFrontWhole += newAvatarFront;
+                newAvatarFrontWhole += ";";
+                try {
+                    Files.move(Paths.get(avatarList.get(i)), Paths.get(newAvatar), StandardCopyOption.REPLACE_EXISTING);
+                } catch (IOException e) {
+                    throw new RuntimeException(e.getMessage());
+                }
+            }
+            newAvatarFrontWhole = newAvatarFrontWhole.substring(0, newAvatarFrontWhole.length() - 1);
+            animal.setAvatar(newAvatarFrontWhole);
         }
         animalMapper.insertSelective(animal);
     }
@@ -260,15 +291,24 @@ public class AnimalService {
     }
 
     public AdminAnimalContentVo animalContent(AdminAnimalContentBo adminAnimalContentBo) {
-        Animal animal = animalMapper.selectByPrimaryKey(adminAnimalContentBo.getRecordId());
+        Animal animal = animalMapper.selectByPrimaryKey(adminAnimalContentBo.getAnimalId());
         if (Objects.isNull(animal)) {
             throw new RuntimeException("Animal ID Does Not Exist");
         }
 
         AdminAnimalContentVo vo = new AdminAnimalContentVo();
         BeanUtils.copyProperties(animal, vo);
+        List<String> avatarList = Arrays.asList(animal.getAvatar().split(";"));
+        vo.setAvatar(avatarList);
 
         return vo;
     }
 
+    public Animal getAnimalById(Integer id) {
+        Animal animal = animalMapper.selectByPrimaryKey(id);
+        if (Objects.isNull(animal)) {
+            throw new RuntimeException("Animal ID Does Not Exist");
+        }
+        return animal;
+    }
 }
