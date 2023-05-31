@@ -202,8 +202,8 @@ public class AnimalService {
             for(int i = 0;i < avatarList.size();i++) {
                 AnimalExample example = new AnimalExample();
                 List<Animal> animalList = animalMapper.selectByExample(example);
-                String newAvatar = PICTURE_SAVE_PATH + animalList.size() + "_" + i + ".png";
-                String newAvatarFront = PICTURE_SAVE_PATH_FRONT + animalList.size() + "_" + i + ".png";
+                String newAvatar = PICTURE_SAVE_PATH + (animalList.size() + 1) + "_" + i + ".png";
+                String newAvatarFront = PICTURE_SAVE_PATH_FRONT + (animalList.size() + 1) + "_" + i + ".png";
                 newAvatarFrontWhole += newAvatarFront;
                 newAvatarFrontWhole += ";";
                 try {
