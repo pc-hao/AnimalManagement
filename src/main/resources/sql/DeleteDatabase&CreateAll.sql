@@ -78,7 +78,7 @@ CREATE TABLE `animal`
     `name`      varchar(32)     NOT NULL UNIQUE,
     `intro`     varchar(256)    NOT NULL DEFAULT "管理员是个OP，还没设置动物介绍",
     `adopted`   boolean         NOT NULL DEFAULT false,
-    `avatar`    varchar(128)     DEFAULT "/static/images/user/default.png",
+    `avatar`    varchar(640)     DEFAULT "/static/images/user/default.png",
     PRIMARY KEY (`id`)
 );
 
