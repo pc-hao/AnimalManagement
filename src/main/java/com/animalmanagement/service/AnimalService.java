@@ -200,8 +200,8 @@ public class AnimalService {
         } else {
             String newAvatarFrontWhole = "";
             for(int i = 0;i < avatarList.size();i++) {
-                String newAvatar = PICTURE_SAVE_PATH + animal.getId() + ".png";
-                String newAvatarFront = PICTURE_SAVE_PATH_FRONT + animal.getId() + ".png";
+                String newAvatar = PICTURE_SAVE_PATH + animal.getId() + "_" + i + ".png";
+                String newAvatarFront = PICTURE_SAVE_PATH_FRONT + animal.getId() + "_" + i + ".png";
                 newAvatarFrontWhole += newAvatarFront;
                 newAvatarFrontWhole += ";";
                 try {
