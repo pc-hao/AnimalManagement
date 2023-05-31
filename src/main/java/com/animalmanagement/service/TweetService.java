@@ -8,10 +8,16 @@ import com.animalmanagement.example.*;
 import com.animalmanagement.enums.*;
 import com.animalmanagement.config.ImageConfig;
 
+import lombok.SneakyThrows;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -210,7 +216,23 @@ public class TweetService {
 
             tweetContentVo.setTags(tagNameList);
         }
+
+        tweetContentVo.setHeight(imagesMaxHeight(tweet.getImages()));
         return tweetContentVo;
+    }
+
+    @SneakyThrows
+    private int imagesMaxHeight(String images) {
+        int maxHeight = 0;
+        List<String> imagePathList = List.of(images.split(","));
+        for(String path: imagePathList) {
+            // 文件对象
+            File file = new File("root/AnimalManagement/src/main/resources" + path);
+            // 图片对象
+            BufferedImage bufferedImage = ImageIO.read(new FileInputStream(file));
+            maxHeight = Math.max(maxHeight, bufferedImage.getHeight());
+        }
+        return maxHeight;
     }
 
     /**

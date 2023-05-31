@@ -32,6 +32,8 @@ public class TweetContentVo {
     private Boolean isHelp;
     private Boolean solved;
 
+    private Integer height;
+
     private List<String> tags;
     private List<String> images;
 }
