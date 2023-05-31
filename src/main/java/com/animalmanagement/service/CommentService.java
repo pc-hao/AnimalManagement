@@ -212,9 +212,9 @@ public class CommentService {
                     if ((o1.getIsAdmin() && o2.getIsAdmin()) || (!o1.getIsAdmin() && !o2.getIsAdmin())) {
                         return o1.getTime().compareTo(o2.getTime());
                     } else if (o1.getIsAdmin()) {
-                        return 1;
-                    } else {
                         return -1;
+                    } else {
+                        return 1;
                     }
                 }).toList();
     }
