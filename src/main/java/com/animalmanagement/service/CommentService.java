@@ -233,19 +233,6 @@ public class CommentService {
     public Map<String, Object> getComments(UserGetCommentsBo getCommentsBo) {
         List<CommentVo> commentVoList = getCommentVoListByTweetId(getCommentsBo.getTweetId());
         fillInIsLike(commentVoList, getCommentsBo.getUserId());
-        List<CommentVo> commentVoListSorted = new ArrayList<>();
-        for(CommentVo commentVo:commentVoList) {
-            if(commentVo.getIsAdmin()) {
-                commentVoListSorted.add(commentVo);
-            }
-        }
-        int count = 0;
-        for(CommentVo commentVo:commentVoList) {
-            if(!commentVo.getIsAdmin()) {
-                commentVoListSorted.add(commentVo);
-                count++;
-            }
-        }
 
         Map<String, Object> resultMap = new HashMap<>();
         int start = getCommentsBo.getCommentPage() * PAGE_SIZE;
