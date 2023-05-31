@@ -227,7 +227,7 @@ public class TweetService {
         List<String> imagePathList = List.of(images.split(";"));
         for(String path: imagePathList) {
             // 文件对象
-            File file = new File("root/AnimalManagement/src/main/resources" + path);
+            File file = new File("/root/AnimalManagement/src/main/resources" + path);
             // 图片对象
             BufferedImage bufferedImage = ImageIO.read(new FileInputStream(file));
             maxHeight = Math.max(maxHeight, bufferedImage.getHeight());
