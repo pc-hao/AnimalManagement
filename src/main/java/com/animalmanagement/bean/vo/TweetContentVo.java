@@ -32,7 +32,7 @@ public class TweetContentVo {
     private Boolean isHelp;
     private Boolean solved;
 
-    private Integer height;
+    private String maxHeightImage;
 
     private List<String> tags;
     private List<String> images;

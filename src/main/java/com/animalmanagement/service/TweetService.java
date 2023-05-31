@@ -217,22 +217,27 @@ public class TweetService {
             tweetContentVo.setTags(tagNameList);
         }
 
-        tweetContentVo.setHeight(imagesMaxHeight(tweet.getImages()));
+        tweetContentVo.setMaxHeightImage(imagesMaxHeight(tweet.getImages()));
         return tweetContentVo;
     }
 
     @SneakyThrows
-    private int imagesMaxHeight(String images) {
+    private String imagesMaxHeight(String images) {
         int maxHeight = 0;
+        String maxHeightImage = "";
         List<String> imagePathList = List.of(images.split(";"));
         for(String path: imagePathList) {
             // 文件对象
             File file = new File("/root/AnimalManagement/src/main/resources" + path);
             // 图片对象
             BufferedImage bufferedImage = ImageIO.read(new FileInputStream(file));
-            maxHeight = Math.max(maxHeight, bufferedImage.getHeight());
+            int height = bufferedImage.getHeight();
+            if(height > maxHeight) {
+                maxHeight = height;
+                maxHeightImage = path;
+            }
         }
-        return maxHeight;
+        return maxHeightImage;
     }
 
     /**
