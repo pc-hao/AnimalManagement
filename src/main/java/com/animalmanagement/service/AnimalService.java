@@ -220,7 +220,9 @@ public class AnimalService {
         } catch (Exception e) {
             throw new RuntimeException("error, can't find predictTxtPath");
         }
-        int label = scanner.nextInt();
+        String line = scanner.nextLine();
+        String[] split_str = line.split(" ");
+        int label = Integer.parseInt(split_str[0]);
         if (label == -1) {
             // -1表示空地址
             return BaseResponse.builder().code(1).message("No match animal").build();
@@ -231,9 +233,13 @@ public class AnimalService {
             // -3表示没有匹配的动物
             return BaseResponse.builder().code(3).message("no match animal").build();
         } else {
-            String animalName = predictId2Name.get(label);
+            String animalName = split_str[1];
             System.out.println("lable is " + Integer.toString(label));
             System.out.println("name  is " + animalName);
+//            AnimalExample example = new AnimalExample();
+//            example.createCriteria().andNameEqualTo(animalName);
+//            Animal animal = animalMapper.selectOneByExample(example);
+
             AnimalExample animalExample = new AnimalExample();
             animalExample.createCriteria().andNameEqualTo(animalName);
             List<Animal> animals = animalMapper.selectByExample(animalExample);
