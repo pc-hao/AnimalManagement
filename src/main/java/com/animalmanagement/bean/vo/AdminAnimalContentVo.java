@@ -15,4 +15,5 @@ public class AdminAnimalContentVo {
     private String intro;
     private Boolean adopted;
     private List<String> avatar;
+    private String maxHeightImage;
 }
