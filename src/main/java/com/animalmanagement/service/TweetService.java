@@ -224,7 +224,7 @@ public class TweetService {
     @SneakyThrows
     private int imagesMaxHeight(String images) {
         int maxHeight = 0;
-        List<String> imagePathList = List.of(images.split(","));
+        List<String> imagePathList = List.of(images.split(";"));
         for(String path: imagePathList) {
             // 文件对象
             File file = new File("root/AnimalManagement/src/main/resources" + path);
