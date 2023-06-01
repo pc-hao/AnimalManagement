@@ -34,19 +34,6 @@ public class UserController {
     @PostMapping("/registerVerify")
     public BaseResponse register(@RequestBody RegisterBo registerBo) {
         try {
-            accountService.verifyCode(registerBo.getEmail(), registerBo.getVerification());
-        } catch (Exception e) {
-            if(e.getMessage().equals("EMAIL IS EMPTY"))
-            return BaseResponse.builder().code(StatusEnum.EMAIL_EMPTY.getCode()).message("邮箱为空").build();
-            else if(e.getMessage().equals("Incorrect Verification Code"))
-                return BaseResponse.builder().code(StatusEnum.VERIFICATION_INCORRECT.getCode()).message("验证码不正确").build();
-            else if(e.getMessage().equals("Verification code expired"))
-                return BaseResponse.builder().code(StatusEnum.VERIFICATION_EXPIRED.getCode()).message("验证码已过期").build();
-            else
-            return BaseResponse.builder().code(StatusEnum.REGISTER_OTHER.getCode()).message("其它注册错误（debug用）").build();
-            
-        }
-        try {
             userService.register(registerBo);
         } catch (Exception e) {
             if(e.getMessage().equals("Username Is Empty"))
@@ -61,8 +48,12 @@ public class UserController {
                 return BaseResponse.builder().code(StatusEnum.PASSWORD_NOT_CONSISTENT.getCode()).message("两次密码不一致").build();
             else if(e.getMessage().equals("Password Length Not Between 6 and 18"))
                 return BaseResponse.builder().code(StatusEnum.PASSWORD_LENGTH.getCode()).message("密码长度不在6和18之间").build();
-            else if(e.getMessage().equals("Email Is Empty"))
+            else if(e.getMessage().equals("Email Is Empty") || e.getMessage().equals("EMAIL IS EMPTY"))
                 return BaseResponse.builder().code(StatusEnum.EMAIL_EMPTY.getCode()).message("邮箱为空").build();
+            else if(e.getMessage().equals("Incorrect Verification Code"))
+                return BaseResponse.builder().code(StatusEnum.VERIFICATION_INCORRECT.getCode()).message("验证码不正确").build();
+            else if(e.getMessage().equals("Verification code expired"))
+                return BaseResponse.builder().code(StatusEnum.VERIFICATION_EXPIRED.getCode()).message("验证码已过期").build();
             else
                 return BaseResponse.builder().code(StatusEnum.REGISTER_OTHER.getCode()).message("其它注册错误（debug用）").build();
             
