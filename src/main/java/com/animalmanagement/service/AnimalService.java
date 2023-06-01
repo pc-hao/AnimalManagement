@@ -252,6 +252,7 @@ public class AnimalService {
             throw new RuntimeException("error, can't find predictTxtPath");
         }
         String line = scanner.nextLine();
+        System.out.println("line is: " + line);
         String[] split_str = line.split(" ");
         int label = Integer.parseInt(split_str[0]);
         if (label == -1) {
