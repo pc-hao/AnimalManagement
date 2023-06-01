@@ -18,6 +18,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -96,10 +97,31 @@ public class UserService {
         return true;
     }
 
+    public void verifyCode(String email, String verificationCode) {
+        if(Objects.isNull(email)) {
+            throw new RuntimeException("EMAIL IS EMPTY");
+        }
+        VerificationExample example = new VerificationExample();
+        example.createCriteria().andEmailEqualTo(email);
+        Verification verifications = verificationMapper.selectOneByExample(example);
+        if (Objects.isNull(verifications)) {
+            throw new RuntimeException("Incorrect Verification Code");
+        }
+        Date now = new Date();
+        long diff = now.getTime() - verifications.getStartTime().getTime(); //毫秒
+        if (diff > 600 * 1000) {
+            throw new RuntimeException("Verification code expired");
+        }
+        if (!Objects.equals(verifications.getVeriCode(), verificationCode)) {
+            throw new RuntimeException("Incorrect Verification Code");
+        }
+    }
+
     public void register(RegisterBo registerBo) {
         checkUsername(registerBo.getUsername());
-        checkPassword(registerBo.getPassword(), registerBo.getPasswordConfirm());
         checkEmail(registerBo.getEmail());
+        verifyCode(registerBo.getEmail(), registerBo.getVerification());
+        checkPassword(registerBo.getPassword(), registerBo.getPasswordConfirm());
         //checkPhone(registerBo.getPhone());
 
         SysUser insertUser = SysUser.builder()
