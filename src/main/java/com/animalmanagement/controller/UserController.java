@@ -34,7 +34,12 @@ public class UserController {
     @PostMapping("/registerVerify")
     public BaseResponse register(@RequestBody RegisterBo registerBo) {
         accountService.verifyCode(registerBo.getEmail(), registerBo.getVerification());
-        userService.register(registerBo);
+        try {
+            userService.register(registerBo);
+        } catch (Exception e) {
+            return BaseResponse.builder().code(StatusEnum.REGISTER_FAILURE.getCode()).message(e.getMessage()).build();
+        }
+        
         return BaseResponse.builder().code(StatusEnum.SUCCESS.getCode()).message("注册成功").build();
     }
 
