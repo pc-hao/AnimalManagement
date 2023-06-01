@@ -100,7 +100,7 @@ public class UserService {
         checkUsername(registerBo.getUsername());
         checkPassword(registerBo.getPassword(), registerBo.getPasswordConfirm());
         checkEmail(registerBo.getEmail());
-        checkPhone(registerBo.getPhone());
+        //checkPhone(registerBo.getPhone());
 
         SysUser insertUser = SysUser.builder()
                 .username(registerBo.getUsername())

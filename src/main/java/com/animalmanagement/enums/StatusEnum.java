@@ -10,7 +10,9 @@ public enum StatusEnum {
     USER_NOT_EXIT(5, "用户不存在"),
     SPELLING_ERROR(6, "用户名或密码错误"),
 
-    BLACK(7,"用户被拉黑");
+    BLACK(7,"用户被拉黑"),
+
+    REGISTER_FAILURE(8,"注册失败");
 
     private Integer code;
     private String message;
