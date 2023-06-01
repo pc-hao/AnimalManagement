@@ -56,9 +56,6 @@ public class UserController {
                 return BaseResponse.builder().code(StatusEnum.VERIFICATION_EXPIRED.getCode()).message("验证码已过期").build();
             else
                 return BaseResponse.builder().code(StatusEnum.REGISTER_OTHER.getCode()).message("其它注册错误（debug用）").build();
-            
-            
-            
         }
         
         return BaseResponse.builder().code(StatusEnum.SUCCESS.getCode()).message("注册成功").build();
