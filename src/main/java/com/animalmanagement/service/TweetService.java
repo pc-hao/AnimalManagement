@@ -68,6 +68,9 @@ public class TweetService {
     @Autowired
     SearchLogService searchLogService;
 
+    @Autowired
+    ImageService imageService;
+
     public Map<String, Object> adminTweetGet(AdminTweetGetBo adminTweetGetBo) {
         TweetExample example = new TweetExample();
         example.createCriteria()
@@ -217,27 +220,8 @@ public class TweetService {
             tweetContentVo.setTags(tagNameList);
         }
 
-        tweetContentVo.setMaxHeightImage(imagesMaxHeight(tweet.getImages()));
+        tweetContentVo.setMaxHeightImage(imageService.imagesMaxHeight(tweet.getImages()));
         return tweetContentVo;
-    }
-
-    @SneakyThrows
-    private String imagesMaxHeight(String images) {
-        int maxHeight = 0;
-        String maxHeightImage = "";
-        List<String> imagePathList = List.of(images.split(";"));
-        for(String path: imagePathList) {
-            // 文件对象
-            File file = new File("/root/AnimalManagement/src/main/resources" + path);
-            // 图片对象
-            BufferedImage bufferedImage = ImageIO.read(new FileInputStream(file));
-            int height = bufferedImage.getHeight();
-            if(height > maxHeight) {
-                maxHeight = height;
-                maxHeightImage = path;
-            }
-        }
-        return maxHeightImage;
     }
 
     /**

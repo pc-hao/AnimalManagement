@@ -65,6 +65,9 @@ public class AnimalService {
     @Autowired
     AnimalMapper animalMapper;
 
+    @Autowired
+    ImageService imageService;
+
     public Map<String, Object> adminAnimalGet(AdminAnimalGetBo adminAnimalGetBo) {
         AnimalExample example = new AnimalExample();
 
@@ -106,6 +109,7 @@ public class AnimalService {
         BeanUtils.copyProperties(animal, vo);
         vo.setAvatar(Arrays.asList(animal.getAvatar().split(";")));
 
+        vo.setMaxHeightImage(imageService.imagesMaxHeight(animal.getAvatar()));
         return vo;
     }
 
@@ -301,7 +305,7 @@ public class AnimalService {
         BeanUtils.copyProperties(animal, vo);
         List<String> avatarList = Arrays.asList(animal.getAvatar().split(";"));
         vo.setAvatar(avatarList);
-
+        vo.setMaxHeightImage(imageService.imagesMaxHeight(animal.getAvatar()));
         return vo;
     }
 
