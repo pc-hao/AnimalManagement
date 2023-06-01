@@ -12,15 +12,15 @@ public enum StatusEnum {
 
     BLACK(7,"用户被拉黑"),
 
-    USERNAME_EMPTY(8,"用户名为空"),
-    USERNAME_TOO_LONG(9,"用户名过长"),
-    USERNAME_EXISTS(10,"用户名已存在"),
-    PASSWORD_EMPTY(11,"密码为空"),
-    PASSWORD_NOT_CONSISTENT(12,"两次密码不一致"),
-    PASSWORD_LENGTH(13,"密码长度不在6和18之间"),
-    EMAIL_EMPTY(14,"邮箱为空"),
-    VERIFICATION_INCORRECT(15,"验证码不正确"),
-    VERIFICATION_EXPIRED(16,"验证码已过期"),
+    EMAIL_EMPTY(8,"邮箱为空"),
+    VERIFICATION_INCORRECT(9,"验证码不正确"),
+    VERIFICATION_EXPIRED(10,"验证码已过期"),
+    USERNAME_EMPTY(11,"用户名为空"),
+    USERNAME_TOO_LONG(12,"用户名过长"),
+    USERNAME_EXISTS(13,"用户名已存在"),
+    PASSWORD_EMPTY(14,"密码为空"),
+    PASSWORD_NOT_CONSISTENT(15,"两次密码不一致"),
+    PASSWORD_LENGTH(16,"密码长度不在6和18之间"),
     REGISTER_OTHER(17,"其它注册错误（debug用）");
 
 
