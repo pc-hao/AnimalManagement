@@ -12,7 +12,14 @@ public enum StatusEnum {
 
     BLACK(7,"用户被拉黑"),
 
-    REGISTER_FAILURE(8,"注册失败");
+    USERNAME_EMPTY(8,"用户名为空"),
+    USERNAME_TOO_LONG(9,"用户名过长"),
+    USERNAME_EXISTS(10,"用户名已存在"),
+    PASSWORD_EMPTY(11,"密码为空"),
+    PASSWORD_NOT_CONSISTENT(12,"两次密码不一致"),
+    PASSWORD_LENGTH(13,"密码长度不在6和18之间"),
+    EMAIL_EMPTY(14,"邮箱为空"),
+    REGISTER_OTHER(15,"其它注册错误（debug用）");
 
     private Integer code;
     private String message;

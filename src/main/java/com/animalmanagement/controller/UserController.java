@@ -37,7 +37,25 @@ public class UserController {
         try {
             userService.register(registerBo);
         } catch (Exception e) {
-            return BaseResponse.builder().code(StatusEnum.REGISTER_FAILURE.getCode()).message(e.getMessage()).build();
+            if(e.getMessage().equals("Username Is Empty"))
+                return BaseResponse.builder().code(StatusEnum.USERNAME_EMPTY.getCode()).message("用户名为空").build();
+            else if(e.getMessage().equals("Username Is Too Long"))
+                return BaseResponse.builder().code(StatusEnum.USERNAME_TOO_LONG.getCode()).message("用户名过长").build();
+            else if(e.getMessage().equals("Username Already Exists"))
+                return BaseResponse.builder().code(StatusEnum.USERNAME_EXISTS.getCode()).message("用户名已存在").build();
+            else if(e.getMessage().equals("Password Is Empty"))
+                return BaseResponse.builder().code(StatusEnum.PASSWORD_EMPTY.getCode()).message("密码为空").build();
+            else if(e.getMessage().equals("Password Is Not Consistent With Password Confirmation"))
+                return BaseResponse.builder().code(StatusEnum.PASSWORD_NOT_CONSISTENT.getCode()).message("两次密码不一致").build();
+            else if(e.getMessage().equals("Password Length Not Between 6 and 18"))
+                return BaseResponse.builder().code(StatusEnum.PASSWORD_LENGTH.getCode()).message("密码长度不在6和18之间").build();
+            else if(e.getMessage().equals("Email Is Empty"))
+                return BaseResponse.builder().code(StatusEnum.EMAIL_EMPTY.getCode()).message("邮箱为空").build();
+            else
+                return BaseResponse.builder().code(StatusEnum.REGISTER_OTHER.getCode()).message("其它注册错误（debug用）").build();
+            
+            
+            
         }
         
         return BaseResponse.builder().code(StatusEnum.SUCCESS.getCode()).message("注册成功").build();
