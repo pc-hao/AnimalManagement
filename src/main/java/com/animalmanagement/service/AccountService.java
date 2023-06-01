@@ -35,7 +35,7 @@ public class AccountService {
         Date now = new Date();
         long diff = now.getTime() - verifications.getStartTime().getTime(); //毫秒
         if (diff > 600 * 1000) {
-            throw new RuntimeException(" Verification code expired");
+            throw new RuntimeException("Verification code expired");
         }
         if (!Objects.equals(verifications.getVeriCode(), verificationCode)) {
             throw new RuntimeException("Incorrect Verification Code");

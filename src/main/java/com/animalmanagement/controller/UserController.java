@@ -33,7 +33,19 @@ public class UserController {
 
     @PostMapping("/registerVerify")
     public BaseResponse register(@RequestBody RegisterBo registerBo) {
-        accountService.verifyCode(registerBo.getEmail(), registerBo.getVerification());
+        try {
+            accountService.verifyCode(registerBo.getEmail(), registerBo.getVerification());
+        } catch (Exception e) {
+            if(e.getMessage().equals("EMAIL IS EMPTY"))
+            return BaseResponse.builder().code(StatusEnum.EMAIL_EMPTY.getCode()).message("邮箱为空").build();
+            else if(e.getMessage().equals("Incorrect Verification Code"))
+                return BaseResponse.builder().code(StatusEnum.VERIFICATION_INCORRECT.getCode()).message("验证码不正确").build();
+            else if(e.getMessage().equals("Verification code expired"))
+                return BaseResponse.builder().code(StatusEnum.VERIFICATION_EXPIRED.getCode()).message("验证码已过期").build();
+            else
+            return BaseResponse.builder().code(StatusEnum.REGISTER_OTHER.getCode()).message("其它注册错误（debug用）").build();
+            
+        }
         try {
             userService.register(registerBo);
         } catch (Exception e) {

@@ -19,7 +19,10 @@ public enum StatusEnum {
     PASSWORD_NOT_CONSISTENT(12,"两次密码不一致"),
     PASSWORD_LENGTH(13,"密码长度不在6和18之间"),
     EMAIL_EMPTY(14,"邮箱为空"),
-    REGISTER_OTHER(15,"其它注册错误（debug用）");
+    VERIFICATION_INCORRECT(15,"验证码不正确"),
+    VERIFICATION_EXPIRED(16,"验证码已过期"),
+    REGISTER_OTHER(17,"其它注册错误（debug用）");
+
 
     private Integer code;
     private String message;
