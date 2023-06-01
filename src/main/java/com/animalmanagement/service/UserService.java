@@ -98,7 +98,7 @@ public class UserService {
     }
 
     public void verifyCode(String email, String verificationCode) {
-        if(Objects.isNull(email)) {
+        if(Objects.isNull(email) || email.isEmpty()) {
             throw new RuntimeException("EMAIL IS EMPTY");
         }
         VerificationExample example = new VerificationExample();
@@ -178,7 +178,7 @@ public class UserService {
     }
 
     public void checkUsername(String username) {
-        if (Objects.isNull(username)) {
+        if (Objects.isNull(username) || username.isEmpty()) {
             throw new RuntimeException("Username Is Empty");
         }
         if (username.length() > 20) {
@@ -192,7 +192,7 @@ public class UserService {
     }
 
     public void checkPassword(String pw, String pwc) {
-        if (Objects.isNull(pw)) {
+        if (Objects.isNull(pw) || pw.isEmpty()) {
             throw new RuntimeException("Password Is Empty");
         }
         if (!Objects.equals(pw, pwc)) {
@@ -204,7 +204,7 @@ public class UserService {
     }
 
     public void checkEmail(String email) {
-        if (Objects.isNull(email)) {
+        if (Objects.isNull(email) || email.isEmpty()) {
             throw new RuntimeException("Email Is Empty");
         }
 //        if (!email.endsWith("@buaa.edu.cn") || email.length() <= "@buaa.edu.cn".length()) {
