@@ -1,17 +1,17 @@
 package com.animalmanagement.controller;
 
 import com.animalmanagement.bean.BaseResponse;
-import com.animalmanagement.bean.bo.*;
-import com.animalmanagement.service.*;
-import com.animalmanagement.enums.*;
-
+import com.animalmanagement.bean.bo.AdminAnimalContentBo;
+import com.animalmanagement.bean.bo.AnimalAIBo;
+import com.animalmanagement.bean.bo.AnimalGetBo;
+import com.animalmanagement.enums.StatusEnum;
+import com.animalmanagement.service.AnimalService;
+import com.animalmanagement.service.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.HashMap;
-import java.util.Map;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/animal")

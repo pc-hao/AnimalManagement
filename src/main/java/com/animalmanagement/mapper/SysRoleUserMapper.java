@@ -2,9 +2,10 @@ package com.animalmanagement.mapper;
 
 import com.animalmanagement.entity.SysRoleUser;
 import com.animalmanagement.example.SysRoleUserExample;
-import java.util.List;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.session.RowBounds;
+
+import java.util.List;
 
 public interface SysRoleUserMapper {
     long countByExample(SysRoleUserExample example);

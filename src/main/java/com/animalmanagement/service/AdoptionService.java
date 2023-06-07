@@ -1,33 +1,21 @@
 package com.animalmanagement.service;
 
-import com.animalmanagement.bean.bo.*;
-import com.animalmanagement.bean.vo.*;
-import com.animalmanagement.config.ImageConfig;
-import com.animalmanagement.entity.*;
+import com.animalmanagement.bean.bo.AdminAdoptionCensorBo;
+import com.animalmanagement.bean.bo.AdminAdoptionGetBo;
+import com.animalmanagement.bean.vo.AdminAdoptionGetVo;
+import com.animalmanagement.bean.vo.UserSelfAdoptionVo;
+import com.animalmanagement.entity.Adoption;
+import com.animalmanagement.entity.Animal;
+import com.animalmanagement.entity.Message;
+import com.animalmanagement.entity.UserInfo;
+import com.animalmanagement.enums.CensorStatusEnum;
+import com.animalmanagement.example.AdoptionExample;
 import com.animalmanagement.mapper.*;
-import com.animalmanagement.example.*;
-import com.animalmanagement.enums.*;
-
-import org.apache.ibatis.annotations.One;
 import org.springframework.beans.BeanUtils;
-import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.Objects;
-import java.util.Random;
-import java.util.function.Function;
-
-import com.animalmanagement.utils.EncodeUtil;
+import java.util.*;
 
 @Service
 public class AdoptionService {

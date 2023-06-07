@@ -3,7 +3,6 @@ package com.animalmanagement.controller;
 import com.animalmanagement.bean.BaseResponse;
 import com.animalmanagement.bean.bo.AnimalIdBo;
 import com.animalmanagement.bean.bo.UserUpdateTrackBo;
-import com.animalmanagement.entity.Animal;
 import com.animalmanagement.entity.Track;
 import com.animalmanagement.enums.StatusEnum;
 import com.animalmanagement.service.AnimalService;
@@ -16,10 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 @RestController
 @RequestMapping("/animal/track")

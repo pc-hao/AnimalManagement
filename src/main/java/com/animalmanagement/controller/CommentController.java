@@ -3,7 +3,6 @@ package com.animalmanagement.controller;
 import com.animalmanagement.bean.BaseResponse;
 import com.animalmanagement.bean.bo.CommentLikeBo;
 import com.animalmanagement.bean.bo.UserAndCommentIdBo;
-import com.animalmanagement.bean.bo.UserAndTweetIdBo;
 import com.animalmanagement.enums.StatusEnum;
 import com.animalmanagement.service.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;

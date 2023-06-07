@@ -13,8 +13,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
-import javax.management.RuntimeErrorException;
-
 @RestController
 @RequestMapping("/image")
 public class PictureController {

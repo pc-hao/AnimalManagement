@@ -2,9 +2,10 @@ package com.animalmanagement.mapper;
 
 import com.animalmanagement.entity.Application;
 import com.animalmanagement.example.ApplicationExample;
-import java.util.List;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.session.RowBounds;
+
+import java.util.List;
 
 public interface ApplicationMapper {
     long countByExample(ApplicationExample example);

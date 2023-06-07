@@ -1,9 +1,9 @@
 package com.animalmanagement.entity;
 
+import lombok.Builder;
+
 import java.io.Serializable;
 import java.time.LocalDateTime;
-
-import lombok.Builder;
 
 @Builder
 public class Tweet implements Serializable {

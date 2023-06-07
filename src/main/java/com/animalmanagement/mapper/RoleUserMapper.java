@@ -2,11 +2,11 @@ package com.animalmanagement.mapper;
 
 import com.animalmanagement.entity.RoleUser;
 import com.animalmanagement.example.RoleUserExample;
-import java.util.List;
-
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.session.RowBounds;
+
+import java.util.List;
 
 @Mapper
 public interface RoleUserMapper {

@@ -1,8 +1,8 @@
 package com.animalmanagement.entity;
 
-import java.io.Serializable;
-
 import lombok.Builder;
+
+import java.io.Serializable;
 
 @Builder
 public class CommentLikeKey implements Serializable {

@@ -2,9 +2,10 @@ package com.animalmanagement.mapper;
 
 import com.animalmanagement.entity.Track;
 import com.animalmanagement.example.TrackExample;
-import java.util.List;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.session.RowBounds;
+
+import java.util.List;
 
 public interface TrackMapper {
     long countByExample(TrackExample example);

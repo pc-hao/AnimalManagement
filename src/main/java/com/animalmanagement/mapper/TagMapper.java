@@ -2,9 +2,10 @@ package com.animalmanagement.mapper;
 
 import com.animalmanagement.entity.Tag;
 import com.animalmanagement.example.TagExample;
-import java.util.List;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.session.RowBounds;
+
+import java.util.List;
 
 public interface TagMapper {
     long countByExample(TagExample example);

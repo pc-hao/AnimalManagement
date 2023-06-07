@@ -2,9 +2,10 @@ package com.animalmanagement.mapper;
 
 import com.animalmanagement.entity.CommentLikeKey;
 import com.animalmanagement.example.CommentLikeExample;
-import java.util.List;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.session.RowBounds;
+
+import java.util.List;
 
 public interface CommentLikeMapper {
     long countByExample(CommentLikeExample example);

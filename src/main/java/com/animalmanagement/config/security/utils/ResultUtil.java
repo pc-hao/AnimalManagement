@@ -7,8 +7,6 @@ import lombok.extern.slf4j.Slf4j;
 
 import javax.servlet.ServletResponse;
 import java.io.PrintWriter;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * 返回结果工具类

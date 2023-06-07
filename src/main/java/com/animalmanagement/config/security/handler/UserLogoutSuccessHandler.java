@@ -3,7 +3,6 @@ package com.animalmanagement.config.security.handler;
 import com.animalmanagement.bean.BaseResponse;
 import com.animalmanagement.config.security.utils.ResultUtil;
 import com.animalmanagement.enums.StatusEnum;
-import io.jsonwebtoken.Jwts;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;

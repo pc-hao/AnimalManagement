@@ -1,7 +1,8 @@
 package com.animalmanagement.controller;
 
 import com.animalmanagement.bean.BaseResponse;
-import com.animalmanagement.bean.bo.*;
+import com.animalmanagement.bean.bo.HelpCreateBo;
+import com.animalmanagement.bean.bo.UserAndTweetIdBo;
 import com.animalmanagement.enums.StatusEnum;
 import com.animalmanagement.service.HelpService;
 import com.animalmanagement.service.SearchLogService;

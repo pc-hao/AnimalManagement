@@ -1,28 +1,24 @@
 package com.animalmanagement.service;
 
-import com.animalmanagement.bean.bo.*;
-import com.animalmanagement.bean.vo.*;
-import com.animalmanagement.entity.*;
-import com.animalmanagement.mapper.*;
-import com.animalmanagement.example.*;
-import com.animalmanagement.enums.*;
+import com.animalmanagement.bean.bo.AdminHelpContentBo;
+import com.animalmanagement.bean.bo.AdminHelpGetBo;
+import com.animalmanagement.bean.bo.HelpCreateBo;
+import com.animalmanagement.bean.vo.AdminHelpGetVo;
 import com.animalmanagement.config.ImageConfig;
-
+import com.animalmanagement.entity.SysUser;
+import com.animalmanagement.entity.Tweet;
+import com.animalmanagement.entity.UserInfo;
+import com.animalmanagement.example.TweetExample;
+import com.animalmanagement.mapper.*;
 import org.springframework.beans.BeanUtils;
-import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.*;
 
 @Service
 public class HelpService {

@@ -2,15 +2,17 @@ package com.animalmanagement.service;
 
 import com.animalmanagement.bean.BaseResponse;
 import com.animalmanagement.bean.bo.*;
-import com.animalmanagement.bean.vo.*;
+import com.animalmanagement.bean.vo.AdminAnimalContentVo;
+import com.animalmanagement.bean.vo.AdminAnimalGetVo;
+import com.animalmanagement.bean.vo.AnimalAIVo;
+import com.animalmanagement.bean.vo.AnimalGetVo;
 import com.animalmanagement.config.ImageConfig;
-import com.animalmanagement.entity.*;
-import com.animalmanagement.mapper.*;
-import com.animalmanagement.example.*;
-
+import com.animalmanagement.entity.Animal;
+import com.animalmanagement.example.AnimalExample;
+import com.animalmanagement.mapper.AnimalMapper;
 import org.springframework.beans.BeanUtils;
-import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.io.FileInputStream;
